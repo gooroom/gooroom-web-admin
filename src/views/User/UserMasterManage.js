@@ -8,6 +8,7 @@ import moment from "moment";
 import * as GlobalActions from "modules/GlobalModule";
 import * as DeptActions from "modules/DeptModule";
 import * as UserActions from "modules/UserModule";
+import * as UserReqActions from "modules/UserReqModule";
 import * as GRConfirmActions from "modules/GRConfirmModule";
 import * as GRAlertActions from "modules/GRAlertModule";
 
@@ -135,7 +136,7 @@ class UserMasterManage extends Component {
   // click user row (in list)
   handleSelectUser = selectedUserObj => {
     const { TotalRuleActions } = this.props;
-    const { UserActions, DeptActions } = this.props;
+    const { UserActions, DeptActions, UserReqActions } = this.props;
     const compId = this.state.compId;
 
     // show user info.
@@ -145,6 +146,18 @@ class UserMasterManage extends Component {
         compId: compId,
         userId: selectedUserObj.get("userId")
       });
+
+      // for user media rule request
+      UserReqActions.readUserReqList({
+        compId: compId,
+        targetType: 'userReqList',
+        userId: selectedUserObj.get("userId")
+      })
+
+      UserReqActions.getServerConf({
+        compId: compId
+      })
+      
       // close dept infrom
       DeptActions.closeInform({ compId: compId });
       // show user inform pane.
@@ -161,17 +174,24 @@ class UserMasterManage extends Component {
 
   // edit dept in tree
   handleEditDept = treeNode => {
-    const { TotalRuleActions } = this.props;
+    const { TotalRuleActions, DeptActions } = this.props;
     if (treeNode && treeNode.get("deptCd")) {
       TotalRuleActions.getAllClientUseRuleByDeptCd({
         compId: this.state.compId,
         deptCd: treeNode.get("deptCd")
       })
         .then(e => {
-          this.props.DeptActions.showDialog({
-            viewItem: treeNode,
-            dialogType: DeptDialog.TYPE_EDIT
-          });
+          DeptActions.getDeptInfo({
+            compId: this.state.compId,
+            deptCd: treeNode.get("deptCd")
+          })
+            .then(res => {
+              treeNode = treeNode.set('expireDate', res.data.data[0].expireDate);
+              this.props.DeptActions.showDialog({
+                viewItem: treeNode,
+                dialogType: DeptDialog.TYPE_EDIT
+              });
+            });
         })
         .catch(e => {});
     }
@@ -201,20 +221,24 @@ class UserMasterManage extends Component {
   // create dept in tree
   handleCreateDept = event => {
     const { t, i18n } = this.props;
+    const { DeptActions, GlobalActions } = this.props;
+    const initDate = moment().add(7, "days");
+    
     const checkedDept = this.getSingleCheckedDept();
     if (checkedDept !== undefined) {
-      this.props.DeptActions.showDialog({
-        viewItem: {
-          parentDeptCd: checkedDept.get("key"),
-          parentExpireDate: checkedDept.get("expireDate"),
-          expireDate: checkedDept.get("expireDate"),
-          deptCd: "",
-          deptNm: ""
-        },
-        dialogType: DeptDialog.TYPE_ADD
-      });
+      DeptActions.showDialog(
+        {
+          viewItem: {
+            parentDeptCd: checkedDept.get("key"),
+            parentExpireDate: checkedDept.get("expireDate"),
+            expireDate: initDate.toJSON().slice(0, 10),
+            deptCd: "",
+            deptNm: ""
+          },
+          dialogType: DeptDialog.TYPE_ADD
+      }, true);
     } else {
-      this.props.GlobalActions.showElementMsg(
+      GlobalActions.showElementMsg(
         event.currentTarget,
         t("msgSelectParentDept")
       );
@@ -951,6 +975,7 @@ const mapStateToProps = state => ({
   GlobalProps: state.GlobalModule,
   DeptProps: state.DeptModule,
   UserProps: state.UserModule,
+  UserReqProps: state.UserReqModule,
   BrowserRuleProps: state.BrowserRuleModule,
   MediaRuleProps: state.MediaRuleModule,
   SecurityRuleProps: state.SecurityRuleModule,
@@ -966,6 +991,7 @@ const mapDispatchToProps = dispatch => ({
 
   DeptActions: bindActionCreators(DeptActions, dispatch),
   UserActions: bindActionCreators(UserActions, dispatch),
+  UserReqActions: bindActionCreators(UserReqActions, dispatch),
 
   TotalRuleActions: bindActionCreators(TotalRuleActions, dispatch),
   GRAlertActions: bindActionCreators(GRAlertActions, dispatch)

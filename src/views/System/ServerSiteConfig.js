@@ -69,7 +69,10 @@ class ServerSiteConfig extends Component {
         pwIncludeLower: '0',
         pwIncludeSpecial: '0',
         enableDuplicateLogin: false,
-        duplicateLoginNotiType: '1'
+        duplicateLoginNotiType: '1',
+        maxMediaCnt: '',
+        registerReq: '1',
+        deleteReq: '1',
       })
     };
   }
@@ -113,6 +116,9 @@ class ServerSiteConfig extends Component {
             .set('pwIncludeSpecial', pwRule ? pwRule.ocredit : false)
             .set('enableDuplicateLogin', (data[0].enableDuplicateLogin > 0) ? true : false)
             .set('duplicateLoginNotiType', dupValue.toString())
+            .set('maxMediaCnt', data[0].maxMediaCnt ? data[0].maxMediaCnt : '')
+            .set('registerReq', data[0].registerReq ? data[0].registerReq : '1')
+            .set('deleteReq', data[0].deleteReq ? data[0].deleteReq : '1')
           }));
         }
     });
@@ -151,7 +157,10 @@ class ServerSiteConfig extends Component {
                   trialCount: stateData.get('trialCount'),
                   lockTime: stateData.get('lockTime'),
                   passwordRule: newPasswordRule,
-                  enableDuplicateLogin: dupValue
+                  enableDuplicateLogin: dupValue,
+                  maxMediaCnt: stateData.get('maxMediaCnt'),
+                  registerReq: stateData.get('registerReq'),
+                  deleteReq: stateData.get('deleteReq')
                 }).then(
                   (response) => {
                     if(response && response.data && response.data.status && response.data.status.result === 'success') {
@@ -189,6 +198,13 @@ class ServerSiteConfig extends Component {
     const value = (event.target.type === 'checkbox') ? event.target.checked : event.target.value;
     this.setState({
       stateData: stateData.set(name, value)
+    });
+  }
+
+  handleUserMediaRuleChange = name => event => {
+    const { stateData } = this.state;
+    this.setState({
+      stateData: (event.target.checked) ? stateData.set(name, "1") : stateData.set(name, "0")
     });
   }
 
@@ -430,6 +446,54 @@ class ServerSiteConfig extends Component {
                     </ListItemSecondaryAction>
                   </ListItem>
                 </List>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={24}>
+          <Grid item xs={6}>
+            <Card style={{marginTop: 16}}>
+              <CardHeader style={{paddingBottom: 0}}
+                title={t("lbSetUserMediaRule")}
+                subheader={t("msgSetUserMediaRuleRequest")}
+              />
+              <CardContent style={{paddingTop: 0}}>
+                <TextValidator label={t("lbSetLimitCnt")}
+                  name="maxMediaCnt"
+                  value={stateData.get('maxMediaCnt')}
+                  validators={['required', 'matchRegexp:^[0-9]*$', 'maxNumber:99']}
+                  errorMessages={[t("msgValidUserMediaRuleRequired"), t("msgTypeNumberOnly"), t("msgValidUserMediaRuleMaximum")]}
+                  onChange={this.handleValueChange("maxMediaCnt")} 
+                />
+                <Grid item xm={6}>
+                  <List dense={true} style={{maxWidth:440,borderStyle:'solid',borderWidth:1,borderRadius:4,borderColor:'#0000003b',margin:10,padding:10}}>
+                    <ListItem>
+                      <ListItemIcon><PropItemIcon style={{width:'16px'}} /></ListItemIcon>
+                      <ListItemText primary={t("lbHowToApproveReq")} style={{padding:0}} />
+                      <ListItemSecondaryAction>
+                      <FormControlLabel style={{heigth:32}}
+                          control={<Switch onChange={this.handleUserMediaRuleChange('registerReq')} 
+                              checked={stateData.get('registerReq') === '1'}
+                              color="primary" />}
+                          label={(stateData.get('registerReq') === '1') ? t("lbAutomatic") : t("lbManual")}
+                      />
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                    <ListItem>
+                      <ListItemIcon><PropItemIcon style={{width:'16px'}} /></ListItemIcon>
+                      <ListItemText primary={t("lbHowToDeleteReq")} style={{padding:0}} />
+                      <ListItemSecondaryAction>
+                      <FormControlLabel style={{heigth:32}}
+                          control={<Switch onChange={this.handleUserMediaRuleChange('deleteReq')} 
+                              checked={stateData.get('deleteReq') === '1'}
+                              color="primary" />}
+                          label={(stateData.get('deleteReq') === '1') ? t("lbAutomatic") : t("lbManual")}
+                      />
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                  </List>
+                </Grid>
               </CardContent>
             </Card>
           </Grid>

@@ -81,7 +81,7 @@ export const getDataPropertyInCompByParam = (propObj, compId, idName, checked, e
         const listData = propObj.getIn(['viewItems', compId, 'listData']);
         if(exceptRevoke) {
             let temp = listData.filter((data) => {
-                return data.get('clientStatus') !== "STAT021";
+                return data.get('clientStatus') !== "STAT021" && data.get('adminCheck') === "waiting";
             });
             return (temp) ? temp.map((e) => (e.get(idName))) : List([]);
         } else {

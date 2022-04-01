@@ -119,6 +119,8 @@ class ClientConfSettingManage extends Component {
         logMaxCount: 3,
         systemKeepFree: 10,
 
+        useHomeReset: false,
+        cleanModeAllow: false,
         rootAllow: true,
         sudoAllow: true,
         policykitUser: 'sudo',
@@ -137,7 +139,7 @@ class ClientConfSettingManage extends Component {
         show_os: 'info',
         transmit_os: 'info',
         
-        notify_exe: 'notice',
+        notify_exe: 'err',
         show_exe: 'info',
         transmit_exe: 'info',
         

@@ -115,6 +115,16 @@ class DividedAdminManageRuleSelector extends Component {
                 />
               </Typography>
             </Grid>
+            {window.usePortable ?
+              <Grid item xs={3} className={classes.specCategory} style={{padding:0}}>
+                <Typography variant="body1" style={{fontWeight:'bold'}} >{t("lbPortablePart")}
+                  <Checkbox checked={(editingItem) ? editingItem.get('isPortableAdmin') == 1 : false}
+                    onChange={this.handleToggle('isPortableAdmin')} value="isPortableAdmin"
+                  />
+                </Typography>
+              </Grid>
+            : null
+            }
           </Grid>
   
           </CardContent>

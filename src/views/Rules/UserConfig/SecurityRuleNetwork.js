@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { Map, List } from 'immutable';
 
 import PropTypes from 'prop-types';
@@ -45,6 +45,11 @@ import DownIcon from '@material-ui/icons/ArrowDownward';
 import Checkbox from "@material-ui/core/Checkbox";
 import Input from '@material-ui/core/Input';
 
+import Popover from '@material-ui/core/Popover';
+import ListItem from '@material-ui/core/ListItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormLabel from '@material-ui/core/FormLabel';
+
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { translate, Trans } from "react-i18next";
@@ -59,15 +64,21 @@ const columns = [
   { id: 'state', numeric: true, label: 'STATE' },
 ];
 
-function createNetworkItem(editingItem, direction, protocol, address, srcport, dstport, state) {
+function createBasicNetworkItem(editingItem, type, direction, protocol, address, srcport, dstport, state) {
   const nextCount = (editingItem && editingItem.get('networkItems')) ? editingItem.get('networkItems').size : 0;
-  const srcName = 'srcport';//_' + nextCount; 
-  return Map({ no: nextCount, direction, protocol, address, [srcName]:srcport, dstport, state });
+  return Map({ no: nextCount, type, direction, protocol, address, srcport, dstport, state });
+}
+
+function createAdvNetworkItem(editingItem, type, command) {
+  const nextCount = (editingItem && editingItem.get('networkItems')) ? editingItem.get('networkItems').size : 0;
+  return Map({ no: nextCount, type, command });
 }
 
 let EnhancedTableToolbar = props => {
   const { numSelected, classes, t } = props;
 
+  const [ addItemPopOver, setAddItemPopOver ] = useState(null);
+  const open = Boolean(addItemPopOver);
   return (
     <Toolbar style={{padding:0}}>
     
@@ -127,11 +138,33 @@ let EnhancedTableToolbar = props => {
                 </Grid>
               </Grid>
             ) : (
-              <Tooltip title={t("ttAddItem")}>
-                <IconButton aria-label={t("ttAddItem")} onClick={props.onAddClick} >
-                  <AddIcon />
-                </IconButton>
-              </Tooltip>
+              <Grid>
+                <Tooltip title={t("ttAddItem")}>
+                  <IconButton aria-label={t("ttAddItem")} onClick={(e) => setAddItemPopOver(e.currentTarget)} >
+                    <AddIcon />
+                  </IconButton>
+                </Tooltip>
+                <Popover
+                  open={open}
+                  anchorEl={addItemPopOver}
+                  onClose={(e) => setAddItemPopOver(null)}
+                  anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                  }}
+                  transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                  }}
+                  >
+                    <ListItem>
+                      <Button onClick={props.onAddClick('basic')}>메뉴 형태 추가하기</Button>
+                    </ListItem>
+                    <ListItem>
+                      <Button onClick={props.onAddClick('advanced')}>입력창 형태 추가하기</Button>
+                    </ListItem>
+                </Popover>
+              </Grid>
             )}
       
           </Grid>
@@ -146,10 +179,14 @@ let EnhancedTableToolbar = props => {
 
 class SecurityRuleNetwork extends Component {
 
-  handleAddClick = () => {
+  handleAddClick = type => event => {
     const { SecurityRuleProps } = this.props;
     const editingItem = (SecurityRuleProps.get('editingItem')) ? SecurityRuleProps.get('editingItem') : null;
-    this.props.SecurityRuleActions.addNetworkItem(createNetworkItem(editingItem, 'input', 'tcp', '', '', '', 'accept'));
+    if(type === 'basic') {
+      this.props.SecurityRuleActions.addNetworkItem(createBasicNetworkItem(editingItem, type, 'input', 'tcp', '', '', '', 'accept'));
+    } else { // advanced
+      this.props.SecurityRuleActions.addNetworkItem(createAdvNetworkItem(editingItem, type, ''));
+    }
   }
 
   handleDeleteClick = () => {
@@ -275,120 +312,158 @@ class SecurityRuleNetwork extends Component {
       />
       
       <div>
-      <Table className={classes.table} aria-labelledby="tableTitle">
-        <TableHead>
-          <TableRow>
-            <TableCell></TableCell>
-            {columns.map(column => {
-              return (
-                <TableCell key={column.id}>{column.label}</TableCell>
-              );
-            }, this)}
-            <TableCell>{t("lbNetworkMove")}</TableCell>
-          </TableRow>
-        </TableHead>
+      <Table className={classes.table} aria-labelledby="tableTitle">        
         {(networkItems) &&
         <TableBody>
-          {networkItems.map(n => {
-              const isSelected = this.isSelected(n.get('no'));
-              return (
-                <TableRow
-                  hover
-                  role="checkbox"
-                  aria-checked={isSelected}
-                  tabIndex={-1}
-                  key={n.get('no')}
-                  selected={isSelected}
-                >
-                  <TableCell padding="checkbox"><Checkbox checked={isSelected} color="primary" onClick={event => this.handleSelectRow(event, n.get('no'))} /></TableCell>
-                  <TableCell>
-                    <FormControl className={classes.formControl}>
-                      <Select
-                        value={n.get('direction')}
-                        name="direction"
-                        onChange={this.changeNetworkOption(n.get('no'))}
-                      >
-                        <MenuItem value={'input'}>input</MenuItem>
-                        <MenuItem value={'output'}>output</MenuItem>
-                        <MenuItem value={'all'}>all</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </TableCell>
-                  <TableCell>
-                    <FormControl className={classes.formControl}>
-                      <Select
-                        value={n.get('protocol')}
-                        name="protocol"
-                        onChange={this.changeNetworkOption(n.get('no'))}
-                      >
-                        <MenuItem value={'tcp'}>tcp</MenuItem>
-                        <MenuItem value={'udp'}>udp</MenuItem>
-                        <MenuItem value={'icmp'}>icmp</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </TableCell>
-                  <TableCell>
-                    <TextValidator 
-                      name='address'
-                      validators={['matchRegexp:^[a-fA-F0-9.:/]*$']}
-                      errorMessages={[t("msgValidFirewallAddress")]}
-                      value={n.get('address')}
-                      onChange={this.changeNetworkOption(n.get('no'))}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <TextValidator 
-                      name='srcport'
-                      validators={['matchRegexp:^[0-9,-]*$']}
-                      errorMessages={[t("msgTypeNumberOnly")]}
-                      value={n.get('srcport')}
-                      onChange={this.changeNetworkOption(n.get('no'))}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <TextValidator 
-                      name='dstport'
-                      validators={['matchRegexp:^[0-9,-]*$']}
-                      errorMessages={[t("msgTypeNumberOnly")]}
-                      value={n.get('dstport')}
-                      onChange={this.changeNetworkOption(n.get('no'))}
-                    />
-                  </TableCell>
+        {networkItems.map(n => {
+          const isSelected = this.isSelected(n.get('no'));
+          return (
+            n.get('type') === 'basic' ?
+            <TableRow
+              hover
+              role="checkbox"
+              aria-checked={isSelected}
+              tabIndex={-1}
+              key={n.get('no')}
+              selected={isSelected}
+            >
+              <TableCell padding="checkbox"><Checkbox checked={isSelected} color="primary" onClick={event => this.handleSelectRow(event, n.get('no'))} /></TableCell>
+              <TableCell>
+                <FormControl>
+                  <InputLabel shrink htmlFor="age-native-label-placeholder">
+                    DIRECTION
+                  </InputLabel>
+                  <Select
+                    value={n.get('direction')}
+                    name="direction"
+                    onChange={this.changeNetworkOption(n.get('no'))}
+                  >
+                    <MenuItem value={'input'}>input</MenuItem>
+                    <MenuItem value={'output'}>output</MenuItem>
+                    <MenuItem value={'all'}>all</MenuItem>
+                  </Select>
+                </FormControl>
+              </TableCell>
+              <TableCell>
+                <FormControl className={classes.formControl}>
+                  <InputLabel shrink htmlFor="age-native-label-placeholder">
+                    PROTOCOL
+                  </InputLabel>
+                  <Select
+                    value={n.get('protocol')}
+                    name="protocol"
+                    onChange={this.changeNetworkOption(n.get('no'))}
+                  >
+                    <MenuItem value={'tcp'}>tcp</MenuItem>
+                    <MenuItem value={'udp'}>udp</MenuItem>
+                    <MenuItem value={'icmp'}>icmp</MenuItem>
+                  </Select>
+                </FormControl>
+              </TableCell>
+              <TableCell>
+                <TextValidator 
+                  label="ADDRESS"
+                  name='address'
+                  validators={['matchRegexp:^[a-fA-F0-9.:/]*$']}
+                  errorMessages={[t("msgValidFirewallAddress")]}
+                  value={n.get('address')}
+                  onChange={this.changeNetworkOption(n.get('no'))}
+                />
+              </TableCell>
+              <TableCell>
+                <TextValidator 
+                  label="SRC PORT"
+                  name='srcport'
+                  validators={['matchRegexp:^[0-9,-]*$']}
+                  errorMessages={[t("msgTypeNumberOnly")]}
+                  value={n.get('srcport')}
+                  onChange={this.changeNetworkOption(n.get('no'))}
+                />
+              </TableCell>
+              <TableCell>
+                <TextValidator 
+                  label="DEST PORT"
+                  name='dstport'
+                  validators={['matchRegexp:^[0-9,-]*$']}
+                  errorMessages={[t("msgTypeNumberOnly")]}
+                  value={n.get('dstport')}
+                  onChange={this.changeNetworkOption(n.get('no'))}
+                />
+              </TableCell>
 
-                  <TableCell>
-                  
-                    <FormControl className={classes.formControl}>
-                      <Select
-                        value={n.get('state')}
-                        name="state"
-                        onChange={this.changeNetworkOption(n.get('no'))}
-                      >
-                        <MenuItem value={'accept'}>accept</MenuItem>
-                        <MenuItem value={'drop'}>drop</MenuItem>
-                      </Select>
-                    </FormControl>
-                  
-                  </TableCell>
+              <TableCell>
+                <FormControl className={classes.formControl}>
+                  <InputLabel shrink htmlFor="age-native-label-placeholder">
+                    STATE
+                  </InputLabel>
+                  <Select
+                    value={n.get('state')}
+                    name="state"
+                    onChange={this.changeNetworkOption(n.get('no'))}
+                  >
+                    <MenuItem value={'accept'}>accept</MenuItem>
+                    <MenuItem value={'drop'}>drop</MenuItem>
+                  </Select>
+                </FormControl>
+              
+              </TableCell>
 
-                  <TableCell className={classes.grSmallAndClickCell}>
+              <TableCell className={classes.grSmallAndClickCell}>
 
-                    <Button color="secondary" size="small" 
-                      className={classes.buttonInTableRow}
-                      onClick={event => this.handleUpwardClick(event, n.get('no'))}>
-                      <UpIcon />
-                    </Button>
+                <Button color="secondary" size="small" 
+                  className={classes.buttonInTableRow}
+                  onClick={event => this.handleUpwardClick(event, n.get('no'))}>
+                  <UpIcon />
+                </Button>
 
-                    <Button color="secondary" size="small" 
-                      className={classes.buttonInTableRow}
-                      onClick={event => this.handleDownwardClick(event, n.get('no'))}>
-                      <DownIcon />
-                    </Button>                        
+                <Button color="secondary" size="small" 
+                  className={classes.buttonInTableRow}
+                  onClick={event => this.handleDownwardClick(event, n.get('no'))}>
+                  <DownIcon />
+                </Button>                        
 
-                  </TableCell>
+              </TableCell>
 
-                </TableRow>
-              );
-            })}
+            </TableRow>
+            : <TableRow
+                hover
+                role="checkbox"
+                aria-checked={isSelected}
+                tabIndex={-1}
+                key={n.get('no')}
+                selected={isSelected}
+              >
+              <TableCell padding="checkbox"><Checkbox checked={isSelected} color="primary" onClick={event => this.handleSelectRow(event, n.get('no'))} /></TableCell>
+              <TableCell colSpan={6} align="left" className={classes.fullWidth}>
+                <TextValidator 
+                  label="COMMAND"
+                  name='command'
+                  validators={['matchRegexp:^[a-zA-Z0-9.:/-\\s]*$']}
+                  errorMessages={[t("msgValidIptablesCmd")]}
+                  value={n.get('command')}
+                  onChange={this.changeNetworkOption(n.get('no'))}
+                  className={classes.fullWidth}
+                />
+              </TableCell>
+              
+              <TableCell className={classes.grSmallAndClickCell}>
+
+                <Button color="secondary" size="small" 
+                  className={classes.buttonInTableRow}
+                  onClick={event => this.handleUpwardClick(event, n.get('no'))}>
+                  <UpIcon />
+                </Button>
+
+                <Button color="secondary" size="small" 
+                  className={classes.buttonInTableRow}
+                  onClick={event => this.handleDownwardClick(event, n.get('no'))}>
+                  <DownIcon />
+                </Button>                        
+
+              </TableCell>
+            </TableRow>
+          );
+        })}
         </TableBody>
         }
       </Table>

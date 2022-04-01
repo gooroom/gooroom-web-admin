@@ -94,6 +94,7 @@ class GRHeader extends Component {
     };
 
     const dupDialogOpen = (AdminProps.get('dupLoginIp') !== undefined && AdminProps.get('dupLoginIp') !== '') ? true : false;
+    const isAdmin = window.gpmsain !== Constants.USER_RULECODE;
 
     return (
       <AppBar className={classes.headerRoot}>
@@ -108,13 +109,18 @@ class GRHeader extends Component {
             <Button onClick={() => changeLanguage("kr")}>kr</Button>
             <Button onClick={() => changeLanguage("en")}>en</Button>
           </div>
-          {(window.gpmsain !== Constants.SUPER_RULECODE && window.gpmsain !== Constants.PART_RULECODE) &&
+          {(window.gpmsain !== Constants.SUPER_RULECODE && window.gpmsain !== Constants.PART_RULECODE && window.gpmsain !== Constants.USER_RULECODE) &&
             <GRAlarmInform />
           }
           <Button onClick={this.props.onAdminClick}>
-            <AccountCircle />{t("adminMenu")}
+            <AccountCircle />
+            {isAdmin ?
+              t("adminMenu")
+            :
+              t("userMenu")
+            }
           </Button>
-          {(window.gpmsain !== Constants.PART_RULECODE) &&
+          {(window.gpmsain !== Constants.PART_RULECODE && window.gpmsain !== Constants.USER_RULECODE) &&
             <Button
               buttonRef={node => {
                 this.anchorEl = node;
@@ -157,7 +163,7 @@ class GRHeader extends Component {
           <DialogTitle id="customized-dialog-title">관리자 계정 접속 시도</DialogTitle>
           <DialogContent dividers>
             <Typography gutterBottom>
-              현재 사용하시는 관리자 계정으로 아래 위치에서 접속시도가 있었습니다.
+              현재 사용하시는 계정으로 아래 위치에서 접속시도가 있었습니다.
           </Typography>
             <Typography variant='body1' gutterBottom>
             <div>IP : {AdminProps.get('dupLoginIp')}</div>

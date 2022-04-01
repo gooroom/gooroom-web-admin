@@ -92,6 +92,8 @@ class DividedAdminManageDialog extends Component {
             return true;
         } else if(editObj.get('isNoticeAdmin') !== undefined && editObj.get('isNoticeAdmin') === '1') {
             return true;
+        } else if(editObj.get('isPortableAdmin') !== undefined && editObj.get('isPortableAdmin') === '1') {
+            return true;
         }
         return false;
     }
@@ -417,6 +419,9 @@ class DividedAdminManageDialog extends Component {
                             <DividedAdminManageRuleSelector compId={compId} editingItem={editingItem} />
                         </Grid>
                     </Grid>
+                    {/*(editingItem.get('isPortableAdmin') === '1') &&
+                      <div style={{color: "red"}}>{t("msgCreatePortableBuildServerBefore")}</div>
+                    */}
                     {(editingItem.get('adminTp') !== Constants.SUPER_TYPECODE) &&
                         <GroupMultiSelector compId={compId} title={t('lbManagedClientGroup')} 
                             isCheckMasterOnly={true}

@@ -412,6 +412,32 @@ export const GRCommonStyle = theme => ({
         cursor: "pointer",
         textAlign: "right"
     },
+    grSmallCenterCellEx: {
+        Width: "200",
+        minWidth: "200",
+        display: "block",
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        textOverflow: "ellipsis",
+    },
+    grSmallAndDateCell: {
+        padding: "0px 10px 0px 10px",
+        cursor: "center",
+        textAlign: "center",
+    },
+    grSmallOverflowClickCenterCell: {
+      padding: "0px 0px 0px 0px",
+      textAlign: "center",
+      cursor: "pointer",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
+      width: "inferit"
+    },
+    grSmallCenterCell: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center"
+    },
     grObjInCell: {
         height: "inherit"
     },
@@ -461,8 +487,188 @@ export const GRCommonStyle = theme => ({
         textAlign: 'right',
         borderBottom: '1px solid rgba(224, 224, 224, 1)',
         verticalAlign: 'inherit'
-    }
+    },
 
-
+    /* for PTGR */
+    ptgrBulkUploadButton: {
+        padding: "0px 34px 0px 34px",
+        minWidth: "26px",
+        minHeight: "24px",
+        color: "#ffffff",
+        backgroundColor: "#70ad47",
+    },
+    ptgrBulkDownloadCsvButton: {
+        padding: "0px 34px 0px 34px",
+        minWidth: "26px",
+        minHeight: "24px",
+        color: "#ffffff",
+        backgroundColor: "#5b9bd5",
+    },
+    ptgrBulkApplyButton: {
+        padding: "8px 34px 8px 34px",
+        minWidth: "30px",
+        minHeight: "26px",
+        color: "#ffffff",
+        backgroundColor: "#00b0f0",
+        fontSize: "15px",
+    },
+    ptgrApproveButton: {
+        padding: "0px 20px 0px 20px",
+        minWidth: "26px",
+        minHeight: "24px",
+        color: "#ffffff",
+        backgroundColor: "#5b9bd5",
+    },
+    ptgrReApproveButton: {
+        padding: "0px 20px 0px 20px",
+        minWidth: "26px",
+        minHeight: "24px",
+        color: "#ffffff",
+        backgroundColor: "#c00000",
+    },
+    ptgrReApproveAllButton: {
+        padding: "0px 20px 0px 20px",
+        minWidth: "26px",
+        minHeight: "24px",
+        color: "#ffffff",
+        backgroundColor: "#70ad47",
+    },
+    ptgrDeleteAllButton: {
+        padding: "0px 20px 0px 20px",
+        minWidth: "26px",
+        minHeight: "24px",
+        color: "#000000",
+        backgroundColor: "#d9d9d9",
+    },
+    ptgrSearchButton: {
+        padding: "0px 20px 0px 20px",
+        minWidth: "48px",
+        minHeight: "24px",
+        color: "#ffffff",
+        backgroundColor: "#ed7d31",
+    },
+    ptgrImagePath: {
+        padding: "0px 20px 0px 20px",
+        minWidth: "48px",
+        minHeight: "24px",
+        color: "#ffffff",
+        backgroundColor: "#404040",
+    },
+    ptgrInputLabel: {
+      padding: "6px 0px 0px 0px",
+      color: "#7f7f7f",
+    },
+    ptgrInputLabelError: {
+      padding: "6px 0px 0px 0px",
+      color: "#fc2e07",
+    },
+    ptgrDownloadImageButton: {
+        padding: "0px 20px 0px 20px",
+        minWidth: "26px",
+        minHeight: "24px",
+        color: "#ffffff",
+        backgroundColor: "#5b9bd5",
+    },
+    ptgrExpiredImageButton: {
+        padding: "0px 20px 0px 20px",
+        minWidth: "26px",
+        minHeight: "24px",
+        color: "#ffffff",
+        backgroundColor: "#c00000",
+    },
+    ptgrExpiredImageDiv: {
+      borderRadius: "5px",
+      padding: "2px 0px 0px 0px",
+      minWidth: "26px",
+      minHeight: "24px",
+      color: "#ffffff",
+      backgroundColor: "#c00000",
+      textAlign: "center",
+      verticalAlign: "middle",
+      curdor: "pointer",
+    },
+    ptgrEmailTextField: {
+      width: "130px"
+    },
+    ptgrApplyTableRowCheck: {
+        padding: "0px",
+        cursor: "pointer",
+        width: "50px",
+    },
+    ptgrApplyTableRowUserId: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "100px",
+    },
+    ptgrApplyTableRowRegAt: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "114px",
+    },
+    ptgrApplyTableRowUseAt: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "254px",
+    },
+    ptgrApplyTableRowCert: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "100px",
+    },
+    ptgrApplyTableRowBuildStatus: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "100px",
+    },
+    ptgrApplyTableRowIsoName: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "450px",
+    },
+    ptgrApplyTableRowIsoUrl: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "170px",
+    },
+    ptgrApplyTableRowImageStatus: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "147px",
+    },
+    ptgrApplyTableRowApprove: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "93px",
+    },
+    ptgrImageTableRowUserId: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "130px",
+    },
+    ptgrImageTableRowRegAt: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "100px",
+    },
+    ptgrImageTableRowIsoName: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "530px",
+    },
+    ptgrImageTableRowIsoCreatedAt: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "350px",
+    },
+    ptgrImageTableRowIsoSize: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "143px",
+    },
+    ptgrImageTableRowImageStatus: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "210px",
+    },
 });
 

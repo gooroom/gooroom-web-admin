@@ -8,6 +8,7 @@ import { formatDateToSimple, calculateDiffDays } from 'components/GRUtils/GRDate
 import { getSelectedObjectInComp, getValueInSelectedObjectInComp, getAvatarExplainForUser } from 'components/GRUtils/GRTableListUtils';
 
 import * as UserActions from 'modules/UserModule';
+import * as UserReqActions from 'modules/UserReqModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
@@ -38,8 +39,22 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
-
 import Button from '@material-ui/core/Button';
+
+import List from '@material-ui/core/List';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import IconButton from '@material-ui/core/IconButton';
+import Popover from '@material-ui/core/Popover';
+import Paper from '@material-ui/core/Paper';
+import Grow from '@material-ui/core/Grow';
+
+import ForumIcon from '@material-ui/icons/Forum';
+import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
+import TurnedInIcon from '@material-ui/icons/TurnedIn';
+import DeleteIcon from '@material-ui/icons/Delete';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import LoginResetIcon from '@material-ui/icons/Flare';
 import UserIcon from '@material-ui/icons/PersonPin';
@@ -70,6 +85,14 @@ import { translate, Trans } from "react-i18next";
 
 
 class UserSpec extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedReqSeq: '',
+      userReqPopOver: null
+    };
+  }
 
    // edit
    handleClickEdit = (viewItem, compId) => {
@@ -210,13 +233,34 @@ class UserSpec extends Component {
   }
   // ===================================================================
 
+  handleClickUserReqDetail = (event, reqSeq) => {
+    this.setState({
+      selectedReqSeq: reqSeq,
+      userReqPopOver: event.currentTarget
+    });
+  }
+
+  handleClickUserReqDetailClose = () => {
+    this.setState({
+      selectedReqSeq: '',
+      userReqPopOver: null
+    })
+  }
+
+  handleClickUserReqDelete = (event, reqSeq) => {
+    alert('삭제 : ' + reqSeq);
+  }
+  // ===================================================================
+
   render() {
     const { classes } = this.props;
-    const { UserProps, compId, AdminProps, isEditable } = this.props;
+    const { UserProps, UserReqProps, compId, AdminProps, isEditable } = this.props;
     const { t, i18n } = this.props;
 
     const informOpen = UserProps.getIn(['viewItems', compId, 'informOpen']);
     const viewItem = UserProps.getIn(['viewItems', compId, 'viewItem']);
+    const userReqList = UserReqProps.getIn(['viewItems', compId, 'userReqList', 'listAllData']);
+    const maxMediaCnt = UserReqProps.getIn(['viewItems', compId, 'userReqList', 'maxMediaCnt']);
 
     const selectedMediaRuleItem = this.props.MediaRuleProps.getIn(['viewItems', compId, 'USER']);
     const selectedBrowserRuleItem = this.props.BrowserRuleProps.getIn(['viewItems', compId, 'USER']);
@@ -227,9 +271,11 @@ class UserSpec extends Component {
     const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'USER']);
 
     const avatarRef = getAvatarExplainForUser(this.props.t);
-    
+    const open = Boolean(this.state.userReqPopOver);
+
     let userSubinfo = null;
     let actionButton = null;
+    let userMediaRuleReqInfo = null; // 매체제어 고도화 사용자 요청 
     if(informOpen && viewItem) {
 
       if(viewItem.get('loginTrial') < 1) {
@@ -257,6 +303,62 @@ class UserSpec extends Component {
           ><SettingsApplicationsIcon /></Button>
         </div>
       }
+
+      userMediaRuleReqInfo = <Card elevation={4} style={{marginTop: 15}}>
+        <CardHeader
+          avatar={
+            <ForumIcon fontSize="large"/>
+          }
+          title={<div>
+            <Typography variant="h6" style={{display: 'inline-block', marginRight:18}}>{t('lbMediaRuleReqList')}</Typography>
+            <Chip avatar={<Avatar>{t('lbReqCnt')}</Avatar>} label={(userReqList && userReqList.size) + " / " + maxMediaCnt} style={{marginRight:18}}/></div>
+          }
+        />
+        <Divider />
+        <CardContent style={{padding:10}}>
+          <List dense={true}>
+            {userReqList && userReqList.map(n => (
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar>
+                    <DoneOutlineIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={"[" + n.get('regDt') + "] " + n.get('usbName') + " / " + n.get('usbSerialNo')}
+                />
+                <ListItemSecondaryAction>
+                  <IconButton edge="end" aria-label="delete">
+                    <TurnedInIcon onClick={(e) => this.handleClickUserReqDetail(e, n.get('reqSeq'))}/>
+                  </IconButton>
+                  <Popover
+                    id={n.get('userId')}
+                    open={open}
+                    anchorEl={this.state.userReqPopOver}
+                    onClose={this.handleClickUserReqDetailClose}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'right',
+                    }}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                  >
+                    <Typography style={{margin: "5px"}}>{t('lbUsbSerial')} : {n.get('usbSerialNo')}</Typography>
+                    <Typography style={{margin: "5px"}}>{t('lbUsbProduct')} : {n.get('usbProduct')}</Typography>
+                    <Typography style={{margin: "5px"}}>{t('lbUsbVendor')} : {n.get('usbVendor')}</Typography>
+                    <Typography style={{margin: "5px"}}>{t('lbUsbModel')} : {n.get('usbModel')}</Typography>
+                  </Popover>
+                  {/* <IconButton edge="end" aria-label="delete">
+                    <DeleteIcon onClick={(e) => this.handleClickUserReqDelete(e, '')}/>
+                  </IconButton> */}
+                </ListItemSecondaryAction>
+              </ListItem>                    
+            ))}
+          </List>
+        </CardContent>
+      </Card>
 
       userSubinfo = <div>
         <Card elevation={4}>
@@ -316,7 +418,10 @@ class UserSpec extends Component {
             </Grid>
           </CardContent>
         </Card>
-      </div>;
+        {userReqList && userReqList.size > 0 &&
+          userMediaRuleReqInfo
+        }
+      </div>;      
     }
  
     return (
@@ -400,6 +505,7 @@ class UserSpec extends Component {
 
 const mapStateToProps = (state) => ({
   UserProps: state.UserModule,
+  UserReqProps: state.UserReqModule,
   AdminProps: state.AdminModule,
 
   MediaRuleProps: state.MediaRuleModule,
@@ -413,6 +519,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   UserActions: bindActionCreators(UserActions, dispatch),
+  UserReqActions: bindActionCreators(UserReqActions, dispatch),
+
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
   GRAlertActions: bindActionCreators(GRAlertActions, dispatch),
   

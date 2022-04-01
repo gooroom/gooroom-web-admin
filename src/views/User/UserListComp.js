@@ -11,6 +11,9 @@ import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
+import { requestFilePostAPI } from 'components/GRUtils/GRRequester';
+import FileSaver from 'file-saver';
+
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, getDataPropertyInCompByParam } from 'components/GRUtils/GRTableListUtils';
 
@@ -37,10 +40,12 @@ import Button from "@material-ui/core/Button";
 import Search from "@material-ui/icons/Search";
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import GetApp from '@material-ui/icons/GetApp'; 
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { translate, Trans } from "react-i18next";
+import { now } from 'moment';
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -188,7 +193,18 @@ class UserListComp extends Component {
 
   handleChangeUserStatusSelect = (value) => {
     const { UserActions, UserProps, compId } = this.props;
-    UserActions.readUserListPaged(UserProps, compId, { page: 0, status: (value == 'ALL') ? '' : value });
+    UserActions.readUserListPaged(UserProps, compId, { 
+      page: 0, status: (value === 'ALL') ? '' : value 
+    });
+  }
+
+  handleDownloadUserList = (event) => {
+    requestFilePostAPI('createUserFileFromData', {}).then(
+      (response) => {
+        var blob = new Blob([response.data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+        FileSaver.saveAs(blob, 'USER_gooroom_'+ formatDateToSimple(new Date(), 'YY/MM/DD') + '.xlsx');
+      }
+    )
   }
 
   render() {
@@ -224,7 +240,8 @@ class UserListComp extends Component {
           <Grid item xs={3} >
             <FormControl fullWidth={true}>
               <UserStatusSelect onChangeSelect={this.handleChangeUserStatusSelect} 
-                value={(listObj && listObj.getIn(['listParam', 'status'])) ? listObj.getIn(['listParam', 'status']) : 'STAT010'}
+                value={(listObj && listObj.getIn(['listParam', 'status'])) ? listObj.getIn(['listParam', 'status']) : 
+                (listObj && listObj.getIn(['listParam', 'status']) === '') ? 'ALL' : 'STAT010'}
               />
             </FormControl>
           </Grid>
@@ -236,13 +253,16 @@ class UserListComp extends Component {
               />
             </FormControl>
           </Grid>
-          <Grid item xs={2}>
-            <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
+          <Grid item xs={6}>
+            <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } style={{marginRight:10}}>
               <Search />{t("btnSearch")}
             </Button>
+            {/* <Button className={classes.GRIconSmallButton} variant='contained' color="primary" onClick={() => this.handleDownloadUserList() } style={{marginRight:10}}>
+              <GetApp /> {t("dtViewUser")} {t("btnDownload")}
+            </Button> */}
           </Grid>
-          <Grid item xs={4} style={{textAlign:'right'}}>
-            {/**
+          {/* <Grid item xs={4} style={{textAlign:'right'}}>
+            *
             <Tooltip title={t("ttMoveDept")}>
               <span>
               <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.props.onMoveUserToDept} disabled={this.isUserChecked()} >
@@ -255,8 +275,8 @@ class UserListComp extends Component {
                 <AddIcon /><AccountIcon />
               </Button>
             </Tooltip>
-             */}
-          </Grid>
+            
+          </Grid> */}
         </Grid>
 
       {(listObj) &&

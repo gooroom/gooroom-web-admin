@@ -97,6 +97,12 @@ export default {
           id: 'GRM0301',
           url: '/user/usermastermanage/GRM0301/menuUserManage',
           level: 2,
+        },
+        {
+          name: 'menuUserReqManage',
+          id: 'GRM0302',
+          url: '/user/userreqmanage/GRM0302/menuUserReqManage',
+          level: 2,
         }
       ]
     }, {

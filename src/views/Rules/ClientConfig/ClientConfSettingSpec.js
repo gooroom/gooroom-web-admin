@@ -114,6 +114,9 @@ class ClientConfSettingSpec extends Component {
               <Grid item xs={2} className={classes.specContent}>{(viewItem.get('whiteIpAll')) ? t("selPermit") : t("selNoPermit")}</Grid>
               <Grid item xs={2} className={classes.specTitle}>{bull} {t("lbPolicykitUserMng")}</Grid>
               <Grid item xs={2} className={classes.specContent}>{(viewItem.get('policykitUser') === 'sudo') ? t("lbPolicykitSudoGroup") : ((viewItem.get('policykitUser') === 'user') ? t("lbPolicykitLocalUser") : viewItem.get('policykitUser'))}</Grid>
+              <Grid item xs={2} className={classes.specTitle}>{bull} {t("dtCleanMode")}</Grid>
+              <Grid item xs={2} className={classes.specContent}>{(viewItem.get('cleanModeAllow')) ? t("selActive") : t("selInActive")}</Grid>
+              <Grid item xs={8} className={classes.specContent}></Grid>
               <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {t("dtSetupLogLevel")} ]</Grid>
               <Grid item xs={12} className={classes.specTitle}>{bull} {t("lbViolatedLogLebel")}</Grid>
               <Grid item xs={12} className={classes.specContent}>
@@ -243,6 +246,7 @@ export const generateClientConfSettingObject = (param, isForViewer, t) => {
 
   if(param) {
     let useHomeReset = false;
+    let cleanModeAllow = false;
     let rootAllow = false;
     let sudoAllow = false;
     let policykitUser = '';
@@ -285,6 +289,8 @@ export const generateClientConfSettingObject = (param, isForViewer, t) => {
       
       if(ename == 'USEHOMERESET') {
         useHomeReset = (evalue == "true");
+      } else  if(ename == 'CLEANMODEALLOW') {
+        cleanModeAllow = (evalue == "true");
       } else if(ename == 'ROOTALLOW') {
         rootAllow = (evalue == "true");
       } else if(ename == 'SUDOALLOW') {
@@ -354,6 +360,7 @@ export const generateClientConfSettingObject = (param, isForViewer, t) => {
       comment: param.get('comment'),
       modDate: param.get('modDate'),
       useHomeReset: useHomeReset,
+      cleanModeAllow: cleanModeAllow,
       rootAllow: rootAllow,
       sudoAllow: sudoAllow,
       policykitUser: policykitUser,

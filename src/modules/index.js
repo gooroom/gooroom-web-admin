@@ -10,6 +10,7 @@ import ClientProfileSetModule from './ClientProfileSetModule';
 import ClientGroupModule from './ClientGroupModule';
 import ClientPackageModule from './ClientPackageModule';
 import UserModule from './UserModule';
+import UserReqModule from './UserReqModule';
 import DeptModule from './DeptModule';
 
 import ClientManageModule from './ClientManageModule';
@@ -52,6 +53,16 @@ import NoticeModule from './NoticeModule';
 import NoticePublishModule from './NoticePublishModule';
 import NoticePublishExtensionModule from './NoticePublishExtensionModule';
 
+/* for PTGR */
+import PortableBulkModule from './PortableBulkModule';
+import PortableApplyModule from './PortableApplyModule';
+import PortableImageModule from './PortableImageModule';
+
+import PortableUserApplyModule from './PortableUserApplyModule';
+import PortableUserReviewModule from './PortableUserReviewModule';
+import UserInfoModule from './UserInfoModule';
+import PortableCertModule from './PortableCertModule';
+
 export default combineReducers({
 
     GlobalModule,
@@ -78,6 +89,7 @@ export default combineReducers({
     ClientGroupModule,
     ClientPackageModule,
     UserModule,
+    UserReqModule,
     DeptModule,
 
     JobManageModule, 
@@ -104,6 +116,13 @@ export default combineReducers({
 	SiteManageModule,
     NoticeModule,
     NoticePublishModule,
-    NoticePublishExtensionModule
+    NoticePublishExtensionModule,
 
+    PortableBulkModule,
+    PortableApplyModule,
+    PortableImageModule,
+    PortableUserApplyModule,
+    PortableUserReviewModule,
+    UserInfoModule,
+    PortableCertModule,
 });

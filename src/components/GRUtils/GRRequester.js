@@ -1,4 +1,4 @@
-import axios, { post }  from "axios";
+import axios  from "axios";
 import qs from "qs";
 
 export const GPMS_URL = '/gpms/';
@@ -68,6 +68,18 @@ export function requestPostAPI(url, param, headers) {
   });
 };
 
+// download
+export function requestFilePostAPI(url, param, headers) {
+  return axios({
+    method: "post",
+    url: GPMS_URL + url, 
+    responseType: 'arraybuffer',
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    data: param,
+    withCredentials: false
+  });
+};
+
 // multipartform
 export function requestMultipartFormAPI(url, param, headers) {
   return axios({
@@ -97,5 +109,12 @@ export function requestMultipartFormAPI(url, param, headers) {
 
 // const instanceOfCollection = collection();
 
+export function grRequestGetAPI(url, data) {
 
-
+  return axios({
+    method: 'GET',
+    url: GPMS_URL + url,
+    withCredentials: false,
+    data: data,
+  });
+}

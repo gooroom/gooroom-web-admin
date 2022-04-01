@@ -254,7 +254,10 @@ const makeParameter = (param) => {
     let firewallNetworkItem = null;
     if(networkItems && networkItems.size > 0) {
         firewallNetworkItem = networkItems.map(e => {
-            return (String(e.get('no'))).concat('|', e.get('direction'), '|', e.get('protocol'), '|', e.get('address'), '|', e.get('srcport'), '|', e.get('dstport'), '|', e.get('state'));
+            return e.get('type') === 'basic' 
+                ? (String(e.get('no'))).concat('|', e.get('type'), '|', e.get('direction'), '|', e.get('protocol'), '|', e.get('address'), '|', e.get('srcport'), '|', e.get('dstport'), '|', e.get('state'))
+                : (String(e.get('no'))).concat('|', e.get('type'), '|', e.get('command'));
+
         })
     }
 
@@ -477,15 +480,24 @@ export default handleActions({
         if(netItems && netItems.size > 0) {
             let networkItems = List([]);
             netItems.forEach(n => {
-                networkItems = networkItems.push(Map({
-                    no: n.no,
-                    direction: n.direction,
-                    protocol: n.protocol,
-                    address: n.address,
-                    srcport: n.src,
-                    dstport: n.dst,
-                    state: n.state
-                }));
+                if(n.type === 'basic') {
+                    networkItems = networkItems.push(Map({
+                        no: n.no,
+                        type: n.type,
+                        direction: n.direction,
+                        protocol: n.protocol,
+                        address: n.address,
+                        srcport: n.src,
+                        dstport: n.dst,
+                        state: n.state
+                    }));
+                } else {
+                    networkItems = networkItems.push(Map({
+                        no: n.no,
+                        type: n.type,
+                        command: n.command
+                    }));
+                }
             });
 
             action.viewItem = action.viewItem.set('networkItems', networkItems);

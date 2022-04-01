@@ -70,6 +70,14 @@ class DividedAdminManageSpec extends Component {
                 {(selectedItem.get('isNoticeAdmin') === '1') && <span> {t('lbHaveIt')} ]</span>}
                 {(selectedItem.get('isNoticeAdmin') !== '1') && <span> {t('lbHaveNotIt')} ]</span>}
               </Grid>
+              {window.usePortable ?
+                <Grid item xs={6} className={classes.specCategory} style={{paddingTop:16}}>
+                  {'['} {t('lbPortablePart')} -
+                  {(selectedItem.get('isPortableAdmin') === '1') && <span> {t('lbHaveIt')} {']'}</span>}
+                  {(selectedItem.get('isPortableAdmin') !== '1') && <span> {t('lbHaveNotIt')} {']'}</span>}
+                </Grid>
+              : null
+              }
             </Grid>
             }
             <Grid container spacing={0}>
