@@ -29,6 +29,7 @@ import PackageManage from 'views/ClientPackage/ClientPackageManage';
 
 import UserMasterManage from "views/User/UserMasterManage";
 import UserReqManage from "views/User/UserReqManage";
+import UserClientManage from "views/User/UserClientManage";
 
 import AdminUserManage from "views/System/AdminUserManage";
 import ServerSiteConfig from "views/System/ServerSiteConfig";
@@ -120,6 +121,7 @@ class GRRouters extends Component {
         
         <Route path="/user/usermastermanage/:grMenuId/:grMenuName" component={UserMasterManage} />
         <Route path="/user/userreqmanage/:grMenuId/:grMenuName" component={UserReqManage} />
+        <Route path="/user/userclientmanage/:grMenuId/:grMenuName/client/:grUserId" component={UserClientManage} />
 
         <Route path="/userconfig/media/:grMenuId/:grMenuName" component={MediaRuleManage} />
         <Route path="/userconfig/browser/:grMenuId/:grMenuName" component={BrowserRuleManage} />

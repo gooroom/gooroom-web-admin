@@ -2,6 +2,8 @@ import React, { Component } from "react";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router';
+
 import moment from "moment";
 
 import * as UserActions from 'modules/UserModule';
@@ -39,6 +41,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import Search from "@material-ui/icons/Search";
 import EditIcon from '@material-ui/icons/Edit';
+import GroupIcon from '@material-ui/icons/Group';
 import DeleteIcon from '@material-ui/icons/Delete';
 import GetApp from '@material-ui/icons/GetApp'; 
 
@@ -144,8 +147,12 @@ class UserListComp extends Component {
       value: newCheckedIds,
       compId: compId
     });
-
   }
+
+  handleToClient= (event, id) => {
+    //document.location.href="/gpms";
+    document.location.href="/#/user/userclientmanage/"+ this.props.compId + "/menuUserManage/client/"+ id;
+  };
 
   isChecked = id => {
     const { UserProps, compId } = this.props;
@@ -215,12 +222,14 @@ class UserListComp extends Component {
 
     let columnHeaders = [
       { id: "chCheckbox", isCheckbox: true},
+      { id: "chCategory", isOrder: true, numeric: false, disablePadding: true, label: t("colCategory") },
       { id: "chUserId", isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
       { id: "chUserNm", isOrder: true, numeric: false, disablePadding: true, label: t("colUserNm") },
       { id: "chDeptNm", isOrder: true, numeric: false, disablePadding: true, label: t("colDeptNm") },
       { id: "chStatus", isOrder: false, numeric: false, disablePadding: true, label: t("colStatus") },
       { id: "chLastLoginDt", isOrder: true, numeric: false, disablePadding: true, label: t("colLoginDate") },
       { id: "chLastClientId", isOrder: true, numeric: false, disablePadding: true, label: t("colLoginClient") },
+      { id: "chClientList", isOrder: true, numeric: false, disablePadding: true, label: t("colClientList") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
     ];
     if(!isEnableEdit) {
@@ -308,6 +317,11 @@ class UserListComp extends Component {
                   <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
                     <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('userId'))}/>
                   </TableCell>
+                  <TableCell className={classes.grSmallAndClickCellAndBreak}>
+                    {
+                      (n.get('userType') === 'nouser') ? '무인' : ''
+                    }
+                  </TableCell>
                   <TableCell className={classes.grSmallAndClickCell}
                     style={(n.get('isExpired') === '1' || n.get('isPasswordExpired') === '1' || n.get('loginTrial') < 1) ? {color:'red'} : {color:''}}
                   
@@ -317,6 +331,15 @@ class UserListComp extends Component {
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('status')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('lastLoginDt'), 'YY/MM/DD HH:mm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('clientId')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell} align='center'>
+                    {
+                    <Button color="secondary" size="small" 
+                      className={classes.buttonInTableRow}
+                      onClick={event => this.handleToClient(event, n.get('userId'))}>
+                      <GroupIcon/>
+                    </Button>
+                    }
+                  </TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>
                     {(n.get('statusCd') !== 'STAT020' && isEnableEdit) &&
                       <React.Fragment>
@@ -337,7 +360,8 @@ class UserListComp extends Component {
               );
             })}
 
-            {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
+            {
+            emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
               <TableRow key={e}>
                 <TableCell
                   colSpan={columnHeaders.length + 1}

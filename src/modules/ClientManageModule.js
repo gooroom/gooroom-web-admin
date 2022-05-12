@@ -101,10 +101,72 @@ export const readClientListPaged = (module, compId, extParam, extOption = {isRes
     });
 };
 
+export const readClientListPagedByUser = (module, compId, userId, extParam, extOption = {isResetSelect:false, isInitParam:false}) => dispatch => {
+
+    let newListParam = (module.getIn(['viewItems', compId])) ? 
+        module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
+        module.get('defaultListParam');
+    
+    if(extOption.isInitParam) {
+        newListParam = module.get('defaultListParam');
+    }
+    const groupIdParam = (newListParam.get('groupId') && List(newListParam.get('groupId')).size > 0) ? List(newListParam.get('groupId')).join() : '';
+
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readClientListPaged', {
+        userId: userId,
+        clientType: newListParam.get('clientType'),
+        groupId: groupIdParam,
+        keyword: newListParam.get('keyword'),
+        page: newListParam.get('page'),
+        start: newListParam.get('page') * newListParam.get('rowsPerPage'),
+        length: newListParam.get('rowsPerPage'),
+        orderColumn: newListParam.get('orderColumn'),
+        orderDir: newListParam.get('orderDir')
+    }).then(
+        (response) => {
+            dispatch({
+                type: GET_CLIENT_LISTPAGED_SUCCESS,
+                compId: compId,
+                listParam: newListParam,
+                extOption: extOption,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
 // delete client(s) selected
 export const deleteClientData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('deleteClientsCertToRevoke', {'clientIds': param.clientIds}).then(
+        (response) => {
+            try {
+                if(response.data.status && response.data.status.result === 'success') {
+                    dispatch({
+                        type: DELETE_CLIENT_SUCCESSk
+                    });
+                }
+                return response.data;
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
+                return error;
+            }
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+export const deleteClientUseHist = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    console.log ("UserID : ", param.userIds, " ClientID : ", param.clientIds);
+    return requestPostAPI('deleteUserClientUseHist', {
+        'userId': param.userIds,
+        'clientIds': param.clientIds
+    }).then(
         (response) => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {

@@ -120,6 +120,9 @@ export default {
   "colLogItem": "LogItem",
   "colLogData": "LogData",
 
+  "colCategory": "Type",
+  "colClientList": "UserClient",
+
   // options
   "optDate": "Date",
   "searchStartDate": "From-Date",
@@ -577,6 +580,7 @@ export default {
   "lbPassword": "Password",
   "lbUserName": "User name",
   "lbEmail": "Email",
+  "lbKiosk": "Kiosk",
   "lbDept": "Organization",
   "lbLoginTrial": "Remain login trial count",
   "lbParentDept": "Parent organization",

@@ -29,6 +29,15 @@ export default {
           id: 'GRM0301',
           url: '/user/usermastermanage/GRM0301/menuUserManage',
           level: 2,
+          disableChildren: true,
+          children: [
+            {
+              name: 'menuClientManage',
+              id: 'GRM0301',
+              url: '/user/userclientmanage/GRM0301/menuUserManage/client',
+              level: 3,
+            }
+          ]
         },
         {
           name: 'menuUserReqManage',

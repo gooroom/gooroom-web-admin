@@ -45,6 +45,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { translate, Trans } from "react-i18next";
 
+import Checkbox from '@material-ui/core/Checkbox';
 
 class UserDialog extends Component {
 
@@ -65,8 +66,25 @@ class UserDialog extends Component {
         this.props.UserActions.closeDialog(true);
     }
 
+    handleUserTypeChange = event => {
+        let value;
+        if (event.target.checked) {
+            value = "nouser";
+            this.props.UserActions.setEditingItemValues({ 'deptNm': '무인사용자', 'deptCd': 'DEPTNOUSERDEFAULT'});
+        }
+        else {
+            value = "normal";
+            this.props.UserActions.setEditingItemValues({ 'deptNm': '구름', 'deptCd': 'DEPTDEFAULT'});
+        }
+        console.log (value);
+        this.props.UserActions.setEditingItemValue({
+            name: 'userType',
+            value: value
+        });
+    }
+
     handleValueChange = name => event => {
-        const value = (event.target.type === 'checkbox') ? event.target.checked : event.target.value;
+        let value = (event.target.type === 'checkbox') ? event.target.checked : event.target.value;
         this.props.UserActions.setEditingItemValue({
             name: name,
             value: value
@@ -171,6 +189,12 @@ class UserDialog extends Component {
     }
     
     handleDeptSelectSave = (selectedDept) => {
+        if (selectedDept.deptCd === 'DEPTNOUSERDEFAULT') {
+            this.props.UserActions.setEditingItemValue({
+                name: 'userType',
+                value: 'nouser' 
+            });
+        }
         this.props.UserActions.setEditingItemValues({ 'deptNm': selectedDept.deptNm, 'deptCd': selectedDept.deptCd });
         this.setState({ isOpenDeptSelect: false });
     }
@@ -203,6 +227,8 @@ class UserDialog extends Component {
 
         const isUseUserExpireDate = (editingItem && editingItem.get('isUseExpire') === '1');
         const isUsePasswordExpireDate = (editingItem && editingItem.get('isUsePasswordExpire') === '1');
+
+        let kioskStatus = 0;
 
         return (
             <React.Fragment>
@@ -260,7 +286,8 @@ class UserDialog extends Component {
                                     label={t("lbDept")}
                                     value={(editingItem.get('deptNm')) ? editingItem.get('deptNm') : ''}
                                     name="deptNm" validators={['required']} errorMessages={[t("msgSelectDept")]}
-                                    onClick={() => this.handleShowDeptSelector()}
+                                    disabled={(editingItem.get('userType') === 'nouser') ? true : false }
+                                    onClick={(editingItem.get('userType') === 'nouser') ? null : () => this.handleShowDeptSelector()}
                                     className={classes.fullWidth}
                                 />
                             </Grid>
@@ -273,7 +300,14 @@ class UserDialog extends Component {
                                     className={classes.fullWidth}
                                 />
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={4} style={{display:'flex', float:'right', justifyContent:'spaceArround', alignItems:'center' }}>
+                                <FormControlLabel label={t("lbKiosk")} disabled={!(editingItem.get('kiosk') !== 'disallow')} style={{heigth:32}}
+                                    control={
+                                        <Checkbox color="primary"
+                                        checked={(editingItem.get('userType') === 'nouser') ? true : false}
+                                        onChange={this.handleUserTypeChange} />
+                                    }                                
+                                />
                             </Grid>
                         </Grid>
 

@@ -271,8 +271,10 @@ class GRTreeDeptList extends Component {
               // upper - another parent
               parentItem = newTreeData.get(listItem.get('parentIndex'));
               listItem = listItem.set('_styles', this.applyStyle(listItem, (activeListItem === i)))
-                                  .set('_shouldRender', (expandedListItems.indexOf(listItem.get('parentIndex')) > -1) ? (parentItem && parentItem.get('_shouldRender')) : false)
-                                  .set('_primaryText', listItem.get('title'));
+                                 .set('_shouldRender',
+                                  (parentItem && parentItem.get('depth') === listItem.get('depth')) ? true : 
+                                  (expandedListItems.indexOf(listItem.get('parentIndex')) > -1) ? (parentItem && parentItem.get('_shouldRender')) : false)
+                                 .set('_primaryText', listItem.get('title'));
             } else {
               // siblings
               listItem = listItem.set('_styles', this.applyStyle(listItem, (activeListItem === i)))

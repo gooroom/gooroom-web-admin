@@ -137,7 +137,8 @@ export const readChildrenDeptList = (compId, deptCd, index) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readChildrenDeptList', {
         deptCd: deptCd,
-        hasWithRoot: (index < 0) ? 'Y' : 'N'
+        hasWithRoot: 'Y'
+        //hasWithRoot: (index < 0) ? 'Y' : 'N' //TODO
     }).then(
         (response) => {
             dispatch({
@@ -522,7 +523,26 @@ export default handleActions({
                 if(realIndex !== undefined) {
                     let newTreeData = state.getIn(['viewItems', compId, 'treeComp', 'treeData']);
                     newTreeData = newTreeData.setIn([index, 'children'], resData.map(d => (d.get('key'))));
-                   
+
+                    // 1. delete children
+                    const parentIndex = newTreeData.getIn([index, 'parentIndex']);
+                    let nextSiblings = newTreeData.map((e, i) => {
+                        if(e.get('parentIndex') !== undefined && e.get('parentIndex') <= parentIndex && i > index) {
+                            return i;
+                        } else {
+                            return -1;
+                        }
+                    });
+
+                    nextSiblings = nextSiblings.filter(e => (e > -1));
+                    if(nextSiblings && nextSiblings.size > 0) {
+                        newTreeData = newTreeData.filter((e, i) => !(i > index && i < nextSiblings.get(0)));
+                    } else {
+                        newTreeData = newTreeData.filter((e, i) => (i <= index));
+                    }
+/*
+
+                    //TODO 무인단말 그룹 추가로인하여 주석 처리
                     // data merge.
                     if(index === 0) {
                         // root
@@ -550,7 +570,7 @@ export default handleActions({
                             newTreeData = newTreeData.filter((e, i) => (i <= index));
                         }
                     }
-
+*/
                     // 2. insert new child data
                     //newTreeData = newTreeData.splice.apply(newTreeData, [index + 1, 0].concat(resData));
                     newTreeData = newTreeData.splice(index+1, newTreeData.size-(index+1)).concat(resData).concat(newTreeData.splice(0, index+1))

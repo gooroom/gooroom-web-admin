@@ -137,6 +137,7 @@ class GRSideMenu extends React.Component {
     const menuType = (item, idx) => {
       return (item.title ? titleMenu(item, idx) :
         item.divider ? menuDivider(item, idx) :
+        item.disableChildren ? menuItem(item, idx, false) :
         item.children ? menuDropdown(item, idx) : menuItem(item, idx, false));
     }
 

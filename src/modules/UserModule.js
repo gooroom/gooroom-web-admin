@@ -194,6 +194,7 @@ const makeParameter = (param) => {
 
         userNm: param.userNm,
         userEmail: param.userEmail,
+        userType: param.userType,
         deptCd: param.deptCd,
         isChangePasswd: isChangePasswd,
         passwordExpireDate: formatDateToSimple(param.passwordExpireDate, 'YYYY-MM-DD'),

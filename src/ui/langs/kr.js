@@ -120,6 +120,9 @@ export default {
   "colLogItem": "로그아이템",
   "colLogData": "로그정보",
 
+  "colCategory": "유형",
+  "colClientList": "사용자 단말",
+
   // options
   "optDate": "날짜",
   "searchStartDate": "조회시작일",
@@ -577,6 +580,7 @@ export default {
   "lbPassword": "Password",
   "lbUserName": "사용자이름",
   "lbEmail": "이메일",
+  "lbKiosk": "무인단말기",
   "lbDept": "조직",
   "lbLoginTrial": "남은 로그인시도 횟수",
   "lbParentDept": "상위조직",
