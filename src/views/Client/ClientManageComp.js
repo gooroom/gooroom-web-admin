@@ -46,8 +46,9 @@ import { Fragment } from "react";
 class ClientManageComp extends Component {
 
   componentDidMount() {
-    const { ClientManageActions, ClientManageProps, compId, userId } = this.props;
-    if (userId === undefined) {
+    const { ClientManageActions, ClientManageProps, compId, userId, userClient } = this.props;
+
+    if (!userClient) {
       if(ClientManageProps.getIn(['viewItems', compId, 'listParam']) === undefined) {
         ClientManageActions.readClientListPaged(this.props.ClientManageProps, this.props.compId, {}, {isResetSelect:false, isInitParam:true});
       } else {
@@ -55,11 +56,10 @@ class ClientManageComp extends Component {
       }
     }
     else {
-      if(ClientManageProps.getIn(['viewItems', compId, 'listParam']) === undefined) {
-        ClientManageActions.readClientListPagedByUser(this.props.ClientManageProps, this.props.compId, userId, {}, {isResetSelect:false, isInitParam:true});
-      } else {
-        ClientManageActions.readClientListPagedByUser(this.props.ClientManageProps, this.props.compId, userId, {});
-      }
+      if (userId === undefined )
+        return;
+
+      ClientManageActions.readClientListPagedByUser(this.props.ClientManageProps, this.props.compId, userId, {});
     }
   }
 
@@ -149,9 +149,6 @@ class ClientManageComp extends Component {
     if(this.props.onSelect) {
       this.props.onSelect(selectRowObject);
     }
-    
-    // rest actions..
-    
   };
 
   isChecked = id => {
@@ -263,16 +260,10 @@ class ClientManageComp extends Component {
       { id: 'STATUS_CD', isOrder: false, numeric: false, disablePadding: true, label: t("colStatus") },
       { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: t("colClientName") },
       { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
-      /*
-      { id: 'LOGIN_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colLoginId") },
-      */
       { id: 'GROUP_NAME', isOrder: true, numeric: false, disablePadding: true, label: t("colClientGroup") },
       { id: 'LAST_LOGIN_TIME', isOrder: true, numeric: false, disablePadding: true, label: t("colLastLoginDate") },
       { id: 'CLIENT_IP', isOrder: true, numeric: false, disablePadding: true, label: t("colLastLoginIp") },
       { id: 'STRG_SIZE', isOrder: false, numeric: false, disablePadding: true, label: t("colUseRate") }
-      /*
-      { id: 'TOTAL_CNT', isOrder: true, numeric: false, disablePadding: true, label: t("colPackageCnt") }
-      */
     ];
     if(this.props.selectorType && this.props.selectorType == 'multiple') {
       columnHeaders.unshift({ id: "chCheckbox", isCheckbox: true });
@@ -283,11 +274,8 @@ class ClientManageComp extends Component {
     if(listObj && listObj.get('listData')) {
       emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
     }
-
-    console.log (listObj && listObj.get('listData').size)
-
+    console.log ("DongYa");
     return (
-
       <div>
         {/* data option area */}
         <Grid container spacing={8} alignItems="flex-end" direction="row" justify="space-between" >
@@ -316,7 +304,7 @@ class ClientManageComp extends Component {
             <Fragment>
             <Grid item xs={4} sm={1} >
               <Button className={classes.GRIconSmallButton} variant="contained" color="inherit" onClick={() => this.handleDeleteBtnClick()} >
-                {t("del")}
+                {t("btnDel")}
               </Button>
             </Grid>
             </Fragment>
@@ -377,11 +365,6 @@ class ClientManageComp extends Component {
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{getClientStatusIcon(n.get('viewStatus'))}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('clientName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientId')}</TableCell>
-                  {
-                  /*
-                  <TableCell className={classes.grSmallAndClickCell}>{(n.get('isOn') == '1') ? ((n.get('loginId') && n.get('loginId').startsWith('+')) ? n.get('loginId').substring(1) + " [LU]" : n.get('loginId')) : ''}</TableCell>
-                  */
-                  }
                   <TableCell className={classes.grSmallAndClickCellAndBreak}>{n.get('clientGroupName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('lastLoginTime'), 'YY/MM/DD HH:mm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientIp')}</TableCell>
@@ -390,11 +373,6 @@ class ClientManageComp extends Component {
                     <Typography>{storageRate}</Typography>
                   </Tooltip>
                   </TableCell>
-                  {
-                  /*
-                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{n.get('totalCnt')}</TableCell>
-                  */
-                  }
                 </TableRow>
               );
             })}

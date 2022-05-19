@@ -102,7 +102,7 @@ export default {
             {
               name: 'menuClientManage',
               id: 'GRM0301',
-              url: '/user/userclientmanage/GRM0301/menuUserManage/client',
+              url: '/user/userclientmanage/GRM0301/menuUserManage/client/',
               level: 3,
             }
           ]

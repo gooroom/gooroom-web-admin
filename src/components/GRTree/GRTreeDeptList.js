@@ -55,9 +55,13 @@ class GRTreeDeptList extends Component {
     if (listItem.get('children')) {
       // fetch children data
       // request to server if children array is empty.
+      /*
       if (listItem.get('children').size < 1) {
         DeptActions.readChildrenDeptList(this.props.compId, listItem.get('key'), index);
       }
+      */
+      //TODO 무인사용자 추가로 삭제 후 갱신 시 리스트 호출 안되는 문제로 매번 호출로 수정 
+      DeptActions.readChildrenDeptList(this.props.compId, listItem.get('key'), index);
 
       const expandedListItems = DeptProps.getIn(['viewItems', compId, 'treeComp', 'expandedListItems']);
       if(expandedListItems && expandedListItems.length > 0 && expandedListItems.indexOf(index) === -1) {

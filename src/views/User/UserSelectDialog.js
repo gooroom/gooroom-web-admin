@@ -46,6 +46,35 @@ class UserSelectDialog extends Component {
         }
     }
 
+    getParentKey = (selectNm) => {
+        const { compId, DeptProps } = this.props;
+        const parentItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(e => {
+            const key = e.get('key');
+            if (key === selectNm)
+                return key;
+
+            const children = e.get('children');
+            if (children && children.size > 0) {
+                const find = (children.filter(e => {
+                    return (e === selectNm) ? true : false;
+                }));
+                if (find && 0 < find.size) {
+                    return e.get('key');
+                }
+            }
+        });
+
+        if (parentItem) {
+            const parentDepth = parentItem.get('depth');
+            if (parentDepth != '1')
+                return this.getParentKey(parentItem.get('key'));
+            return parentItem.get('key');
+        }
+        else {
+            return '';
+        }
+    }
+
     render() {
         const { classes } = this.props;
         const { isOpen, compId, DeptProps } = this.props;
@@ -54,10 +83,12 @@ class UserSelectDialog extends Component {
         const checkedDeptCd = DeptProps.getIn(['viewItems', compId, 'treeComp', 'checked']);
 
         let deptNm = '';
+        let userType ='';
         if(checkedDeptCd && checkedDeptCd.length > 0) {
             const selectedItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(e => (e.get('key') === checkedDeptCd[0]));
             if(selectedItem) {
                 deptNm = selectedItem.get('title');
+                userType = this.getParentKey(selectedItem.get('key'));
             }
         }
 
@@ -67,7 +98,7 @@ class UserSelectDialog extends Component {
                 <Dialog open={isOpen} fullWidth={true} >
                     <DialogTitle>{t("lbAddUserInDept", {deptNm:deptNm})}</DialogTitle>
                     <DialogContent>
-                        <UserListForSelect name='UserListForSelect' deptCd={this.state.selectedDeptCd} 
+                        <UserListForSelect name='UserListForSelect' deptCd={this.state.selectedDeptCd}  userType={userType}
                             onSelectUser={this.handleSelectUser}
                         />
                     </DialogContent>

@@ -155,6 +155,7 @@ export default {
   "btnOK": "OK",
   "btnYes": "Yes",
   "btnNo": "No",
+  "btnDel": "Del",
 
   // Menus
   "home": "",

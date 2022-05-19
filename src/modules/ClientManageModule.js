@@ -103,7 +103,7 @@ export const readClientListPaged = (module, compId, extParam, extOption = {isRes
 
 export const readClientListPagedByUser = (module, compId, userId, extParam, extOption = {isResetSelect:false, isInitParam:false}) => dispatch => {
 
-    let newListParam = (module.getIn(['viewItems', compId])) ? 
+    let newListParam = (module.getIn(['viewItems', compId, 'listParam'])) ? 
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
         module.get('defaultListParam');
     

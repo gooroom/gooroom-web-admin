@@ -13,7 +13,7 @@ import * as UserActions from 'modules/UserModule';
 
 import * as TotalRuleActions from 'modules/TotalRuleModule';
 
-import { getRowObjectById, getDataObjectVariableInComp } from 'components/GRUtils/GRTableListUtils';
+import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
 import GRPageHeader from "containers/GRContent/GRPageHeader";
 import GRPane from 'containers/GRContent/GRPane';
@@ -37,15 +37,6 @@ import DesktopConfDialog from "views/Rules/DesktopConfig/DesktopConfDialog";
 import DesktopAppDialog from 'views/Rules/DesktopConfig/DesktopApp/DesktopAppDialog';
 
 import Grid from '@material-ui/core/Grid';
-import Toolbar from '@material-ui/core/Toolbar';
-import Tooltip from '@material-ui/core/Tooltip';
-import Button from '@material-ui/core/Button';
-
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
-import TuneIcon from '@material-ui/icons/Tune';
-import DeleteIcon from '@material-ui/icons/Delete';
-import ClientIcon from '@material-ui/icons/Laptop';
 
 import ClientManageComp from 'views/Client/ClientManageComp';
 import ClientManageSpec from 'views/Client/ClientManageSpec';
@@ -58,51 +49,33 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { translate } from "react-i18next";
 
 
-class ClientMasterManage extends Component {
+class UserClientManage extends Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
       compId: this.props.match.params.grMenuId,
-      userId: this.props.match.params.grUserId,
       isOpenClientSelect: false,
       isOpenGroupSelect: false,
+      userClientId: '',
       userName: '',
       clientCnt: 0
     };
   }
 
   componentDidMount() {
-    this.props.UserActions.readUserListPaged(this.props.UserProps, this.state.compId);
-    const clientObj = this.props.UserProps.getIn(['viewItems', this.state.compId]);//, 'listData']));//.find (n => n.userId === this.state.userId);
-    const listObj = clientObj && clientObj.get('listData');
-    if (listObj) {
-      const obj = listObj.find (n => n.get('userId') === this.state.userId);
-      this.state.clientCnt = obj ? obj.get('useClientCnt') : 0;
-      this.state.userName = obj ? obj.get('userNm') : '';
-    }
   }
 
   componentWillUnmount() {
     const compId = this.state.compId;
-    const { ClientManageActions, ClientGroupActions } = this.props;
+    const { ClientManageActions, ClientGroupActions, UserActions } = this.props;
     ClientGroupActions.closeClientGroupInform({compId:compId});
     ClientManageActions.closeClientManageInform({compId: compId});
     //ClientManageActions.showClientManageInform({ compId: compId, viewItem: null});
     console.log("unmount");
   }
 
-/* 
-  //TODO
-  handleInitTreeData = () => {
-    // Check selectedGrpId
-    this.props.ClientGroupActions.changeCompVariableObject({
-      compId: this.state.compId,
-      valueObj: {selectedGrpId: '', selectedGrpNm: ''}
-    });
-  }
-*/
 
   // click client row (in list)
   handleSelectClient = (selectedClientObj) => {
@@ -135,42 +108,8 @@ class ClientMasterManage extends Component {
 
     if(groupId) {
       TotalRuleActions.getAllClientRuleByGroupId({ compId: compId, groupId: groupId });
-      // // get client conf setting info
-      // ClientConfSettingActions.getClientConfByGroupId({ compId: compId, groupId: groupId });   
-      // // get Hosts conf info
-      // ClientHostNameActions.getClientHostNameByGroupId({ compId: compId, groupId: groupId });
-      // // get Update server conf info
-      // ClientUpdateServerActions.getClientUpdateServerByGroupId({ compId: compId, groupId: groupId });   
-      // // get browser rule info
-      // BrowserRuleActions.getBrowserRuleByGroupId({ compId: compId, groupId: groupId });
-      // // get media control setting info
-      // MediaRuleActions.getMediaRuleByGroupId({ compId: compId, groupId: groupId });
-      // // get client secu info
-      // SecurityRuleActions.getSecurityRuleByGroupId({ compId: compId, groupId: groupId });   
-      // // get filtered software rule
-      // SoftwareFilterActions.getSoftwareFilterByGroupId({ compId: compId, groupId: groupId });   
-      // // get desktop conf info
-      // DesktopConfActions.getDesktopConfByGroupId({ compId: compId, groupId: groupId });   
     }
   }
-/*
-  //TODO
-  // edit group in tree
-  handleEditClientGroup = (treeNode) => {
-    const { TotalRuleActions } = this.props;
-    if(treeNode && treeNode.get('grpId')) {
-      TotalRuleActions.getAllClientRuleByGroupId({ compId: this.state.compId, groupId: treeNode.get('grpId') })
-      .then((e) => {
-        this.props.ClientGroupActions.showDialog({
-          viewItem: treeNode,
-          dialogType: ClientGroupDialog.TYPE_EDIT
-        });
-      })
-      .catch((e) => {
-      });
-    }
-  };
-*/
   getSingleCheckedClientGroup = () => {
     const checkedGrpIds = this.props.ClientGroupProps.getIn(['viewItems', this.state.compId, 'treeComp', 'checked']);
     if(checkedGrpIds && checkedGrpIds.length > 0) {
@@ -225,82 +164,6 @@ class ClientMasterManage extends Component {
     }
   }
 
-/*
-  //TODO
-  // remove client in group - save
-  handleRemoveClientInGroup = (event) => {
-    const { ClientManageProps, GRConfirmActions } = this.props;
-    const { t, i18n } = this.props;
-    const checkedClientIds = ClientManageProps.getIn(['viewItems', this.state.compId, 'checkedIds']);
-    if(checkedClientIds && checkedClientIds !== '') {
-      GRConfirmActions.showConfirm({
-        confirmTitle: t("dtDeleteClientFromGroup"),
-        confirmMsg: t("msgCfmDeleteClientFromGroup"),
-        handleConfirmResult: (confirmValue, paramObject) => {
-          if(confirmValue) {
-            const { ClientManageProps, ClientManageActions, ClientGroupProps, ClientGroupActions } = this.props;
-            ClientGroupActions.removeClientsInGroup({
-              clients: paramObject.checkedClientIds.join(',')
-            }).then(() => {
-              // change group node info as client count
-              this.handleResetTreeForEdit();
-              // show clients list in group
-              ClientManageActions.readClientListPaged(ClientManageProps, this.state.compId, {
-                groupId: ClientGroupProps.getIn(['viewItems', this.state.compId, 'treeComp', 'checked']), 
-                page:0
-              }, {isResetSelect:true});
-            });
-          }
-        },
-        confirmObject: {
-          checkedClientIds: checkedClientIds
-        }
-      });
-    } else {
-      this.props.GlobalActions.showElementMsg(event.currentTarget, t("msgSelectClient"));
-    }
-  }
-*/
-/*
-  //TODO
-  // delete client
-  handleDeleteClient = () => {
-    const { ClientManageProps } = this.props;
-    const { t, i18n } = this.props;
-    const checkedClientIds = ClientManageProps.getIn(['viewItems', this.state.compId, 'checkedIds']);
-    if(checkedClientIds && checkedClientIds.size > 0) {
-      this.props.GRConfirmActions.showConfirm({
-        confirmTitle: t("dtDeleteClient"),
-        confirmMsg: t("msgDeleteClient", {clientCnt: checkedClientIds.size}),
-        handleConfirmResult: (confirmValue, confirmObject) => {
-          if(confirmValue) {
-            const { ClientManageProps, ClientManageActions } = this.props;
-            ClientManageActions.deleteClientData({
-              clientIds: confirmObject.checkedClientIds.join(',')
-            }).then(res => {
-              if (res && res.status && res.status.result === "fail") {
-                this.props.GRAlertActions.showAlert({
-                  alertTitle: this.props.t("dtSystemError"),
-                  alertMsg: res.status.message
-                });
-              }
-              if (res && res.status && res.status.result === "success") {
-                // change group node info as client count
-                this.handleResetTreeForEdit();
-                // show clients list in group
-                ClientManageActions.readClientListPaged(ClientManageProps, this.state.compId, {
-                  page:0
-                }, {isResetSelect:true});
-              }
-            });
-          }
-        },
-        confirmObject: {checkedClientIds: checkedClientIds}
-      });
-    }
-  }
-*/
-
   handleResetTreeForEdit = (index) => {
     // change group node info as client count TODO
     this.props.ClientGroupActions.getClientGroupNodeList({
@@ -318,22 +181,30 @@ class ClientMasterManage extends Component {
   }
 
   render() {
-    const { classes } = this.props;
-    const { t, i18n } = this.props;
     const compId = this.state.compId;
-    const userId = this.state.userId;
-    const userName = this.state.userName;
-
     const isEditable = (window.gpmsain === Constants.SUPER_RULECODE) ? false : true;
+
+    let clientCnt = 0;
+    let userName = '';
+    const userId = this.props.UserProps.getIn(['viewItems', this.state.compId, 'selectId']);
+    const clientObj = this.props.UserProps.getIn(['viewItems', this.state.compId]);
+    const listObj = clientObj && clientObj.get('listData');
+    if (listObj) {
+      const obj = listObj.find (n => n.get('userId') === userId);
+      clientCnt  = obj ? obj.get('useClientCnt') : 0;
+      userName = obj ? obj.get('userNm') : '';
+    }
+
+    console.log ("@@@@@ ", userId);
 
     return (
       <React.Fragment>
-        <GRPageHeader name={ userName + " (" + this.state.clientCnt + ")"}/>
+        <GRPageHeader name={ userName + " (" + clientCnt + ")"}/>
         <GRPane>
           <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
             <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}}>
               <ClientManageComp compId={compId} selectorType='multiple'
-                userClient="true"
+                userClient={true}
                 userId={userId}
                 onSelect={this.handleSelectClient}
                 selectorType={(isEditable) ? 'multiple' : 'single'}
@@ -397,5 +268,5 @@ const mapDispatchToProps = (dispatch) => ({
   TotalRuleActions: bindActionCreators(TotalRuleActions, dispatch)
 });
 
-export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientMasterManage)));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserClientManage)));
 

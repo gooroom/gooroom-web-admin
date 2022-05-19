@@ -29,6 +29,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import { translate, Trans } from "react-i18next";
+import { EuroSymbol } from "@material-ui/icons";
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -71,11 +72,14 @@ class UserListForSelect extends Component {
     }).then(
       (response) => {
         const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = response.data;
-
         const { stateData } = this.state;
+        const type = this.props.userType === 'DEPTDEFAULT' ? 'normal' : 'nouser';
+        const newData = data.filter(e => e.userType === type )
         this.setState({
           stateData: stateData
-            .set('listData', List(data.map((e) => {return Map(e)})))
+            .set('listData', List(newData.map((e) => {
+                return Map(e)
+            })))
             .set('listParam', newListParam.merge({
               rowsFiltered: parseInt(recordsFiltered, 10),
               rowsTotal: parseInt(recordsTotal, 10),
@@ -168,7 +172,7 @@ class UserListForSelect extends Component {
     });
     this.handleGetUserList(newListParam);
   }
-
+  
   handleKeywordChange = (name, value) => {
     const { stateData } = this.state;
     const newListParam = (stateData.get('listParam')).merge({
