@@ -651,6 +651,8 @@ export default {
   "msgThemeName": "Please enter a theme name.",
   "lbThemeDesc": "Theme Description",
   "lbIconSetting": "Application icon setting",
+  "lbBackgroundSetting": "배경화면 설정",
+  "lbUtility": "유틸리티",
   
   // 관리서버설정
   "lbSaveServerConfig": "Save management server settings",

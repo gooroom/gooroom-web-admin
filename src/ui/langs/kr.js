@@ -651,6 +651,8 @@ export default {
   "msgThemeName": "테마 이름을 입력하세요.",
   "lbThemeDesc": "테마 설명",
   "lbIconSetting": "업무환경(Application) 아이콘 설정",
+  "lbBackgroundSetting": "배경화면 설정",
+  "lbUtility": "유틸리티",
   
   // 관리서버설정
   "lbSaveServerConfig": "구름관리서버설정 저장",

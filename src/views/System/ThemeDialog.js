@@ -17,6 +17,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 
+import Grid from '@material-ui/core/Grid';
+
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import FormLabel from '@material-ui/core/FormLabel';
@@ -26,10 +28,12 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { translate, Trans } from "react-i18next";
-
 
 class ThemeDialog extends Component {
 
@@ -206,77 +210,173 @@ class ThemeDialog extends Component {
         return (
             <div>
             {(ThemeManageProps.get('dialogOpen') && editingItem) &&
-            <Dialog open={ThemeManageProps.get('dialogOpen')} fullWidth={true} maxWidth="sm">
-                <ValidatorForm ref="form">
-                <DialogTitle>{title}</DialogTitle>
-                <DialogContent>
-                {(dialogType === ThemeDialog.TYPE_EDIT) &&
-                    <TextField label={t("lbThemeId")} className={classes.fullWidth}
-                        value={(editingItem.get('themeId')) ? editingItem.get('themeId') : ''}
-                    />
-                }
-                    <TextValidator label={t("lbThemeName")} className={classes.fullWidth}
-                        value={(editingItem.get('themeNm')) ? editingItem.get('themeNm') : ''}
-                        name="themeNm" validators={['required']} errorMessages={[t("msgThemeName")]}
-                        onChange={this.handleValueChange("themeNm")}
-                    />
-                    <TextField label={t("lbThemeDesc")} className={classes.fullWidth}
-                        value={(editingItem.get('themeCmt')) ? editingItem.get('themeCmt') : ''}
-                        onChange={this.handleValueChange("themeCmt")}
-                    />
-                    <div style={{marginTop:20}}></div>
-                    <FormLabel>{t("lbIconSetting")}</FormLabel>
-                    <div style={{maxHeight:270,overflowY:'auto'}}>
-                    <Table>
-                        <TableBody>
-                            {ThemeDialog.APP_LIST && ThemeDialog.APP_LIST.map(n => {
-                                let beforeImg = '';
-                                if(dialogType == ThemeDialog.TYPE_EDIT) {
-                                    const iconItem = editingItem.get('themeIcons').find(icon => {
-                                        return icon.get('fileEtcInfo') == n.name;
-                                    });
-                                    if(iconItem && iconItem.get('fileName') && iconItem.get('fileName') !== '') {
-                                        beforeImg = iconItem.get('imgUrl') + iconItem.get('fileName');
-                                    }                                    
-                                }
+                <Dialog open={ThemeManageProps.get('dialogOpen')} fullWidth={true} maxWidth="md">
+                    <ValidatorForm ref="form">
+                        <DialogTitle>{title}</DialogTitle>
+                        <DialogContent>
+                            <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
+                                {/* 테마이름 */}
+                                <Grid item xs={8} >
+                                    {(dialogType === ThemeDialog.TYPE_EDIT) &&
+                                        <TextField label={t("lbThemeId")} className={classes.fullWidth}
+                                            value={(editingItem.get('themeId')) ? editingItem.get('themeId') : ''}
+                                        />
+                                    }
+                                     <TextValidator label={t("lbThemeName")} className={classes.fullWidth}
+                                        value={(editingItem.get('themeNm')) ? editingItem.get('themeNm') : ''}
+                                        name="themeNm" validators={['required']} errorMessages={[t("msgThemeName")]}
+                                        onChange={this.handleValueChange("themeNm")}
+                                    />
+                                </Grid>
+                                {/* 테마설명 */}
+                                <Grid item xs={4}>
+                                    <TextField label={t("lbThemeDesc")} className={classes.fullWidth}
+                                        value={(editingItem.get('themeCmt')) ? editingItem.get('themeCmt') : ''}
+                                        onChange={this.handleValueChange("themeCmt")}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} >
+                                    {/* 배경화면 */}
+                                    <Grid container spacing={12} direction="row" justify="flex-start" 
+                                        alignItems="flex-start" style={{width:'auto',margin:(20, 0)}}
+                                    >
+                                       <div><span style={{verticalAlign: 'middle'}}>{t("lbBackgroundSetting")}</span><span style={{marginLeft: '10px'}}><Button variant="contained" size='small' component="span" className={classes.button}>{t("btnSelectFile")}</Button></span></div>
+                                       <div style={{width:'100%',height:260,marginTop:10,marginBottom:10,overflowX:'auto',border:'1px solid #cecece'}}>
 
-                                return (
-                                    <TableRow hover key={n.no}>
-                                        <TableCell style={{width:230}}>{n.no}. {n.title}</TableCell>
-                                        {(dialogType === ThemeDialog.TYPE_EDIT) &&
-                                            <TableCell style={{width:50}}>
-                                            {(beforeImg && beforeImg !== '') && 
-                                                <img src={beforeImg} height="50" style={{border:'solid 1 red'}} />
-                                            }
-                                            </TableCell>
-                                        }
-                                        <TableCell style={{width:80}}>
-                                            <input style={{display:'none'}} id={n.name + '-file'} type="file" onChange={event => this.handleImageFileChange(event, n.name)} />
-                                            <label htmlFor={n.name + '-file'}>
-                                                <Button variant="contained" size='small' component="span" className={classes.button}>{t("btnSelectFile")}</Button>
-                                            </label>
-                                        </TableCell>
-                                        <TableCell>
-                                            <img src={editingItem.get(n.name + '_GRFILE')} height="50" />
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
-                    </div>
-                </DialogContent>
-                <DialogActions>
-                {(dialogType === ThemeDialog.TYPE_ADD) &&
-                    <Button onClick={this.handleCreateData} variant='contained' color="secondary">{t("btnRegist")}</Button>
-                }
-                {(dialogType === ThemeDialog.TYPE_EDIT) &&
-                    <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
-                }
-                <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
-                </DialogActions>
-                </ValidatorForm>
-            </Dialog>
+                                       </div>
+                                    </Grid>
+                                    {/* 아이콘 설정 */}
+                                    <Grid container spacing={12} direction="row" justify="flex-start" 
+                                        alignItems="flex-start" style={{width:'inherit',margin:(20, 0)}}
+                                    >
+                                        <div><span style={{verticalAlign: 'middle'}}>{t("lbIconSetting")}</span></div>
+                                        <div style={{width:'100%',height:260,marginTop:10,marginBottom:10,overflowX:'auto',border:'1px solid #cecece', background: '#cecece'}}>
+                                            <div style={{margin:20}}>
+                                                {ThemeDialog.APP_LIST && ThemeDialog.APP_LIST.map(n => {
+                                                    let beforeImg = '';
+                                                    if(dialogType == ThemeDialog.TYPE_EDIT) {
+                                                        const iconItem = editingItem.get('themeIcons').find(icon => {
+                                                            return icon.get('fileEtcInfo') == n.name;
+                                                        });
+                                                        console.log("iconItem >>> ", editingItem.get('themeIcons'))
+                                                        if(iconItem && iconItem.get('fileName') && iconItem.get('fileName') !== '') {
+                                                            beforeImg = iconItem.get('imgUrl') + iconItem.get('fileName');
+                                                        }                                    
+                                                    }
+
+                                                    return (                                                        
+                                                        <div style={{display: 'inline-block',width:200,height:160,marginRight:10,marginBottom:10,padding:10,background: '#ffffff',borderRadius: 4}}>
+                                                            <div>{t("lbUtility")}</div>
+                                                            <div style={{marginTop: 16}}>
+                                                                <div style={{display: 'inline-block',width:50,height:50,border:'1px solid red'}}>
+                                                                    {/* 아이콘 위치 */}
+                                                                    {(beforeImg && beforeImg !== '') && 
+                                                                        <img src={beforeImg} height="40" />
+                                                                    }
+                                                                </div>
+                                                                <div style={{display:'inline-block',margin:'10px 0 0 42px',verticalAlign:'top'}}>
+                                                                    <Button className={classes.button} size='small' variant="contained" color="secondary" style={{marginLeft: "10px"}}>
+                                                                        <EditIcon />
+                                                                        {/* <DeleteIcon />  삭제 아이콘*/}
+                                                                    </Button>
+                                                                </div> 
+                                                            </div>                                                            
+                                                            <div style={{height:50,marginTop:8,fontSize:14}}>
+                                                                {/*넘버 주석처리 {n.no}. */}
+                                                                {n.title}</div>
+                                                        </div>                                                       
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>                                                
+                                    </Grid>
+
+                                </Grid>
+                            </Grid>
+                        </DialogContent>
+                        <DialogActions>
+                        {(dialogType === ThemeDialog.TYPE_ADD) &&
+                                <Button onClick={this.handleCreateData} variant='contained' color="secondary">{t("btnRegist")}</Button>
+                            }
+                            {(dialogType === ThemeDialog.TYPE_EDIT) &&
+                                <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
+                            }
+                            <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
+                        </DialogActions>
+                    </ValidatorForm>
+                </Dialog>
+            
+            // <Dialog open={ThemeManageProps.get('dialogOpen')} fullWidth={true} maxWidth="sm">
+            //     <ValidatorForm ref="form">
+            //     <DialogTitle>{title}</DialogTitle>
+            //     <DialogContent>
+            //     {(dialogType === ThemeDialog.TYPE_EDIT) &&
+            //         <TextField label={t("lbThemeId")} className={classes.fullWidth}
+            //             value={(editingItem.get('themeId')) ? editingItem.get('themeId') : ''}
+            //         />
+            //     }
+            //         <TextValidator label={t("lbThemeName")} className={classes.fullWidth}
+            //             value={(editingItem.get('themeNm')) ? editingItem.get('themeNm') : ''}
+            //             name="themeNm" validators={['required']} errorMessages={[t("msgThemeName")]}
+            //             onChange={this.handleValueChange("themeNm")}
+            //         />
+            //         <TextField label={t("lbThemeDesc")} className={classes.fullWidth}
+            //             value={(editingItem.get('themeCmt')) ? editingItem.get('themeCmt') : ''}
+            //             onChange={this.handleValueChange("themeCmt")}
+            //         />
+            //         <div style={{marginTop:20}}></div>
+            //         <FormLabel>{t("lbIconSetting")}</FormLabel>
+            //         <div style={{maxHeight:270,overflowY:'auto'}}>
+            //         <Table>
+            //             <TableBody>
+            //                 {ThemeDialog.APP_LIST && ThemeDialog.APP_LIST.map(n => {
+            //                     let beforeImg = '';
+            //                     if(dialogType == ThemeDialog.TYPE_EDIT) {
+            //                         const iconItem = editingItem.get('themeIcons').find(icon => {
+            //                             return icon.get('fileEtcInfo') == n.name;
+            //                         });
+            //                         if(iconItem && iconItem.get('fileName') && iconItem.get('fileName') !== '') {
+            //                             beforeImg = iconItem.get('imgUrl') + iconItem.get('fileName');
+            //                         }                                    
+            //                     }
+
+            //                     return (
+            //                         <TableRow hover key={n.no}>
+            //                             <TableCell style={{width:230}}>{n.no}. {n.title}</TableCell>
+            //                             {(dialogType === ThemeDialog.TYPE_EDIT) &&
+            //                                 <TableCell style={{width:50}}>
+            //                                 {(beforeImg && beforeImg !== '') && 
+            //                                     <img src={beforeImg} height="50" style={{border:'solid 1 red'}} />
+            //                                 }
+            //                                 </TableCell>
+            //                             }
+            //                             <TableCell style={{width:80}}>
+            //                                 <input style={{display:'none'}} id={n.name + '-file'} type="file" onChange={event => this.handleImageFileChange(event, n.name)} />
+            //                                 <label htmlFor={n.name + '-file'}>
+            //                                     <Button variant="contained" size='small' component="span" className={classes.button}>{t("btnSelectFile")}</Button>
+            //                                 </label>
+            //                             </TableCell>
+            //                             <TableCell>
+            //                                 <img src={editingItem.get(n.name + '_GRFILE')} height="50" />
+            //                             </TableCell>
+            //                         </TableRow>
+            //                     );
+            //                 })}
+            //             </TableBody>
+            //         </Table>
+            //         </div>
+            //     </DialogContent>
+            //     <DialogActions>
+            //     {(dialogType === ThemeDialog.TYPE_ADD) &&
+            //         <Button onClick={this.handleCreateData} variant='contained' color="secondary">{t("btnRegist")}</Button>
+            //     }
+            //     {(dialogType === ThemeDialog.TYPE_EDIT) &&
+            //         <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
+            //     }
+            //     <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
+            //     </DialogActions>
+            //     </ValidatorForm>
+            // </Dialog>
             }
             </div>
         );

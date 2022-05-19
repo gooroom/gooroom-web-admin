@@ -197,9 +197,9 @@ class ThemeManage extends Component {
         <GRPane>
           {/* data option area */}
           <Grid container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={10} >
+            <Grid item xs={6} >
               <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
-                <Grid item xs={4} >
+                <Grid item xs={6} >
                   <FormControl fullWidth={true}>
                     <KeywordOption paramName="keyword" keywordValue={(listObj) ? listObj.getIn(['listParam', 'keyword']) : ''}
                       handleKeywordChange={this.handleKeywordChange} 
@@ -207,12 +207,19 @@ class ThemeManage extends Component {
                     />
                   </FormControl>
                 </Grid>
-                <Grid item xs={4} >
+                <Grid item xs={6} >
                   <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
                     <Search />{t("btnSearch")}
                   </Button>
                 </Grid>
               </Grid>
+            </Grid>
+            {/* 등록버튼 추가 */}
+            <Grid item xs={6} style={{textAlign:'right'}}>
+              <Button className={classes.GRIconSmallButton} variant="contained" color="primary" 
+                onClick={() => { this.handleCreateButton(); } } >
+                <AddIcon />{t("btnRegist")}
+              </Button>
             </Grid>
             <Grid item xs={2} style={{textAlign:'right'}}>
             </Grid>
