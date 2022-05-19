@@ -121,7 +121,7 @@ class GRRouters extends Component {
         
         <Route path="/user/usermastermanage/:grMenuId/:grMenuName" component={UserMasterManage} />
         <Route path="/user/userreqmanage/:grMenuId/:grMenuName" component={UserReqManage} />
-        <Route path="/user/userclientmanage/:grMenuId/:grMenuName/client/:grUserId" component={UserClientManage} />
+        <Route path="/user/userclientmanage/:grMenuId/:grMenuName/client" component={UserClientManage} />
 
         <Route path="/userconfig/media/:grMenuId/:grMenuName" component={MediaRuleManage} />
         <Route path="/userconfig/browser/:grMenuId/:grMenuName" component={BrowserRuleManage} />

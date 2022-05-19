@@ -494,6 +494,7 @@ export default handleActions({
         const realIndex = action.index;
         const index = (realIndex === undefined || realIndex < 0) ? 0 : realIndex;
         const data = action.response.data;
+        let applyNewData = false;
         if(data && data.length > 0) {
 
             const resData = fromJS(data.map(x => {
@@ -523,34 +524,18 @@ export default handleActions({
                 if(realIndex !== undefined) {
                     let newTreeData = state.getIn(['viewItems', compId, 'treeComp', 'treeData']);
                     newTreeData = newTreeData.setIn([index, 'children'], resData.map(d => (d.get('key'))));
-
-                    // 1. delete children
-                    const parentIndex = newTreeData.getIn([index, 'parentIndex']);
-                    let nextSiblings = newTreeData.map((e, i) => {
-                        if(e.get('parentIndex') !== undefined && e.get('parentIndex') <= parentIndex && i > index) {
-                            return i;
-                        } else {
-                            return -1;
-                        }
-                    });
-
-                    nextSiblings = nextSiblings.filter(e => (e > -1));
-                    if(nextSiblings && nextSiblings.size > 0) {
-                        newTreeData = newTreeData.filter((e, i) => !(i > index && i < nextSiblings.get(0)));
-                    } else {
-                        newTreeData = newTreeData.filter((e, i) => (i <= index));
-                    }
-/*
-
-                    //TODO 무인단말 그룹 추가로인하여 주석 처리
                     // data merge.
                     if(index === 0) {
-                        // root
-                        newTreeData = newTreeData.filter((e, i) => (i === 0));
-                        if(realIndex < 0 && data.length > 0) {
-                            newTreeData = newTreeData
-                                .setIn([0, 'itemCount'], data[0].rootItemCount)
-                                .setIn([0, 'itemTotalCount'], data[0].rootItemTotalCount);
+                        if (realIndex === -1) {
+                            newTreeData = newTreeData.filter((e, i) => (e.get('depth') === '1'));
+                            applyNewData = true;
+                        }
+                        else {
+                           const newData = newTreeData.find(e => {
+                               return resData.find (r => r.get('key') === e.get('key'))
+                           });
+                           if (newData === undefined)
+                               applyNewData = true
                         }
                     } else {
                         // 1. delete children
@@ -569,35 +554,39 @@ export default handleActions({
                         } else {
                             newTreeData = newTreeData.filter((e, i) => (i <= index));
                         }
+                        applyNewData = true;
                     }
-*/
-                    // 2. insert new child data
-                    //newTreeData = newTreeData.splice.apply(newTreeData, [index + 1, 0].concat(resData));
-                    newTreeData = newTreeData.splice(index+1, newTreeData.size-(index+1)).concat(resData).concat(newTreeData.splice(0, index+1))
 
-                    // 3. reset parent index 
-                    newTreeData = newTreeData.map((obj, i) => {
-                        if (i > index + resData.size && obj.get('parentIndex') > 0) {
-                            if(obj.get('parentIndex') > index) {
-                                obj = obj.set('parentIndex', obj.get('parentIndex') + resData.size);
-                            }
-                        }
-                        return obj;
-                    });
-    
-                    // reset expandedListItems values for adding nodes.
                     const expandedListItems = state.getIn(['viewItems', compId, 'treeComp', 'expandedListItems']);
-                    const newExpandedListItems = (expandedListItems) ? expandedListItems.map(obj => {
-                        if(obj > index) {
-                            return obj + resData.size;
-                        } else {
-                            return obj;
-                        }
-                    }) : [];
-
-                    // reset activeListItem
+                    let newExpandedListItems = expandedListItems;
                     let activeListItem = state.getIn(['viewItems', compId, 'treeComp', 'activeListItem']);
-                    activeListItem = (activeListItem > index) ? activeListItem + resData.size : activeListItem;
+
+                    if (applyNewData) {
+                         // 2. insert new child data
+                        //newTreeData = newTreeData.splice.apply(newTreeData, [index + 1, 0].concat(resData));
+                        newTreeData = newTreeData.splice(index+1, newTreeData.size-(index+1)).concat(resData).concat(newTreeData.splice(0, index+1))
+
+                        // 3. reset parent index 
+                        newTreeData = newTreeData.map((obj, i) => {
+                            if (i > index + resData.size && obj.get('parentIndex') > 0) {
+                                if(obj.get('parentIndex') > index) {
+                                    obj = obj.set('parentIndex', obj.get('parentIndex') + resData.size);
+                                }
+                            }
+                            return obj;
+                        });
+    
+                        // reset expandedListItems values for adding nodes.
+                        newExpandedListItems = (expandedListItems) ? expandedListItems.map(obj => {
+                            if(obj > index) {
+                                return obj + resData.size;
+                            } else {
+                                return obj;
+                            }
+                        }) : [];
+                        // reset activeListItem
+                        activeListItem = (activeListItem > index) ? activeListItem + resData.size : activeListItem;
+                    } 
 
                     let hasChild = false;
                     if(state.getIn(['viewItems', compId, 'treeComp', 'treeData', realIndex, 'key']) === state.getIn(['viewItems', compId, 'viewItem', 'deptCd'])) {
@@ -605,7 +594,7 @@ export default handleActions({
                     } else {
                         hasChild = state.getIn(['viewItems', compId, 'viewItem', 'hasChildren']);
                     }
-    
+
                     return state.setIn(['viewItems', compId, 'treeComp', 'treeData'], newTreeData)
                                 .setIn(['viewItems', compId, 'treeComp', 'expandedListItems'], newExpandedListItems)
                                 .setIn(['viewItems', compId, 'treeComp', 'activeListItem'], activeListItem)

@@ -150,8 +150,7 @@ class UserListComp extends Component {
   }
 
   handleToClient= (event, id) => {
-    //document.location.href="/gpms";
-    document.location.href="/#/user/userclientmanage/"+ this.props.compId + "/menuUserManage/client/"+ id;
+    document.location.href="/#/user/userclientmanage/"+ this.props.compId + "/menuUserManage/client";
   };
 
   isChecked = id => {

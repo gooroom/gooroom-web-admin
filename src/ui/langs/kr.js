@@ -155,6 +155,7 @@ export default {
   "btnOK": "확인",
   "btnYes": "예",
   "btnNo": "아니오",
+  "btnDel" : "삭제",
 
   // Menus
   "home": "",
