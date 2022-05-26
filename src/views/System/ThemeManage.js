@@ -282,7 +282,6 @@ class ThemeManage extends Component {
           }
         </GRPane>
         {/* dialog(popup) component area */}
-        <ThemeDialog compId={compId} />
         <ThemeSpec compId={compId}
           specType="inform" 
           selectedItem={listObj}

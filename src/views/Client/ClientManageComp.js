@@ -205,7 +205,6 @@ class ClientManageComp extends Component {
     const { t, i18n } = this.props;
     const { ClientManageProps, compId, userId } = this.props;
     const checkedClientIds = getDataObjectVariableInComp(ClientManageProps, compId, 'checkedIds');
-    console.log(checkedClientIds);
 
     if(checkedClientIds && checkedClientIds.size > 0) {
       this.props.GRConfirmActions.showConfirm({
@@ -274,7 +273,6 @@ class ClientManageComp extends Component {
     if(listObj && listObj.get('listData')) {
       emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
     }
-    console.log ("DongYa");
     return (
       <div>
         {/* data option area */}
@@ -294,13 +292,13 @@ class ClientManageComp extends Component {
             />
             </FormControl>
           </Grid>
-          <Grid item xs={this.props.userClient === "true" ? 3 : 4} >
+          <Grid item xs={this.props.userClient === true ? 3 : 4} >
             <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
               <Search />{t("btnSearch")}
             </Button>
           </Grid>
           {
-            (this.props.userClient === "true") &&
+            (this.props.userClient === true) &&
             <Fragment>
             <Grid item xs={4} sm={1} >
               <Button className={classes.GRIconSmallButton} variant="contained" color="inherit" onClick={() => this.handleDeleteBtnClick()} >
