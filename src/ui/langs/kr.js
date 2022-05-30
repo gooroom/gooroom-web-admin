@@ -152,6 +152,7 @@ export default {
   "btnCopy": "복사",
   "btnSelect": "선택",
   "btnSelectFile": "File선택",
+  "btnUploadFile": "Upload File",
   "btnOK": "확인",
   "btnYes": "예",
   "btnNo": "아니오",

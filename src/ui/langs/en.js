@@ -152,6 +152,7 @@ export default {
   "btnCopy": "Copy",
   "btnSelect": "Select",
   "btnSelectFile": "FileSelect",
+  "btnUploadFile": "Upload File",
   "btnOK": "OK",
   "btnYes": "Yes",
   "btnNo": "No",

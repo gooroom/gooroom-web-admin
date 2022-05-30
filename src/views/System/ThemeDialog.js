@@ -28,8 +28,9 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
+import DeleteOutline from '@material-ui/icons/DeleteOutline';
+import EditOutlined from '@material-ui/icons/EditOutlined';
+//import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -254,11 +255,11 @@ class ThemeDialog extends Component {
                                        <div><span style={{verticalAlign: 'middle'}}>{t("lbBackgroundSetting")}</span>
                                             <input style={{display:'none'}} id={'background-file'} type="file" onChange={event => this.handleImageFileChange(event, 'beforeBackground')}/>
                                             <label style={{marginLeft: '10px'}} htmlFor={'background-file'}>
-                                                <Button variant="contained" size='small' component="span" className={classes.button}>{t("btnSelectFile")}</Button>
+                                                <Button variant="contained" size='small' component="span" className={classes.button} style={{width:120,height:28,background:'#666666',color:'#ffffff',borderRadius:4,border:0}}>{t("btnUploadFile")}</Button>
                                             </label></div>
-                                       <div style={{width:'100%',height:260,marginTop:10,marginBottom:10,overflowX:'auto',border:'1px solid #cecece'}}>
+                                       <div style={{width:'100%',height:260,marginTop:10,marginBottom:10,lineHeight:'260px',overflow:'hidden',border:'1px solid #cecece',textAlign:'center'}}>
                                            {
-                                                <img src={editingItem.get('beforeBackground_GRFILE')} height="90%" width="90%" style={{border:'solid 1 red'}} />
+                                                <img src={editingItem.get('beforeBackground_GRFILE')} height='90%' width='auto' style={{verticalAlign:'middle'}}/>
                                            }
                                        </div>
                                     </Grid>
@@ -287,33 +288,29 @@ class ThemeDialog extends Component {
                                                         }
                                                     }
                                                     return (                                                        
-                                                        <div key={i} style={{display: 'inline-block',width:200,height:160,marginRight:10,marginBottom:10,padding:10,background: '#ffffff',borderRadius: 4}}>
+                                                        <div key={i} style={{display: 'inline-block',width:200,height:160,marginRight:8,marginBottom:8,padding:10,background: '#ffffff',borderRadius: 16}}>
                                                             <div>{t("lbUtility")}</div>
-                                                            <div style={{marginTop: 16}}>
-                                                                <div style={{display: 'inline-block',width:50,height:50,border:'1px solid red'}}>
+                                                            <div style={{position:'relative',margin: '16px 10px 0'}}>
+                                                                <div style={{display: 'inline-block',width:50,height:50}}>
                                                                     {/* 아이콘 위치 */}
                                                                     {(beforeImg && beforeImg !== '') ? 
                                                                         <img src={beforeImg} height="50" width="50" /> :
                                                                         <img src={defaultImg} height="50" width="50" /> 
                                                                     }
                                                                 </div>
-                                                                <div style={{display:'inline-block',margin:'10px 0 0 42px',verticalAlign:'top'}}>
+                                                                <div style={{display:'inline-block',position:'absolute',top:13,right:0,}}>
                                                                     {
                                                                         (actionType === 'DEL') ?
-                                                                        <div>
-                                                                            <Button variant="contained" size='small' component="span" className={classes.button} id={n.name + '-file'} onClick={event => this.handleImageFileDelete (event, n.name)}>
-                                                                                <DeleteIcon/>
-                                                                            </Button>
+                                                                        <div id={n.name + '-file'} onClick={event => this.handleImageFileDelete (event, n.name)} style={{position:'relative',width:30,height:30,borderRadius:4,border:'1px solid rgb(206, 206, 206)',background:'#e9e9e9'}}>
+                                                                            <DeleteOutline style={{minWidth:24,minHeight:24,position:'absolute',top:2,left:3,cursor:'pointer'}}/>
                                                                         </div>
                                                                         :
-                                                                        <div>
+                                                                        <div style={{position:'relative',width:30,height:30,borderRadius:4,border:'1px solid rgb(206, 206, 206)',background:'#e9e9e9'}}>
                                                                             <input style={{display:'none'}} id={n.name + '-file'} type="file" onChange={event => this.handleImageFileChange(event, n.name)}/>
-                                                                            <label style={{marginLeft: '10px'}} htmlFor={n.name + '-file'}> 
-                                                                                <Button variant="contained" size='small' component="span" className={classes.button}>
-                                                                                    {
-                                                                                        (actionType === 'DEL') ?  <DeleteIcon/> :<EditIcon /> 
-                                                                                    }
-                                                                                </Button>
+                                                                            <label style={{marginLeft: '10px'}} htmlFor={n.name + '-file'}>
+                                                                                {
+                                                                                    (actionType === 'DEL') ?  <DeleteOutline style={{minWidth:24,minHeight:24,position:'absolute',top:2,left:3,cursor:'pointer'}}/> : <EditOutlined style={{minWidth:24,minHeight:24,position:'absolute',top:2,left:3,cursor:'pointer'}}/>
+                                                                                }
                                                                             </label>
                                                                         </div>
                                                                     }
