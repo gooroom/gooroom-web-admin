@@ -2,7 +2,7 @@ import { handleActions } from 'redux-actions';
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 
 import { getDuplicateStringArray } from 'components/GRUtils/GRPortableUtils';
-import { getInvalidEmailInJson, isEmpty } from 'components/GRUtils/GRValidationUtils';
+import { getInvalidEmailInJson, isEmpty, isUndefined } from 'components/GRUtils/GRValidationUtils';
 import { toStringList } from 'components/GRUtils/GRPortableUtils';
 
 import moment from 'moment';
@@ -55,6 +55,9 @@ const initialState = {
 
 const makeParameter = (module, params, adminId) => {
   return params.reduce((acc, cur, index) => {
+    if (isEmpty(cur.ID) || isUndefined(cur.Password))
+      return acc;
+
     const userPw = sha256(cur.ID + sha256(cur.Password));
     const isoPw = module['passwd'];
 
