@@ -44,7 +44,7 @@
     "i18next-browser-languagedetector": "^2.2.4",
     "immutable": "3.8.2",
     "material-ui-pickers": "^2.2.4",
-    "moment": "^2.22.1",
+    "moment": "^2.29.4",
     "qs": "^6.7.0",
     "react": "^16.8.6",
     "react-app-polyfill": "^1.0.4",
