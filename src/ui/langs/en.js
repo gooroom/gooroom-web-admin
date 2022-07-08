@@ -123,6 +123,9 @@ export default {
   "colCategory": "Type",
   "colClientList": "UserClient",
 
+  "colRuleModDate": "Rule ModDate",
+  "colActivateGroup": "ActivateGroup",
+
   // options
   "optDate": "Date",
   "searchStartDate": "From-Date",
@@ -279,6 +282,10 @@ export default {
   "stNoticeLevel": "Alarm",
   "stShowLevel": "Show",
   "stTranmitLevel": "Transmit",
+
+  "stActiveUser": "User",
+  "stActiveClient": "Client",
+  "stActiveDate": "Date",
 
   // 일별접속통계
   "connectRequestCount": "ConnReqCnt",
@@ -1055,6 +1062,9 @@ export default {
   "dtPkitAdminAuth": "Admin Auth",
   "dtPkitAdminAuthKeep": "Admin Auth (Retained)",
   "dtPkitDisallow": "Disallow",
+
+  // 활성화 그룹
+  "lbActivateGroup": "Activate Group",
 
   // 관리자 개인 설정
   "lbAdminTitle": "Manager",

@@ -1,15 +1,10 @@
 import React, { Component } from "react";
 import { Map, List, fromJS } from 'immutable';
 
-import PropTypes from "prop-types";
-import classNames from "classnames";
-
-import ClientStatusSelect from "views/Options/ClientStatusSelect";
 import KeywordOption from "views/Options/KeywordOption";
 
-import { getClientStatusIcon } from 'components/GRUtils/GRCommonUtils';
-
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
+import ActivateGroupStatusSelect from "views/Options/ActivateGroupStatusSelect";
 
 import Grid from '@material-ui/core/Grid';
 
@@ -32,8 +27,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import { translate, Trans } from "react-i18next";
 
-
-class ClientListForSelect extends Component {
+class DeptActivateList extends Component {
 
   constructor(props) {
     super(props);
@@ -41,29 +35,29 @@ class ClientListForSelect extends Component {
       stateData: Map({
         listData: List([]),
         listParam: Map({
-          clientType: 'ALL',
-          groupId: '',
+          status: 'STAT010',
           keyword: '',
+          objectId: props.objId,
           orderDir: 'asc',
-          orderColumn: 'CLIENT_NM',
+          orderColumn: 'chUserNm',
           page: 0,
-          rowsPerPage: 10,
-          rowsPerPageOptions: List([5, 10, 25]),
+          rowsPerPage: 5,
+          rowsPerPageOptions: List([5, 10]),
           rowsTotal: 0,
           rowsFiltered: 0
-        }),
-        checkedIds: List([])
+        })
       })
     };
   }
 
-  handleGetClientList = (newListParam) => {
-
-    requestPostAPI('readClientListPaged', {
-      clientType: newListParam.get('clientType'),
-      groupId: newListParam.get('groupId'),
+  handleGetActivateList = (newListParam) => {
+    requestPostAPI('readActivateGroupList', {
+      deptCd: newListParam.get('deptCd'),
+      objectId: newListParam.get('objectId'),
       keyword: newListParam.get('keyword'),
+      status: newListParam.get('status'),
       page: newListParam.get('page'),
+      draw: newListParam.get('page'),
       start: newListParam.get('page') * newListParam.get('rowsPerPage'),
       length: newListParam.get('rowsPerPage'),
       orderColumn: newListParam.get('orderColumn'),
@@ -71,7 +65,6 @@ class ClientListForSelect extends Component {
     }).then(
       (response) => {
         const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = response.data;
-
         const { stateData } = this.state;
         this.setState({
           stateData: stateData
@@ -99,9 +92,7 @@ class ClientListForSelect extends Component {
     const newListParam = (stateData.get('listParam')).merge({
       page: page
     });
-    this.setState({ stateData: stateData.set('checkedIds', List([])) });
-    this.props.onSelectClient(List([]));
-    this.handleGetClientList(newListParam);
+    this.handleGetActivateList(newListParam);
   };
 
   handleChangeRowsPerPage = event => {
@@ -109,9 +100,7 @@ class ClientListForSelect extends Component {
     const newListParam = (stateData.get('listParam')).merge({
       rowsPerPage: event.target.value, page: 0
     });
-    this.setState({ stateData: stateData.set('checkedIds', List([])) });
-    this.props.onSelectClient(List([]));
-    this.handleGetClientList(newListParam);
+    this.handleGetActivateList(newListParam);
   };
 
   handleChangeSort = (event, columnId, currOrderDir) => {
@@ -119,53 +108,19 @@ class ClientListForSelect extends Component {
     const newListParam = (stateData.get('listParam')).merge({
       orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
-    this.setState({ stateData: stateData.set('checkedIds', List([])) });
-    this.props.onSelectClient(List([]));
-    this.handleGetClientList(newListParam);
-  };
-  // .................................................
-
-  handleSelectRow = (event, id) => {
-    const { stateData } = this.state;
-    const checkedIds = stateData.get('checkedIds');
-    let newCheckedIds = null;
-    if(checkedIds) {
-        const indexNo = checkedIds.indexOf(id);
-        if(indexNo > -1) {
-          newCheckedIds = checkedIds.delete(indexNo);
-        } else {
-          newCheckedIds = checkedIds.push(id);
-        }
-    } else {
-      newCheckedIds = List([id]);
-    }
-    this.setState({ stateData: stateData.set('checkedIds', newCheckedIds) });
-    this.props.onSelectClient(newCheckedIds);
-  };
-    
-  handleClickAllCheck = (event, checked) => {
-    const { stateData } = this.state;
-    let newCheckedIds = List([]);
-
-    if(checked) {
-      stateData.get('listData').map(n => {
-        newCheckedIds = newCheckedIds.push(n.get('clientId'));
-      });
-    }
-
-    this.setState({ stateData: stateData.set('checkedIds', newCheckedIds) });
-    this.props.onSelectClient(newCheckedIds);
+    this.handleGetActivateList(newListParam);
   };
 
-  handleChangeClientStatusSelect = (event, property) => {
+  handleChangeActivateGroupStatusSelect = (value) => {
     const { stateData } = this.state;
     const newListParam = (stateData.get('listParam')).merge({
-      clientType: property, page: 0
+      status: (value == 'ALL') ? '' : value, 
+      page: 0
     });
     this.setState({
       stateData: stateData.set('listParam', newListParam)
     });
-    this.handleGetClientList(newListParam);
+    this.handleGetActivateList(newListParam);
   }
 
   handleKeywordChange = (name, value) => {
@@ -176,37 +131,26 @@ class ClientListForSelect extends Component {
     this.setState({
       stateData: stateData.set('listParam', newListParam)
     });
-    // 아래 커멘트 제거시, 타이프 칠때마다 조회
-    //this.handleGetClientList(newListParam);
   }
 
   handleSelectBtnClick = () => {
     const { stateData } = this.state;
     const newListParam = stateData.get('listParam');
-    this.handleGetClientList(newListParam);
+    this.handleGetActivateList(newListParam);
   };
-
-  isChecked = id => {
-    const checkedIds = this.state.stateData.get('checkedIds');
-    if(checkedIds) {
-      return checkedIds.includes(id);
-    } else {
-      return false;
-    }
-  }
+  // .................................................
 
   render() {
-    const { classes } = this.props;
+    const { classes, checkedUser } = this.props;
     const { t, i18n } = this.props;
 
     const columnHeaders = [
-      { id: 'checkbox', isCheckbox: true},
-      { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: t("colClientName") },
-      { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colClientId") },
-      { id: 'GROUP_NAME', isOrder: true, numeric: false,disablePadding: true,label: t("colClientGroup")},
-      { id: 'STATUS_CD', isOrder: false, numeric: false, disablePadding: true, label: t("colStatus") }
+      { id: 'chCategory', isOrder: false, numeric: false, disablePadding: true, label: t("colCategory") },
+      { id: 'chName', isOrder: false, numeric: false, disablePadding: true, label: t("colName") },
+      { id: 'chId', isOrder: false, numeric: false, disablePadding: true, label: t("colId") },     
+      { id: 'chRuleModDate', isOrder: false, numeric: false, disablePadding: true, label: t("colRuleModDate") }     
     ];
-    
+   
     const listObj = this.state.stateData;
     let emptyRows = 0; 
     if(listObj && listObj.get('listData')) {
@@ -218,20 +162,22 @@ class ClientListForSelect extends Component {
         {/* data option area */}
         <Grid container alignItems="flex-end" direction="row" justify="space-between" >
           <Grid item xs={4} >
+            {/* TODO 검색 조건 BE 처리 필요*/}
             <FormControl fullWidth={true}>
-              <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} 
-                value={(listObj && listObj.getIn(['listParam', 'clientType'])) ? listObj.getIn(['listParam', 'clientType']) : 'ALL'}
-              />
+              <ActivateGroupStatusSelect onChangeSelect={this.handleChangeActivateGroupStatusSelect}
+                value={'ALL'}/>
             </FormControl>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={4} >
             <FormControl fullWidth={true}>
-              <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+              <KeywordOption paramName="keyword" 
+                handleKeywordChange={this.handleKeywordChange} 
+                handleSubmit={() => this.handleSelectBtnClick()} />
             </FormControl>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={4} style={{paddingLeft:10,paddingRight:20,textAlign:'right'}} >
             <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
-              <Search /> {t("btnSearch")}
+              <Search />{t("btnSearch")}
             </Button>
           </Grid>
         </Grid>
@@ -239,34 +185,26 @@ class ClientListForSelect extends Component {
         <Table>
           <GRCommonTableHead
             classes={classes}
-            keyId="clientId"
-            orderDir={listObj.getIn(['listParam', 'orderDir'])}
-            orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
-            onRequestSort={this.handleChangeSort}
-            onClickAllCheck={this.handleClickAllCheck}
-            checkedIds={listObj.get('checkedIds')}
+            keyId="userId"
             listData={listObj.get('listData')}
             columnData={columnHeaders}
           />
           <TableBody>
-            {listObj.get('listData').map(n => {
-              const isChecked = this.isChecked(n.get('clientId'));
+            {listObj.get('listData').map((n, index)  => {
               return (
                 <TableRow
                   hover
-                  onClick={event => this.handleSelectRow(event, n.get('clientId'))}
-                  role="checkbox"
-                  aria-checked={isChecked}
-                  key={n.get('clientId')}
-                  selected={isChecked}
+                  key={index}
+                  sytle={{textAlign:'center'}}
                 >
-                  <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                    <Checkbox color="primary" checked={isChecked} className={classes.grObjInCell} />
+                  <TableCell className={classes.grSmallAndClickCell}>
+                  {
+                    n.get('gunbun') === '그룹' ? t('lbClient') :  t('lbUser')
+                  }
                   </TableCell>
-                  <TableCell className={classes.grSmallAndClickCell} >{n.get('clientName')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickCell} >{n.get('simpleClientId')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickCell} >{n.get('clientGroupName')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{getClientStatusIcon(n.get('viewStatus'))}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell}>{n.get('deptNm')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell}>{n.get('deptCd')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell}>{n.get('regDt')}</TableCell>
                 </TableRow>
               );
             })}
@@ -302,9 +240,8 @@ class ClientListForSelect extends Component {
       }
       </div>
     );
-
   }
 }
 
-export default translate("translations")(withStyles(GRCommonStyle)(ClientListForSelect));
+export default translate("translations")(withStyles(GRCommonStyle)(DeptActivateList));
 

@@ -362,7 +362,7 @@ class ClientManageComp extends Component {
                 }
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{getClientStatusIcon(n.get('viewStatus'))}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('clientName')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientId')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('simpleClientId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCellAndBreak}>{n.get('clientGroupName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('lastLoginTime'), 'YY/MM/DD HH:mm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientIp')}</TableCell>

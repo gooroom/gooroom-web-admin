@@ -37,6 +37,9 @@ import AddIcon from '@material-ui/icons/Add';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/Delete';
 
+import GroupIcon from '@material-ui/icons/Group';
+import ActivateGroupDialog from './ActivateGroupDialog';
+
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { translate, Trans } from "react-i18next";
@@ -49,7 +52,9 @@ class SecurityRuleManage extends Component {
 
     this.state = {
       loading: true,
-    }
+      isOpenActivateGroup: false,
+      objId: ''
+    };
   }
 
   componentDidMount() {
@@ -185,6 +190,20 @@ class SecurityRuleManage extends Component {
       dialogType: SecurityRuleDialog.TYPE_EDIT
     });
   };
+
+  handleActivateGroupClick = (event, id) => {
+    this.setState({
+      isOpenActivateGroup:true,
+      objId: id
+    });
+  };
+
+  handleActivateGroupClose = () => {
+    this.setState({
+      isOpenActivateGroup: false,
+      objId: ''
+    });
+  };
   // ===================================================================
 
   render() {
@@ -201,6 +220,7 @@ class SecurityRuleManage extends Component {
       { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") },
       { id: 'chRegUser', isOrder: true, numeric: false, disablePadding: true, label: t("colRegUser") },
       { id: 'chRegDate', isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate") },
+      { id: 'chActivateGroup', isOrder: false, numeric: false, disablePadding: true, label: t("colActivateGroup") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
     ];
     
@@ -273,6 +293,13 @@ class SecurityRuleManage extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('regUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                        <Button color="secondary" size="small"
+                          className={classes.buttonInTableRow}
+                          onClick={event => this.handleActivateGroupClick(event, n.get('objId'))}>
+                          <GroupIcon/>
+                        </Button>
+                      </TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>
                       {isEditable &&
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
@@ -331,6 +358,12 @@ class SecurityRuleManage extends Component {
         />
         </GRPane>
         <SecurityRuleDialog compId={compId} />
+        <ActivateGroupDialog
+          isOpen={this.state.isOpenActivateGroup}
+          compId={compId}
+          objId={this.state.objId}
+          onClose={this.handleActivateGroupClose}
+        />
         <GRConfirm />
       </div>
     );

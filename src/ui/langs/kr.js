@@ -123,6 +123,9 @@ export default {
   "colCategory": "유형",
   "colClientList": "사용자 단말",
 
+  "colRuleModDate": "정책 설정일",
+  "colActivateGroup": "활성화 그룹",
+
   // options
   "optDate": "날짜",
   "searchStartDate": "조회시작일",
@@ -279,6 +282,10 @@ export default {
   "stNoticeLevel": "알림",
   "stShowLevel": "표시",
   "stTranmitLevel": "전송",
+
+  "stActiveUser": "사용자",
+  "stActiveClient": "단말",
+  "stActiveDate": "기간별",
   
   // 일별접속통계
   "connectRequestCount": "접속요청수",
@@ -1055,6 +1062,9 @@ export default {
   "dtPkitAdminAuth": "관리자인증",
   "dtPkitAdminAuthKeep": "관리자인증(유지)",
   "dtPkitDisallow": "불허",
+
+  // 활성화 그룹
+  "lbActivateGroup": "활성화 그룹",
   
   // 관리자 개인 설정
   "lbAdminTitle": "관리자",
