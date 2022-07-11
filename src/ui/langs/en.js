@@ -589,7 +589,6 @@ export default {
   "lbPassword": "Password",
   "lbUserName": "User name",
   "lbEmail": "Email",
-  "lbKiosk": "Kiosk",
   "lbDept": "Organization",
   "lbLoginTrial": "Remain login trial count",
   "lbParentDept": "Parent organization",
@@ -644,6 +643,8 @@ export default {
   "lbAccountRemailTrial": "Login Remail Trial",
   "lbAccountLocked": "Locked",
   "lbAccountPossibleCnt": "Count",
+  "lbNoUser": "nouser",
+  "lbNoUserClient": "No User Client",
 
   // 테마조회
   "lbDeleteTheme": "Remove theme",

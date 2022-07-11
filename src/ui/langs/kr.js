@@ -589,7 +589,6 @@ export default {
   "lbPassword": "Password",
   "lbUserName": "사용자이름",
   "lbEmail": "이메일",
-  "lbKiosk": "무인단말기",
   "lbDept": "조직",
   "lbLoginTrial": "남은 로그인시도 횟수",
   "lbParentDept": "상위조직",
@@ -644,6 +643,8 @@ export default {
   "lbAccountRemailTrial": "로그인 재시도 가능 횟수",
   "lbAccountLocked": "계정잠김",
   "lbAccountPossibleCnt": "회",
+  'lbNoUser': "무인",
+  'lbNoUserClient': "무인단말기",
 
   // 테마조회
   "lbDeleteTheme": "테마 삭제",

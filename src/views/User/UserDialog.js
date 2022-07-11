@@ -189,10 +189,16 @@ class UserDialog extends Component {
     }
     
     handleDeptSelectSave = (selectedDept) => {
-        if (selectedDept.deptCd === 'DEPTNOUSERDEFAULT') {
+        if (selectedDept.parentKey === 'DEPTNOUSERDEFAULT') {
             this.props.UserActions.setEditingItemValue({
                 name: 'userType',
                 value: 'nouser' 
+            });
+        }
+        else {
+            this.props.UserActions.setEditingItemValue({
+                name: 'userType',
+                value: 'normal' 
             });
         }
         this.props.UserActions.setEditingItemValues({ 'deptNm': selectedDept.deptNm, 'deptCd': selectedDept.deptCd });
@@ -227,8 +233,6 @@ class UserDialog extends Component {
 
         const isUseUserExpireDate = (editingItem && editingItem.get('isUseExpire') === '1');
         const isUsePasswordExpireDate = (editingItem && editingItem.get('isUsePasswordExpire') === '1');
-
-        let kioskStatus = 0;
 
         return (
             <React.Fragment>
@@ -301,7 +305,7 @@ class UserDialog extends Component {
                                 />
                             </Grid>
                             <Grid item xs={4} style={{display:'flex', float:'right', justifyContent:'spaceArround', alignItems:'center' }}>
-                                <FormControlLabel label={t("lbKiosk")} disabled={!(editingItem.get('kiosk') !== 'disallow')} style={{heigth:32}}
+                                <FormControlLabel label={t("lbNoUserClient")} style={{heigth:32}}
                                     control={
                                         <Checkbox color="primary"
                                         checked={(editingItem.get('userType') === 'nouser') ? true : false}

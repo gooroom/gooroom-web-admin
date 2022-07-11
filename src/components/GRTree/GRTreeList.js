@@ -87,7 +87,8 @@ class GRTreeList extends Component {
             regDate: x.regDt,
             modDate: x.modDt,
             comment: x.comment,
-            _shouldRender: true
+            _shouldRender: true,
+            parentKey:''
           };
           if (index !== undefined) {
             node["parentIndex"] = index;
@@ -399,9 +400,21 @@ class GRTreeList extends Component {
         listItem._shouldRender = // (listItem._shouldRender) ||
           (listItem.depth >= startingDepth && parentsAreExpanded(listItem));
         listItem._primaryText = listItem['title'];
+        listItem.parentKey = parentsKey(listItem);
         return listItem;
       }
     );
+
+    function parentsKey (listItem) {
+      if (listItem.parentIndex == undefined) {
+        return listItem.key;
+      }
+      if (listItem.parentIndex != 1) {
+        const parentItem = treeData[listItem.parentIndex];
+        return parentsKey (parentItem)
+      }
+      return listItem.key;
+    }
 
     function parentsAreExpanded(listItem) {
       if (listItem.depth > startingDepth) {

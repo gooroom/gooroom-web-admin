@@ -436,6 +436,7 @@ class UserMasterManage extends Component {
               userNm: UserProps.getIn(["editingItem", "userNm"]),
               userEmail: UserProps.getIn(["editingItem", "userEmail"]),
               deptCd: UserProps.getIn(["editingItem", "deptCd"]),
+              userType: UserProps.getIn(["editingItem", "userType"]),
               expireDate: userExpireDate,
               passwordExpireDate: passwordExpireDate,
 

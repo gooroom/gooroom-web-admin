@@ -38,7 +38,7 @@ class DeptSelectDialog extends Component {
 
     handleSelectDept = (listItem) => {
         this.setState({
-            selectedDept: { deptCd: listItem.key, deptNm: listItem.title }
+            selectedDept: { deptCd: listItem.key, deptNm: listItem.title, parentKey: listItem.parentKey }
         });
     }
 

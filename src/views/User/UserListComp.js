@@ -318,7 +318,7 @@ class UserListComp extends Component {
                   </TableCell>
                   <TableCell className={classes.grSmallAndClickCellAndBreak}>
                     {
-                      (n.get('userType') === 'nouser') ? '무인' : ''
+                      (n.get('userType') === 'nouser') ? t('lbNoUser') : ''
                     }
                   </TableCell>
                   <TableCell className={classes.grSmallAndClickCell}
