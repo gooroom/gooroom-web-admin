@@ -55,13 +55,11 @@ class GRTreeDeptList extends Component {
     if (listItem.get('children')) {
       // fetch children data
       // request to server if children array is empty.
-      /*
       if (listItem.get('children').size < 1) {
         DeptActions.readChildrenDeptList(this.props.compId, listItem.get('key'), index);
       }
-      */
       //TODO 무인사용자 추가로 삭제 후 갱신 시 리스트 호출 안되는 문제로 매번 호출로 수정 
-      DeptActions.readChildrenDeptList(this.props.compId, listItem.get('key'), index);
+      //DeptActions.readChildrenDeptList(this.props.compId, listItem.get('key'), index);
 
       const expandedListItems = DeptProps.getIn(['viewItems', compId, 'treeComp', 'expandedListItems']);
       if(expandedListItems && expandedListItems.length > 0 && expandedListItems.indexOf(index) === -1) {
@@ -282,7 +280,7 @@ class GRTreeDeptList extends Component {
             } else {
               // siblings
               listItem = listItem.set('_styles', this.applyStyle(listItem, (activeListItem === i)))
-                                  .set('_shouldRender', (expandedListItems.indexOf(listItem.get('parentIndex')) > -1) ? (parentItem && parentItem.get('_shouldRender')) : false)
+                                  .set('_shouldRender', (listItem.get('depth') == 1 ? true : (expandedListItems.indexOf(listItem.get('parentIndex')) > -1) ? (parentItem && parentItem.get('_shouldRender')) : false))
                                   .set('_primaryText', listItem.get('title'));
             }
           }

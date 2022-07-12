@@ -137,8 +137,7 @@ export const readChildrenDeptList = (compId, deptCd, index) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readChildrenDeptList', {
         deptCd: deptCd,
-        hasWithRoot: 'Y'
-        //hasWithRoot: (index < 0) ? 'Y' : 'N' //TODO
+        hasWithRoot: (index < 0) ? 'Y' : 'N' 
     }).then(
         (response) => {
             dispatch({
@@ -618,11 +617,11 @@ export default handleActions({
                 if(index !== undefined) {
                     let newTreeData = state.getIn(['viewItems', compId, 'treeComp', 'treeData']);
                     newTreeData = newTreeData.deleteIn([index, 'children']);
-                   
                     // data merge.
                     if(index === 0) {
                         // root
-                        newTreeData = newTreeData.filter((e, i) => (i === 0));
+                        //newTreeData = newTreeData.filter((e, i) => (i === 0));
+                        newTreeData = newTreeData.filter((e, i) => (e.get('depth') === '1'));
                     } else {
                         // 1. delete children
                         const parentIndex = newTreeData.getIn([index, 'parentIndex']);

@@ -195,8 +195,6 @@ class UserClientManage extends Component {
       userName = obj ? obj.get('userNm') : '';
     }
 
-    console.log ("@@@@@ ", userId);
-
     return (
       <React.Fragment>
         <GRPageHeader name={ userName + " (" + clientCnt + ")"}/>
@@ -207,7 +205,6 @@ class UserClientManage extends Component {
                 userClient={true}
                 userId={userId}
                 onSelect={this.handleSelectClient}
-                selectorType={(isEditable) ? 'multiple' : 'single'}
               />
             </Grid>
             <Grid item xs={12} sm={12} lg={12} style={{border: '1px solid #efefef', padding: 0, marginTop: 20}}>

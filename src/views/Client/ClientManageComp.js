@@ -267,7 +267,9 @@ class ClientManageComp extends Component {
     if(this.props.selectorType && this.props.selectorType == 'multiple') {
       columnHeaders.unshift({ id: "chCheckbox", isCheckbox: true });
     }
-
+   
+    const checkedClientIds = getDataObjectVariableInComp(ClientManageProps, compId, 'checkedIds');
+    
     const listObj = ClientManageProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
     if(listObj && listObj.get('listData')) {
@@ -301,7 +303,9 @@ class ClientManageComp extends Component {
             (this.props.userClient === true) &&
             <Fragment>
             <Grid item xs={4} sm={1} >
-              <Button className={classes.GRIconSmallButton} variant="contained" color="inherit" onClick={() => this.handleDeleteBtnClick()} >
+              <Button className={classes.GRIconSmallButton} variant="contained" onClick={() => this.handleDeleteBtnClick()}
+                style={{backgroundColor:'#455a64', color:'white'}}
+                disabled={ checkedClientIds && checkedClientIds.size > 0 ? false : true} >
                 {t("btnDel")}
               </Button>
             </Grid>

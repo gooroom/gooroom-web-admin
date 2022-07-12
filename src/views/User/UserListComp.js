@@ -49,6 +49,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { translate, Trans } from "react-i18next";
 import { now } from 'moment';
+import { Link } from 'react-router-dom';
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -148,10 +149,6 @@ class UserListComp extends Component {
       compId: compId
     });
   }
-
-  handleToClient= (event, id) => {
-    document.location.href="/#/user/userclientmanage/"+ this.props.compId + "/menuUserManage/client";
-  };
 
   isChecked = id => {
     const { UserProps, compId } = this.props;
@@ -332,11 +329,9 @@ class UserListComp extends Component {
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('clientId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} align='center'>
                     {
-                    <Button color="secondary" size="small" 
-                      className={classes.buttonInTableRow}
-                      onClick={event => this.handleToClient(event, n.get('userId'))}>
-                      <GroupIcon/>
-                    </Button>
+                      <Link to={"/user/userclientmanage/"+ this.props.compId + "/menuUserManage/client"} style={{ color: 'gray'}}>
+                        <GroupIcon/>
+                      </Link>
                     }
                   </TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>
