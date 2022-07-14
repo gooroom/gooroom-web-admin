@@ -496,7 +496,7 @@ export default handleActions({
         let applyNewData = false;
         if(data && data.length > 0) {
 
-            const resData = fromJS(data.map(x => {
+            let resData = fromJS(data.map(x => {
                 let node = {
                     key: x.key,
                     depth: x.level,
@@ -530,10 +530,11 @@ export default handleActions({
                             applyNewData = true;
                         }
                         else {
-                           const newData = newTreeData.find(e => {
-                               return resData.find (r => r.get('key') === e.get('key'))
-                           });
-                           if (newData === undefined)
+                           resData = resData.filter ( x => {
+                                const n = newTreeData.find ( r => x.get('key') == r.get('key'));
+                                return n === undefined ? true : false;
+                           })
+                           if (resData.size > 0)
                                applyNewData = true
                         }
                     } else {
@@ -616,7 +617,13 @@ export default handleActions({
             if(state.getIn(['viewItems', compId, 'treeComp', 'treeData'])) {
                 if(index !== undefined) {
                     let newTreeData = state.getIn(['viewItems', compId, 'treeComp', 'treeData']);
-                    newTreeData = newTreeData.deleteIn([index, 'children']);
+                    newTreeData = newTreeData.map ((e, i) => {
+                        if (e.get('depth') === '1') {
+                            e = e.deleteIn (['children']);
+                            return e;
+                        }
+                        return e;
+                    })
                     // data merge.
                     if(index === 0) {
                         // root
@@ -788,7 +795,9 @@ export default handleActions({
     [DELETE_DEPT_SUCCESS]: (state, action) => {
         const newState = commonHandleActions.handleDeleteSuccessAction(state, action, 'deptCd');
         return newState.deleteIn(['viewItems', action.compId, 'treeComp', 'activeListItem'])
+                    .deleteIn(['viewItems', action.compId, 'treeComp', 'treeData'])
                     .deleteIn(['viewItems', action.compId, 'treeComp', 'checked'])
+                    .deleteIn(['viewItems', action.compId, 'treeComp', 'expandedListItems'])
                     .deleteIn(['viewItems', action.compId, 'informOpen'])
                     .deleteIn(['viewItems', action.compId, 'viewItem']);
     },

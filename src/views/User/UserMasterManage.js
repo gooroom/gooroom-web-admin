@@ -255,7 +255,7 @@ class UserMasterManage extends Component {
     ]);
     if (checkedDeptCd && checkedDeptCd.length > 0) {
       // except default item
-      checkedDeptCd = checkedDeptCd.filter(e => e !== "DEPTDEFAULT");
+      checkedDeptCd = checkedDeptCd.filter(e => e !== "DEPTDEFAULT" && e !== "DEPTNOUSERDEFAULT");
       return !(checkedDeptCd && checkedDeptCd.length > 0);
     } else {
       return true;
@@ -709,8 +709,8 @@ class UserMasterManage extends Component {
     } else {
       this.props.DeptActions.readChildrenDeptList(
         this.state.compId,
-        "DEPTDEFAULT",
-        -1
+        0,
+        undefined
       );
     }
   };
