@@ -1247,7 +1247,7 @@ export default {
   "btnReApproveAll": "Re-Approve All",
   "btnDeleteAll": "Delete All",
 
-  "colUserId": "User ID",
+  "colApplyUserId": "User ID",
   "colApplyDate": "Regist date",
   "colExpireDate": "Expiration date",
   "colCertStatus": "Cert Status",
