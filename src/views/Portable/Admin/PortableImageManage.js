@@ -216,8 +216,8 @@ class PortableImageManage extends React.Component {
 
     let columnHeaders = [
       {id: "chCheckbox", isCheckbox: true},
-      {id: "chUserId", isOrder: false, numeric: false, disablePadding: true, label: t("colUserId")},
-      {id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate")},
+      {id: "chUserId", isOrder: false, numeric: false, disablePadding: true, label: t("colApplyUserId")},
+      {id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: t("colApplyDate")},
       {id: "chImageName", isOrder: false, numeric: false, disablePadding: true, label: t("colImageName")},
       {id: "chCreateDate", isOrder: false, numeric: false, disablePadding: true, label: t("colImageCreatedDate")},
       {id: "chSize", isOrder: false, numeric: false, disablePadding: true, label: t("colImageSize")},

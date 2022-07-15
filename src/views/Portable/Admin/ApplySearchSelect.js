@@ -13,8 +13,8 @@ class ApplySearchSelect extends Component {
       data: Map({
         // 전체, 신청자, 신청일, 발급 결과
         typeData: List([
-          Map({ typeId: 'USER', typeVal: 'chUserId', typeTxt: 'stUser' }),
-          Map({ typeId: 'DATE', typeVal: 'chRegDate', typeTxt: 'stRegDate' }),
+          Map({ typeId: 'USER', typeVal: 'chUserId', typeTxt: 'stApplyUser' }),
+          Map({ typeId: 'DATE', typeVal: 'chRegDate', typeTxt: 'stApplyDate' }),
           Map({ typeId: 'STATUS', typeVal: 'chImagePublish', typeTxt: 'stImageStatus' }),
           Map({ typeId: 'ALL', typeVal: 'ALL', typeTxt: 'stAll' })
         ]),

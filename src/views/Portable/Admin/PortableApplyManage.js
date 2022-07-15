@@ -295,8 +295,8 @@ class PortableApplyManage extends Component {
 
     let columnHeaders = [
       {id: "chCheckbox", isCheckbox: true},
-      {id: "chUserId", isOrder: false, numeric: false, disablePadding: true, label: t("colUserId")},
-      {id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate")},
+      {id: "chUserId", isOrder: false, numeric: false, disablePadding: true, label: t("colApplyUserId")},
+      {id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: t("colApplyDate")},
       {id: "chExpireDate", isOrder: false, numeric: false, disablePadding: true, label: t("colExpireDate")},
       {id: "chCertStatus", isOrder: false, numeric: false, disablePadding: true, label: t("colCertStatus")},
       {id: "chBuildStatus", isOrder: false, numeric: false, disablePadding: true, label: t("colBuildStatus")},

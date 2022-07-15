@@ -84,7 +84,7 @@ export const PORTABLE_APPLY_SEARCH_TYPE = {
   REGDATE: {
      id: 'REGDT',
     value: 'chRegDate',
-    text: 'stRegDate',   
+    text: 'stApplyDate',   
   },
   CREATEDDATE: {
      id: 'CREATEDDT',

@@ -1241,14 +1241,14 @@ export default {
   "msgBulkSuccess": "Bulk registration is performed on the server.",
 
   // apply manage
-  "stUser": "User",
-  "stRegDate": "Regist date",
+  "stApplyUser": "User",
+  "stApplyDate": "Regist date",
   "stImageStatus": "Image Status",
   "btnReApproveAll": "Re-Approve All",
   "btnDeleteAll": "Delete All",
 
   "colUserId": "User ID",
-  "colRegDate": "Regist date",
+  "colApplyDate": "Regist date",
   "colExpireDate": "Expiration date",
   "colCertStatus": "Cert Status",
   "colBuildStatus": "Build Transfer",

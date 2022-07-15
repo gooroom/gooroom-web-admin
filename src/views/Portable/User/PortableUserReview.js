@@ -163,7 +163,7 @@ class PortableUserReview extends React.Component {
 
     let columnHeaders = [
       {id: "chCheckbox", isCheckbox: false},
-      {id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate")},
+      {id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: t("colApplyDate")},
       {id: "chExpireDate", isOrder: false, numeric: false, disablePadding: true, label: t("colExpireDate")},
       {id: "chCertStatus", isOrder: false, numeric: false, disablePadding: true, label: t("colCertStatus")},
       {id: "chBuildStatus", isOrder: false, numeric: false, disablePadding: true, label: t("colBuildStatus")},

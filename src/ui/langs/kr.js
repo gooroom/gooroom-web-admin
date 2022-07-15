@@ -1242,14 +1242,14 @@ export default {
   "msgBulkSuccess": "서버에서 일괄등록을 진행합니다.",
 
   // apply manage
-  "stUser": "신청자",
-  "stRegDate": "신청일",
+  "stApplyUser": "신청자",
+  "stApplyDate": "신청일",
   "stImageStatus": "발급 결과",
   "btnReApproveAll": "일괄 재등록",
   "btnDeleteAll": "전체 삭제",
 
-  "colUserId": "신청자",
-  "colRegDate": "신청일",
+  "colApplyUserId": "신청자",
+  "colApplyDate": "신청일",
   "colExpireDate": "사용기간",
   "colCertStatus": "인증서 발급",
   "colBuildStatus": "빌드 전달 결과",

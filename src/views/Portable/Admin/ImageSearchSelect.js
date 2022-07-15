@@ -13,8 +13,8 @@ class ImageSearchSelect extends React.Component {
       data: Map({
         // 전체, 신청자, 신청일, 발급 결과
         typeData: List([
-          Map({ typeId: 'USER', typeVal: 'chUserId', typeTxt: 'stUser' }),
-          Map({ typeId: 'REGDT', typeVal: 'chRegDate', typeTxt: 'stRegDate' }),
+          Map({ typeId: 'USER', typeVal: 'chUserId', typeTxt: 'stApplyUser' }),
+          Map({ typeId: 'REGDT', typeVal: 'chRegDate', typeTxt: 'stApplyDate' }),
           Map({ typeId: 'CREATEDDT', typeVal: 'chCreateDate', typeTxt: 'stImageCreatedDate' }),
           Map({ typeId: 'ALL', typeVal: 'ALL', typeTxt: 'stAll' })
         ]),
