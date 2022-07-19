@@ -128,10 +128,9 @@ class DeptDialog extends Component {
         const initDate = moment().add(7, "days");
 
         if(this.refs.form && this.refs.form.isFormValid()) {
-            GRConfirmActions.showCheckConfirm({
+            GRConfirmActions.showConfirm({
                 confirmTitle: t("lbEditDeptInfo"),
                 confirmMsg: t("msgEditDeptInfo"),
-                confirmCheckMsg: t("lbEditChildDeptInfo"),
                 handleConfirmResult: (confirmValue, confirmObject, isChecked) => {
                     if(confirmValue) {
                         const isInherit = isChecked;

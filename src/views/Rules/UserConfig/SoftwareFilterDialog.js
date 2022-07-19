@@ -46,19 +46,54 @@ class SoftwareFilterDialog extends Component {
     static TYPE_INHERIT_GROUP = 'INHERIT_GROUP';
     static TYPE_COPY = 'COPY';
 
+    static SW_GROUP_LIST =  [
+        {no:1, tag:'Network', name: 'network', name_kr: '인터넷', list: [
+            {no:1, tag:'chromium.desktop', name:'Chromium Web Browser', name_kr:'Chromium 웹 브라우저', icon:'2_gooroom-browser.svg'},
+            {no:2, tag:'gooroom-browser.desktop', name:'Gooroom Web Browser', name_kr:'구름 브라우저', icon:'1_gooroom-browser.svg'}
+        ]},
+        {no:2, tag:'Utility', name: 'utility', name_kr: '유틸리티', list: [
+            {no:1, tag:'org.gnome.Calculator.desktop', name:'Galculator', name_kr:'계산기',icon:'1_galculator.svg'},
+            {no:2, tag:'gooroom-security-status-settings.desktop,,,gooroom-secuity-status-tool', name:'Gooroom Management Settings', name_kr:'구름 관리 설정',icon:'1_gooroom-other-applications.svg'},
+            {no:3, tag:'gooroom-security-status-view.desktop', name:'Gooroom Security Status View', name_kr:'구름 보안 상태 보기',icon:'1_gooroom-other-applications.svg'},
+            {no:4, tag:'gooroom-toolkit.desktop', name:'Gooroom Toolkit', name_kr:'구름 도구모음',icon:'1_gooroom-other-applications.svg'},
+            {no:5, tag:'hwpviewer.desktop', name:'Hancom Office Hwp 2014 Viewer', name_kr:'한컴오피스 한글 2014 뷰어',icon:'1_gooroom-web-office.svg'},
+            {no:6, tag:'org.gnome.FileRoller.desktop', name:'Archive Manager', name_kr:'압축 관리자',icon:'1_file-roller.svg'},
+            {no:7, tag:'org.gnome.Nautilus.desktop,,,nemo.desktop', name:'Files', name_kr:'파일 관리자',icon:'1_org.gnome.Nautilus.svg'},
+            {no:8, tag:'scratch.desktop', name:'scratch-3.0', name_kr:'스크래치 3.0',icon:'1_gooroom-other-applications.svg'},
+            {no:9, tag:'xfce4-screenshooter.desktop,,,org.gnome.Screenshot.desktop', name:'Screenshot', name_kr:'스크린샷',icon:'1_applets-screenshooter.svg'},
+            {no:10, tag:'veyon-master.desktop', name:'Veyon Master', name_kr:'Veyon Master',icon:'1_gooroom-other-applications.svg'},
+            {no:11, tag:'blueman-manager.desktop', name:'Bluetooth Manager', name_kr:'블루투스 관리자',icon:'1_gooroom-other-applications.svg'},
+            {no:12, tag:'org.gnome.gedit.desktop', name:'Mousepad', name_kr:'메모',icon:'1_accessories-text-editor.svg'},
+            {no:13, tag:'gooroom-guide.desktop', name:'Gooroom Guide', name_kr:'구름 도움말',icon:'1_gooroom-other-applications.svg'}
+        ]},
+        {no:3, tag:'System', name: 'system ', name_kr: '시스템 도구', list: [
+            {no:1, tag:'grac-editor.desktop', name:'Grac Editor', name_kr:'매체제어 편집기',icon:'1_gooroom-other-applications.svg'},
+            {no:2, tag:'gooroom-control-center.desktop,,,gnome-control-center.desktop', name:'Gnome Control Center', name_kr:'설정',icon:'1_gooroom-other-applications.svg'},
+            {no:3, tag:'xfce4-terminal.desktop,,,org.gnome.Terminal.desktop', name:'Terminal', name_kr:'터미널',icon:'1_gooroom-other-applications.svg'},
+            {no:4, tag:'kr.gooroom.Software.desktop', name:'Software', name_kr:'소프트웨어',icon:'1_gooroom-other-applications.svg'},
+            {no:5, tag:'synaptic.desktop', name:'Synaptic Package Manager', name_kr:'시냅틱 패키지 관리자',icon:'1_synaptic.svg'}
+        ]},
+        {no:4, tag:'AudioVideo', name: 'audiovideo', name_kr: '음악과 비디오', list: [
+            {no:1, tag:'org.gnome.Totem.desktop,,,io.github.GnomeMpv.desktop,,,io.github.celluloid_player.Celluloid.desktop', name:'Videos', name_kr:'동영상',icon:'1_io.github.GnomeMpv.svg'}
+        ]},
+        {no:5, tag:'Graphics', name: 'graphics', name_kr: '그래픽', list: [
+            {no:1, tag:'eog.desktop', name:'Image Viewer', name_kr:'이미지 보기',icon:'1_gooroom-other-applications.svg'}
+        ]}
+    ]
+
     static SW_LIST = [
         {no:1, tag:'chromium.desktop', name:'Chromium Web Browser', name_kr:'Chromium 웹 브라우저'},
         {no:2, tag:'org.gnome.Calculator.desktop', name:'Galculator', name_kr:'계산기'},
         {no:3, tag:'gooroom-browser.desktop', name:'Gooroom Web Browser', name_kr:'구름 브라우저'},
         {no:4, tag:'gooroom-control-center.desktop,,,gnome-control-center.desktop', name:'Gnome Control Center', name_kr:'설정'},
-        {no:5, tag:'gooroom-security-status-settings.desktop', name:'Gooroom Management Settings', name_kr:'구름 관리 설정'},
+        {no:5, tag:'gooroom-security-status-settings.desktop,,,gooroom-secuity-status-tool', name:'Gooroom Management Settings', name_kr:'구름 관리 설정'},
         {no:6, tag:'gooroom-security-status-view.desktop', name:'Gooroom Security Status View', name_kr:'구름 보안 상태 보기'},
         {no:7, tag:'gooroom-toolkit.desktop', name:'Gooroom Toolkit', name_kr:'구름 도구모음'},
         {no:8, tag:'grac-editor.desktop', name:'Grac Editor', name_kr:'매체제어 편집기'},
         {no:9, tag:'hwpviewer.desktop', name:'Hancom Office Hwp 2014 Viewer', name_kr:'한컴오피스 한글 2014 뷰어'},
         {no:10, tag:'org.gnome.FileRoller.desktop', name:'Archive Manager', name_kr:'압축 관리자'},
         {no:11, tag:'org.gnome.Nautilus.desktop,,,nemo.desktop', name:'Files', name_kr:'파일 관리자'},
-        {no:12, tag:'org.gnome.Totem.desktop,,,io.github.GnomeMpv.desktop', name:'Videos', name_kr:'동영상'},
+        {no:12, tag:'org.gnome.Totem.desktop,,,io.github.GnomeMpv.desktop,,,io.github.celluloid_player.Celluloid.desktop', name:'Videos', name_kr:'동영상'},
         {no:13, tag:'scratch.desktop', name:'scratch-3.0', name_kr:'스크래치 3.0'},
         {no:14, tag:'synaptic.desktop', name:'Synaptic Package Manager', name_kr:'시냅틱 패키지 관리자'},
         {no:15, tag:'xfce4-screenshooter.desktop,,,org.gnome.Screenshot.desktop', name:'Screenshot', name_kr:'스크린샷'},

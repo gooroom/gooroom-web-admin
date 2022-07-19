@@ -27,6 +27,9 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import { translate, Trans } from "react-i18next";
 
+import { InlineDatePicker } from 'material-ui-pickers';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
+
 class DeptActivateList extends Component {
 
   constructor(props) {
@@ -46,7 +49,8 @@ class DeptActivateList extends Component {
           rowsTotal: 0,
           rowsFiltered: 0
         })
-      })
+      }),
+      searchType:'all'
     };
   }
 
@@ -54,7 +58,10 @@ class DeptActivateList extends Component {
     requestPostAPI('readActivateGroupList', {
       deptCd: newListParam.get('deptCd'),
       objectId: newListParam.get('objectId'),
+      gubun: newListParam.get('gubun'),
       keyword: newListParam.get('keyword'),
+      toDate: newListParam.get('toDate') ? newListParam.get('toDate') : '',
+      fromDate: newListParam.get('fromDate') ? newListParam.get('fromDate') : '',
       status: newListParam.get('status'),
       page: newListParam.get('page'),
       draw: newListParam.get('page'),
@@ -113,13 +120,18 @@ class DeptActivateList extends Component {
 
   handleChangeActivateGroupStatusSelect = (value) => {
     const { stateData } = this.state;
+   
     const newListParam = (stateData.get('listParam')).merge({
-      status: (value == 'ALL') ? '' : value, 
+      gubun: (value == 'all') ? '' : value, 
       page: 0
     });
+
     this.setState({
+      keyword: '',
+      searchType: value,
       stateData: stateData.set('listParam', newListParam)
     });
+
     this.handleGetActivateList(newListParam);
   }
 
@@ -132,6 +144,30 @@ class DeptActivateList extends Component {
       stateData: stateData.set('listParam', newListParam)
     });
   }
+
+  handleDateChange = (date, name) => {
+    const { stateData } = this.state;
+    let newListParam;
+
+    if (name === 'toDate') {
+      newListParam = (stateData.get('listParam')).merge({
+        toDate: date.format('YYYY-MM-DD'),
+        page: 0
+      });
+    }
+    else {
+      newListParam = (stateData.get('listParam')).merge({
+        fromDate: date.format('YYYY-MM-DD'),
+        page: 0
+      });
+    }
+
+    this.setState({
+      stateData: stateData.set('listParam', newListParam)
+    });
+
+    this.handleGetActivateList(newListParam);
+  };
 
   handleSelectBtnClick = () => {
     const { stateData } = this.state;
@@ -152,35 +188,62 @@ class DeptActivateList extends Component {
     ];
    
     const listObj = this.state.stateData;
+    const searchType = this.state.searchType;
     let emptyRows = 0; 
     if(listObj && listObj.get('listData')) {
       emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
     }
 
+    const date = formatDateToSimple (new Date(), 'YYYY-MM-DD');
+
     return (
       <div>
         {/* data option area */}
-        <Grid container alignItems="flex-end" direction="row" justify="space-between" >
+        <Grid container alignItems="flex-end" direction="row" justify="space-between" style={{flexWrap:"inherit"}} >
           <Grid item xs={4} >
-            {/* TODO 검색 조건 BE 처리 필요*/}
             <FormControl fullWidth={true}>
               <ActivateGroupStatusSelect onChangeSelect={this.handleChangeActivateGroupStatusSelect}
-                value={'ALL'}/>
+                value={searchType}/>
             </FormControl>
           </Grid>
-          <Grid item xs={4} >
-            <FormControl fullWidth={true}>
-              <KeywordOption paramName="keyword" 
-                handleKeywordChange={this.handleKeywordChange} 
-                handleSubmit={() => this.handleSelectBtnClick()} />
-            </FormControl>
-          </Grid>
-          <Grid item xs={4} style={{paddingLeft:10,paddingRight:20,textAlign:'right'}} >
-            <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
-              <Search />{t("btnSearch")}
-            </Button>
-          </Grid>
-        </Grid>
+          {
+          searchType !== 'date' ?
+          <Grid container alignItems="flex-end" style={{display:'contents'}} >
+            <Grid item xs={4} style={{paddingLeft:20}} >
+              <FormControl fullWidth={true}>
+                <KeywordOption paramName="keyword" 
+                  handleKeywordChange={this.handleKeywordChange} 
+                  handleSubmit={() => this.handleSelectBtnClick()} />
+              </FormControl>
+            </Grid> 
+            <Grid item xs={4} style={{paddingLeft:10,paddingRight:20,textAlign:'right'}} >
+              <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
+                <Search />{t("btnSearch")}
+              </Button>
+            </Grid>
+          </Grid> 
+          :
+          <Grid container alignItems="flex-end" style={{display:'contents'}} >
+            <Grid item xs={4} style={{paddingLeft:20}} >
+              <InlineDatePicker label={t('searchStartDate')} format='YYYY-MM-DD'
+                value={(listObj && listObj.getIn(['listParam', 'fromDate'])) ? listObj.getIn(['listParam', 'fromDate']) : date}
+                onChange={(date) => {this.handleDateChange(date, 'fromDate');}} 
+                className={classes.fullWidth} />
+            </Grid>
+            <Grid item xs={4} >
+              <InlineDatePicker label={t('searchEndDate')} format='YYYY-MM-DD'
+                value={(listObj && listObj.getIn(['listParam', 'toDate'])) ? listObj.getIn(['listParam', 'toDate']) : date}
+                onChange={(date) => {this.handleDateChange(date, 'toDate');}} 
+                className={classes.fullWidth} />
+            </Grid>
+            <Grid item xs={4} style={{textAlign:'right'}} >
+              <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
+                <Search />{t("btnSearch")}
+              </Button>
+            </Grid>
+          </Grid> 
+          }
+       </Grid>
       {(listObj) &&
         <Table>
           <GRCommonTableHead

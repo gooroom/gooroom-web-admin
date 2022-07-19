@@ -15,12 +15,12 @@ class ActivateGroupStatusSelect extends Component {
     this.state = {
       data: Map({
         userStatusData: List([
-          Map({ statusId: 'ALL', statusVal: 'ALL', statusTxt: 'stAll' }),
-          Map({ statusId: 'USER', statusVal: 'USER', statusTxt: 'stActiveUser' }),
-          Map({ statusId: 'CLIENT', statusVal: 'CLIENT', statusTxt: 'stActiveClient' }),
-          Map({ statusId: 'DATE', statusVal: 'DATE', statusTxt: 'stActiveDate' })
+          Map({ statusId: 'ALL', statusVal: 'all', statusTxt: 'stAll' }),
+          Map({ statusId: 'USER', statusVal: 'user', statusTxt: 'stActiveUser' }),
+          Map({ statusId: 'GROUP', statusVal: 'group', statusTxt: 'stActiveClient' }),
+          Map({ statusId: 'DATE', statusVal: 'date', statusTxt: 'stActiveDate' })
         ]),
-        selectedStatusValue: 'ALL'
+        selectedStatusValue: 'all'
       })
     }
   }

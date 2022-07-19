@@ -24,8 +24,16 @@ import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { translate, Trans } from "react-i18next";
 
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
+import { refreshDataListInComps, getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
 
 class SoftwareFilterSpec extends Component {
+
+  constructor(props) {
+    super(props);
+  }
 
   shouldComponentUpdate(nextProps, nextState) {
     const { selectedItem } = nextProps;
@@ -34,6 +42,38 @@ class SoftwareFilterSpec extends Component {
     } else {
       return false;
     }
+  }
+
+  handleSoftwareGroupValueChange = name => event => {
+    const { selectedItem, SoftwareFilterProps, SoftwareFilterActions, compId} = this.props;
+    const state = event.target.checked ? 'allow' : 'disallow'
+
+    let viewItem = generateSoftwareFilterObject(selectedItem, false);
+    let swItems = viewItem.get('SWITEM');
+
+    const itemList = SoftwareFilterDialog.SW_GROUP_LIST && SoftwareFilterDialog.SW_GROUP_LIST.find (n => n.tag === name); 
+    if (itemList) {
+      itemList.list.map (n => {
+
+        swItems= swItems.map (o => {
+          if (o === n.tag) {
+            return {...o, value: state}
+          }
+          return o;
+        }) 
+        
+        const findItem = swItems.find( o => o === n.tag);
+        if (findItem === undefined) {
+          swItems = swItems.set(n.tag, state);
+        }
+      })
+    }
+
+    viewItem = viewItem.setIn(['SWITEM'], swItems);
+    SoftwareFilterActions.editSoftwareFilterData(viewItem, compId).then((res) => {
+      refreshDataListInComps(SoftwareFilterProps, SoftwareFilterActions.readSoftwareFilterListPaged);
+    });
+
   }
 
   render() {
@@ -85,60 +125,65 @@ class SoftwareFilterSpec extends Component {
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
             />
           }
-            <CardContent>
-              <InputLabel className={classes.specTitle} style={{color:'black'}}>{t("msStopRunRedSW")}</InputLabel>
-              <Grid container spacing={8} alignItems="flex-start" direction="row" justify="flex-start" style={{marginTop:10}}>
-              {SoftwareFilterDialog.SW_LIST && SoftwareFilterDialog.SW_LIST.map(n => {
-                const selected = (viewItem.getIn(['SWITEM', n.tag])) ? true : false;
-                const swStyle = (selected) ? {color:'red',fontWeight:'bold'} : {color:'#8484',fontWeight:'bold'};
-                return (
-                  <div style={{width: 570,height: 240,margin: 10,border:'1.5px solid #BFBFBF'}}>
-                    {/* Header */}
-                    <div style={{height: 46,position:'relative',lineHeight:'46px',padding: '0 20px',background:'#F2F2F2',borderBottom: '1.5px solid #BFBFBF'}}>
-                      <span>{n.tag}</span>
-                      <span style={{position: 'absolute',right: 0}}>
-                        <FormControlLabel control={
-                            <Switch 
-                              // onChange={} 
-                              color="primary"
-                              // checked={} 
-                            />
-                          }
-                        />
-                      </span>
-                    </div>
-                    {/* Body */}
-                    <div >
-                      <ul style={{listStyle:'none',margin: 0,padding: 0,height: 192,overflow:'auto'}}>
-                        {/* 반복 시작 */}
-                        <li style={{padding:'20px 30px'}}>
-                          <div style={{display:'inline-block'}}>
-                            <img src={{/* 경로 추가 */}} height="50" width="50" />
-                          </div>
-                          <div style={{display:'inline-block',verticalAlign:'top',marginLeft:'30px'}}>
-                            <div style={swStyle}>{n.name}</div>
-                            <div>{n.name_kr}</div>
-                          </div>
-                        </li>{/* 반복 끝 */}
-                      </ul>
-                    </div>
+          <CardContent>
+            <InputLabel className={classes.specTitle} style={{color:'black'}}>{t("msStopRunRedSW")}</InputLabel>
+            <Grid container spacing={8} alignItems="flex-start" direction="row" justify="flex-start" style={{marginTop:10}}>
+            {SoftwareFilterDialog.SW_GROUP_LIST && SoftwareFilterDialog.SW_GROUP_LIST.map(n => {
+             const find = n.list.find ( o => { 
+                return viewItem.getIn(['SWITEM', o.tag ]) ? o : null; 
+              })
+             const chk = find ? true : false;
+             //const chk = false;
+             return (
+                <div key={n.no} style={{width: 570,height: 240,margin: 10,border:'1.5px solid #BFBFBF'}}>
+                  {/* Header */}
+                  <div style={{height: 46,position:'relative',lineHeight:'46px',padding: '0 20px',background:'#F2F2F2',borderBottom: '1.5px solid #BFBFBF'}}>
+                    <span>{this.props.lng === 'kr' ? n.name_kr : n.tag}</span>
+                    {
+                    hasAction &&
+                    <span style={{position: 'absolute',right: 0}}>
+                      <FormControlLabel control={
+                          <Switch 
+                            onChange={this.handleSoftwareGroupValueChange(n.tag)} 
+                            color="primary"
+                            checked={chk} 
+                          />
+                        }
+                      />
+                    </span>
+                    }
                   </div>
-
-                  // 기존 소스
-                  //   <Grid item xs={12} sm={12} md={6} lg={4} xl={3} key={n.no}>
-                  //   <Card>
-                  //     <GRSoftwareCardHeader category={n.tag} style={{height:30}}/>
-                  //     <CardContent style={{padding:6}}>
-                  //       <Typography variant="body1" style={swStyle}>{n.name}</Typography>
-                  //       <Typography variant="caption" color="textSecondary">{n.name_kr}</Typography>
-                  //     </CardContent>
-                  //   </Card>
-                  // </Grid>
-                  );
-                })
-              }
-              </Grid>
-            </CardContent>
+                  {/* Body */}
+                  <div >
+                    <ul style={{listStyle:'none',margin: 0,padding: 0,height: 192,overflow:'auto'}}>
+                    {/* 반복 시작 */}
+                    {
+                      n.list && n.list.map (item => {
+                          const selected = (viewItem.getIn(['SWITEM', item.tag])) ? true : false;
+                          const swStyle = (selected) ? {color:'red',fontWeight:'bold'} : {color:'#8484',fontWeight:'bold'};
+                          const iconUrl = location.origin + '/gpms/images/gr_icons/' + item.icon;
+                          return (
+                            <li style={{padding:'20px 30px'}} key={item.no}>
+                              <div style={{display:'inline-block'}}>
+                                <img src={iconUrl} height="50" width="50" />
+                              </div>
+                              <div style={{display:'inline-block',verticalAlign:'top',marginLeft:'30px'}}>
+                                <div style={swStyle}>{item.name}</div>
+                                <div>{item.name_kr}</div>
+                              </div>
+                            </li>
+                          )
+                      })
+                    }
+                    {/* 반복 끝 */}
+                    </ul>
+                  </div>
+               </div>
+                );
+              })
+            }
+            </Grid>
+          </CardContent>
           </Card>
         }
       </React.Fragment>
@@ -146,7 +191,16 @@ class SoftwareFilterSpec extends Component {
   }
 }
 
-export default translate("translations")(withStyles(GRCommonStyle)(SoftwareFilterSpec));
+const mapStateToProps = (state) => ({
+  SoftwareFilterProps: state.SoftwareFilterModule
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch)
+});
+
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(SoftwareFilterSpec)));
+//export default translate("translations")(withStyles(GRCommonStyle)(SoftwareFilterSpec));
 
 export const generateSoftwareFilterObject = (param, isForViewer) => {
 
