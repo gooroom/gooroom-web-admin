@@ -80,7 +80,8 @@ class ThemeManage extends Component {
   // .................................................
   handleSelectBtnClick = () => {
     const { ThemeManageActions, ThemeManageProps } = this.props;
-    ThemeManageActions.readThemeListPaged(ThemeManageProps, this.props.match.params.grMenuId, {page: 0});
+    ThemeManageActions.readThemeListPaged(ThemeManageProps, this.props.match.params.grMenuId, { 
+      page: 0 });
   };
 
   handleKeywordChange = (name, value) => {
@@ -130,12 +131,8 @@ class ThemeManage extends Component {
   };
 
   // delete
-  handleDeleteClick = (event, id) => {
-    event.stopPropagation();
-    const { ThemeManageProps, GRConfirmActions } = this.props;
-    const { t, i18n } = this.props;
-
-    const viewItem = getRowObjectById(ThemeManageProps, this.props.match.params.grMenuId, id, 'themeId');
+  handleDeleteClick = (viewItem) => {
+    const { GRConfirmActions , t } = this.props;
     GRConfirmActions.showConfirm({
       confirmTitle: t("lbDeleteTheme"),
       confirmMsg: t("msgDeleteTheme", {themeNm: viewItem.get('themeNm')}),
@@ -186,12 +183,14 @@ class ThemeManage extends Component {
     ];
 
     const listObj = ThemeManageProps.getIn(['viewItems', compId]);
+    let selectId = 0;
     let emptyRows = 0; 
     if(listObj) {
       emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
+      selectId = listObj.get('selectId');
     }
 
-    return (
+     return (
       <React.Fragment>
         <GRPageHeader name={t(this.props.match.params.grMenuName)} />        
         <GRPane>
@@ -285,9 +284,10 @@ class ThemeManage extends Component {
         <ThemeSpec compId={compId}
           specType="inform" 
           selectedItem={listObj}
-          isEditable={false}
+          isEditable={selectId > 3 ? true : false}
           onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleClickEdit}
+          onClickDelete={this.handleDeleteClick}
         />
         <GRConfirm />
       </React.Fragment>

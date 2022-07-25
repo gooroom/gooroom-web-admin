@@ -147,25 +147,13 @@ class DeptActivateList extends Component {
 
   handleDateChange = (date, name) => {
     const { stateData } = this.state;
-    let newListParam;
-
-    if (name === 'toDate') {
-      newListParam = (stateData.get('listParam')).merge({
-        toDate: date.format('YYYY-MM-DD'),
-        page: 0
-      });
-    }
-    else {
-      newListParam = (stateData.get('listParam')).merge({
-        fromDate: date.format('YYYY-MM-DD'),
-        page: 0
-      });
-    }
-
+    let newListParam = (stateData.get('listParam')).merge({
+      [name]: date.format('YYYY-MM-DD'),
+      page: 0
+    });
     this.setState({
       stateData: stateData.set('listParam', newListParam)
     });
-
     this.handleGetActivateList(newListParam);
   };
 

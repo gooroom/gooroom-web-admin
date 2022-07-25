@@ -661,8 +661,15 @@ export default {
   "msgThemeName": "Please enter a theme name.",
   "lbThemeDesc": "Theme Description",
   "lbIconSetting": "Application icon setting",
-  "lbBackgroundSetting": "배경화면 설정",
-  "lbUtility": "유틸리티",
+  "lbBackgroundSetting": "Background setting",
+  "dtAddThemeError": "Registration Error",
+  "msgBackgroundSettingError": "Wallpaper registration is required.",
+  // 테마 카테고리
+  "lbUtility": "Utility",
+  "lbNetwork": "Netowrk",
+  "lbSystem": "System",
+  "lbAudioVideo": "Audio & Video",
+  "lbGraphics": "Graphics",
   
   // 관리서버설정
   "lbSaveServerConfig": "Save management server settings",

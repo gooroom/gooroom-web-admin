@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 
 import * as ThemeManageActions from 'modules/ThemeManageModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
@@ -43,30 +44,40 @@ class ThemeDialog extends Component {
     static TYPE_EDIT = 'EDIT';
 
     static APP_LIST = [
-        {no:1, title:'cloud storage', name:'gooroom-cloud-storage'},
-        {no:2, title:'web office', name:'gooroom-web-office'},
-        {no:3, title:'office SNS', name:'gooroom-sns'},
-        {no:4, title:'team', name:'gooroom-collaboration'},
-        {no:5, title:'video conferencing system', name:'gooroom-video-conference'},
-        {no:6, title:'groupware', name:'gooroom-groupware'},
-        {no:7, title:'memo', name:'memo'},
-        {no:8, title:'KMS', name:'gooroom-kms'},
-        {no:9, title:'ERP', name:'gooroom-erp'},
-        {no:10, title:'accounting management', name:'gooroom-accounting-management'},
-        {no:11, title:'personnel management', name:'gooroom-personnel-management'},
-        {no:12, title:'etc applications', name:'gooroom-other-applications'},
-        {no:13, title:'security status', name:'preferences-system-firewall'},
-        {no:14, title:'screenshot', name:'applets-screenshooter'},
-        {no:15, title:'smartcard register', name:'gooroom-smartcard-register'},
-        {no:16, title:'gooroom terminal server', name:'gooroom-client-server-register'},
-        {no:17, title:'package management', name:'synaptic'},
-        {no:18, title:'updater', name:'gooroomupdater'},
-        {no:19, title:'archiver', name:'file-roller'},
-        {no:20, title:'multimedia', name:'io.github.GnomeMpv'},
-        {no:21, title:'calculator', name:'galculator'},
-        {no:22, title:'network management', name:'preferences-system-network'},
-        {no:23, title:'file manager', name:'org.gnome.Nautilus'},
-        {no:24, title:'gooroom browser', name:'gooroom-browser'}
+        {no:1, title:'gooroom browser', name:'gooroom-browser', group:'lbNetwork', default:'1_gooroom-browser.svg'},
+        //{no:2, title:'image viewer', name:'org.gnome.eog', group:'lbGraphics', default:'1_gooroom-other-applications.svg'},
+        {no:3, title:'multimedia', name:'io.github.GnomeMpv', group:'lbAudioVideo', default:'1_io.github.GnomeMpv.svg'},
+        {no:4, title:'updater', name:'gooroomupdater', group:'lbSystem', default:'1_gooroomupdater.svg'},
+        {no:5, title:'package management', name:'synaptic', group:'lbSystem', default:'1_synaptic.svg'},
+        //{no:6, title:'gnome control center', name:'gnome-control-center', group:'lbSystem', default:'1_gooroom-other-applications.svg'},
+        //{no:7, title:'grac editor', name:'grac-editor', group:'lbSystem', default:'1_gooroom-other-applications.svg'},
+        //{no:8, title:'software', name:'kr.gooroom.Software', group:'lbSystem', default:'1_gooroom-other-applications.svg'},
+        {no:9, title:'cloud storage', name:'gooroom-cloud-storage', group:'lbUtility', default:'1_gooroom-cloud-storage.svg'},
+        {no:10, title:'web office', name:'gooroom-web-office', group:'lbUtility', default:'1_gooroom-web-office.svg'},
+        {no:11, title:'office SNS', name:'gooroom-sns', group:'lbUtility', default:'1_gooroom-sns.svg'},
+        {no:12, title:'team', name:'gooroom-collaboration', group:'lbUtility', default:'1_gooroom-collaboration.svg'},
+        {no:13, title:'video conferencing system', name:'gooroom-video-conference', group:'lbUtility', default:'1_gooroom-video-conference.svg'},
+        {no:14, title:'groupware', name:'gooroom-groupware', group:'lbUtility', default:'1_gooroom-groupware.svg'},
+        {no:15, title:'memo', name:'accessories-text-editor', group:'lbUtility', default:'1_accessories-text-editor.svg'},
+        {no:16, title:'KMS', name:'gooroom-kms', group:'lbUtility', default:'1_gooroom-kms.svg'},
+        {no:17, title:'ERP', name:'gooroom-erp', group:'lbUtility', default:'1_gooroom-erp.svg'},
+        {no:18, title:'accounting management', name:'gooroom-accounting-management', group:'lbUtility', default:'1_gooroom-accounting-management.svg'},
+        {no:19, title:'personnel management', name:'gooroom-personnel-management', group:'lbUtility', default:'1_gooroom-personnel-management.svg'},
+        {no:20, title:'etc applications', name:'gooroom-other-applications', group:'lbUtility', default:'1_gooroom-other-applications.svg'},
+        {no:21, title:'security status', name:'preferences-system-firewall', group:'lbUtility', default:'1_preferences-system-firewall.svg'},
+        {no:22, title:'screenshot', name:'applets-screenshooter', group:'lbUtility', default:'1_applets-screenshooter.svg'},
+        {no:23, title:'smartcard register', name:'gooroom-smartcard-register', group:'lbUtility', default:'1_gooroom-smartcard-register.svg'},
+        {no:24, title:'gooroom terminal server', name:'gooroom-client-server-register', group:'lbUtility', default:'1_gooroom-client-server-register.svg'},
+        {no:25, title:'archiver', name:'file-roller', group:'lbUtility', default:'1_file-roller.svg'},
+        {no:26, title:'calculator', name:'galculator', group:'lbUtility', default:'1_galculator.svg'},
+        {no:27, title:'network management', name:'preferences-system-network', group:'lbUtility', default:'1_preferences-system-network.svg'},
+        {no:28, title:'file manager', name:'org.gnome.Nautilus', group:'lbUtility', default:'1_org.gnome.Nautilus.svg'}
+        //{no:29, title:'appointment', name:'appointment', group:'lbUtility', default:'1_gooroom-other-applications.svg'},
+        //{no:30, title:'calender', name:'calender', group:'lbUtility', default:'1_gooroom-other-applications.svg'}, 
+        //{no:31, title:'gooroom guide', name:'gooroom-guide', group:'lbUtility', default:'1_gooroom-other-applications.svg'},
+        //{no:32, title:'gooroom toolkit', name:'gooroom-toolkit', group:'lbUtility', default:'1_gooroom-other-applications.svg'},
+        //{no:33, title:'terminal', name:'org.gnome.Terminal', group:'lbUtility', default:'1_gooroom-other-applications.svg'},
+        //{no:34, title:'yelp browser', name:'yelp-browser', group:'lbUtility', default:'1_gooroom-other-applications.svg'}
     ];
 
     handleClose = (event) => {
@@ -87,25 +98,72 @@ class ThemeDialog extends Component {
         });
     }
 
-    makeParameter = (paramObject) => {
+    makeParameter = (paramObject, dialogType) => {
+
+        const imageType = "image/svg+xml";
 
         let dataParam = Map({
             themeId: paramObject.get('themeId'),
             themeNm: paramObject.get('themeNm'),
-            themeCmt: paramObject.get('themeCmt')
+            themeCmt: paramObject.get('themeCmt'),
+            wallpaperFile: paramObject.get('wallpaper')
         });
-        ThemeDialog.APP_LIST.map(n => {
-            dataParam = dataParam.set(n.name, paramObject.get(n.name));
-        });
+
+        if (dialogType == ThemeDialog.TYPE_ADD) {
+            ThemeDialog.APP_LIST.map(n => {
+                const editFile = paramObject.get(n.name);
+                dataParam = dataParam.set(n.name, editFile === undefined ? new File ([], n.name, {type:imageType}) : editFile);
+            });
+            return dataParam.toJS();
+        }
+
+        paramObject.get('themeIcons').map (n => {
+            const fileName = n.get ('fileEtcInfo');
+            let editFile = paramObject.get(fileName);
+            if (editFile === undefined || editFile === '') {
+                const deleteFile = paramObject.get(fileName + "_DELETE");
+                if (deleteFile === undefined) {
+                    const imgUrl = n.get('imgUrl');
+                    const defaultItem = ThemeDialog.APP_LIST.find (o => o.name === fileName);
+                    const defaultImg = window.location.origin + '/gpms/images/gr_icons/' + defaultItem.default;
+                    if (imgUrl === defaultImg)  {
+                        editFile = new File ([],fileName, {type:imageType});
+                    }
+                    else {
+                        fetch(imgUrl).then (res => res.blob())
+                        .then (blob => {
+                            this.readFileContent(blob).then(content => {
+                                if(content) {
+                                    editFile = new File ([content], fileName, {type:imageType});
+                                }
+                            }).catch(error => console.log(error));
+                        });
+                    }
+                }
+                else {
+                    editFile = new File ([], fileName, {type:imageType});
+                }
+            }
+            dataParam = dataParam.set(fileName, editFile);
+        })
         return dataParam.toJS();
     }
 
     // 생성
     handleCreateData = (event) => {
-        const { ThemeManageProps, GRConfirmActions } = this.props;
+        const { ThemeManageProps, GRConfirmActions, GRAlertActions } = this.props;
         const { t, i18n } = this.props;
 
         if(this.refs.form && this.refs.form.isFormValid()) {
+            const wallpaler = ThemeManageProps.get('editingItem').get('wallpaper');
+            if (wallpaler === undefined || wallpaler === '') {
+                GRAlertActions.showAlert({
+                    alertTitle: t("dtAddThemeError"),
+                    alertMsg: t("msgBackgroundSettingError") 
+                });
+                return;
+            }
+
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbAddTheme"),
                 confirmMsg: t("msgAddTheme"),
@@ -123,7 +181,7 @@ class ThemeDialog extends Component {
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { ThemeManageProps, ThemeManageActions, compId } = this.props;
-            ThemeManageActions.createThemeData(this.makeParameter(paramObject)).then((res) => {
+            ThemeManageActions.createThemeData(this.makeParameter(paramObject, ThemeDialog.TYPE_ADD)).then((res) => {
                 ThemeManageActions.readThemeListPaged(ThemeManageProps, compId);
                 this.handleClose();
             });
@@ -153,7 +211,7 @@ class ThemeDialog extends Component {
     handleEditDataConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { ThemeManageProps, ThemeManageActions, compId } = this.props;
-            ThemeManageActions.editThemeData(this.makeParameter(paramObject)).then((res) => {
+            ThemeManageActions.editThemeData(this.makeParameter(paramObject, ThemeDialog.TYPE_EDIT)).then((res) => {
                 ThemeManageActions.readThemeListPaged(ThemeManageProps, compId);
                 this.handleClose();
             });
@@ -175,6 +233,11 @@ class ThemeDialog extends Component {
             [gubunName]: '',
             [viewFileName]: ''
         });
+
+        const deleteName = gubunName +  '_DELETE';
+        this.props.ThemeManageActions.setEditingItemObject({
+            [deleteName]: 'true'
+        });
     }
     // file select
     handleImageFileChange = (event, gubunName) => {
@@ -189,6 +252,7 @@ class ThemeDialog extends Component {
             }
         }).catch(error => console.log(error));
     }
+
     readFileContent(file) {
         const reader = new FileReader()
         return new Promise((resolve, reject) => {
@@ -198,7 +262,6 @@ class ThemeDialog extends Component {
         });
     }
 
-
     render() {
         const { classes } = this.props;
         const { ThemeManageProps, compId } = this.props;
@@ -206,9 +269,6 @@ class ThemeDialog extends Component {
 
         const dialogType = ThemeManageProps.get('dialogType');
         const editingItem = (ThemeManageProps.get('editingItem')) ? ThemeManageProps.get('editingItem') : null;
-
-        const defaultThemes = ThemeManageProps.getIn(['viewItems', compId, 'listData']);
-        const defaultTheme = defaultThemes && defaultThemes.get(0).getIn(['themeIcons']);
 
         let title = "";
         if(dialogType === ThemeDialog.TYPE_ADD) {
@@ -253,13 +313,16 @@ class ThemeDialog extends Component {
                                         alignItems="flex-start" style={{width:'auto',margin:(20, 0)}}
                                     >
                                        <div><span style={{verticalAlign: 'middle'}}>{t("lbBackgroundSetting")}</span>
-                                            <input style={{display:'none'}} id={'background-file'} type="file" onChange={event => this.handleImageFileChange(event, 'beforeBackground')}/>
+                                            <input style={{display:'none'}} id={'background-file'} type="file" accept=".png" onChange={event => this.handleImageFileChange(event, 'wallpaper')}/>
                                             <label style={{marginLeft: '10px'}} htmlFor={'background-file'}>
                                                 <Button variant="contained" size='small' component="span" className={classes.button} style={{width:120,height:28,background:'#666666',color:'#ffffff',borderRadius:4,border:0}}>{t("btnUploadFile")}</Button>
                                             </label></div>
                                        <div style={{width:'100%',height:260,marginTop:10,marginBottom:10,lineHeight:'260px',overflow:'hidden',border:'1px solid #cecece',textAlign:'center'}}>
                                            {
-                                                <img src={editingItem.get('beforeBackground_GRFILE')} height='90%' width='auto' style={{verticalAlign:'middle'}}/>
+                                                dialogType === ThemeDialog.TYPE_ADD ?
+                                                    <img src={editingItem.get('wallpaper_GRFILE')} height='90%' width='auto' style={{verticalAlign:'middle'}}/>
+                                                :
+                                                    <img src={editingItem.get('wallpaperUrl')} height='90%' width='auto' style={{verticalAlign:'middle'}}/>
                                            }
                                        </div>
                                     </Grid>
@@ -270,26 +333,33 @@ class ThemeDialog extends Component {
                                         <div><span style={{verticalAlign: 'middle'}}>{t("lbIconSetting")}</span></div>
                                         <div style={{width:'100%',height:260,marginTop:10,marginBottom:10,overflowX:'auto',border:'1px solid #cecece', background: '#cecece'}}>
                                             <div style={{margin:20}}>
-                                                {ThemeDialog.APP_LIST && ThemeDialog.APP_LIST.map((n, i) => {
+                                            {
+                                                ThemeDialog.APP_LIST && ThemeDialog.APP_LIST.map((n, i) => {
                                                     let beforeImg = '';
-                                                    let defaultImg = '';
                                                     let actionType = 'DEL';
+                                                    const defaultImg = window.location.origin + '/gpms/images/gr_icons/' + n.default;
 
-                                                    if(dialogType === ThemeDialog.TYPE_ADD) {
-                                                        beforeImg = editingItem.get(n.name + "_GRFILE");
+                                                    beforeImg = editingItem.get(n.name + "_GRFILE");
+
+                                                    if (dialogType === ThemeDialog.TYPE_EDIT) {
                                                         if (beforeImg === undefined || beforeImg === '') {
-                                                            const iconItem = defaultTheme.find(icon => {
-                                                                return icon.get('fileEtcInfo') == n.name;
-                                                            });
-                                                            if(iconItem && iconItem.get('fileName') && iconItem.get('fileName') !== '') {
-                                                                defaultImg = iconItem.get('imgUrl') + iconItem.get('fileName');
+                                                            const beforeItem = editingItem.get('themeIcons').find ( o => o.get('fileEtcInfo') === n.name);
+                                                            if (beforeItem) {
+                                                                if (!editingItem.get(n.name + "_DELETE")) {
+                                                                    beforeImg = beforeItem.get('imgUrl'); 
+                                                                    if (beforeImg === defaultImg) {
+                                                                        actionType = 'ADD';
+                                                                    }
+                                                                }
                                                             }
-                                                            actionType = 'ADD';
                                                         }
+                                                    }
+                                                    if (beforeImg === undefined || beforeImg === '') {
+                                                        actionType = 'ADD';
                                                     }
                                                     return (                                                        
                                                         <div key={i} style={{display: 'inline-block',width:200,height:160,marginRight:8,marginBottom:8,padding:10,background: '#ffffff',borderRadius: 16}}>
-                                                            <div>{t("lbUtility")}</div>
+                                                            <div>{t(n.group)}</div>
                                                             <div style={{position:'relative',margin: '16px 10px 0'}}>
                                                                 <div style={{display: 'inline-block',width:50,height:50}}>
                                                                     {/* 아이콘 위치 */}
@@ -306,11 +376,9 @@ class ThemeDialog extends Component {
                                                                         </div>
                                                                         :
                                                                         <div style={{position:'relative',width:30,height:30,borderRadius:4,border:'1px solid rgb(206, 206, 206)',background:'#e9e9e9'}}>
-                                                                            <input style={{display:'none'}} id={n.name + '-file'} type="file" onChange={event => this.handleImageFileChange(event, n.name)}/>
+                                                                            <input style={{display:'none'}} id={n.name + '-file'} type="file" accept=".svg" onChange={event => this.handleImageFileChange(event, n.name)}/>
                                                                             <label style={{marginLeft: '10px'}} htmlFor={n.name + '-file'}>
-                                                                                {
-                                                                                    (actionType === 'DEL') ?  <DeleteOutline style={{minWidth:24,minHeight:24,position:'absolute',top:2,left:3,cursor:'pointer'}}/> : <EditOutlined style={{minWidth:24,minHeight:24,position:'absolute',top:2,left:3,cursor:'pointer'}}/>
-                                                                                }
+                                                                                <EditOutlined style={{minWidth:24,minHeight:24,position:'absolute',top:2,left:3,cursor:'pointer'}}/>
                                                                             </label>
                                                                         </div>
                                                                     }
@@ -319,99 +387,27 @@ class ThemeDialog extends Component {
                                                             <div style={{height:50,marginTop:8,fontSize:14}}>
                                                                 {/*넘버 주석처리 {n.no}. */}
                                                                 {n.title}</div>
-                                                        </div>                                                       
+                                                            </div>                                                       
                                                     );
-                                                })}
+                                                })
+                                            }
                                             </div>
                                         </div>                                                
                                     </Grid>
-
                                 </Grid>
                             </Grid>
                         </DialogContent>
                         <DialogActions>
                         {(dialogType === ThemeDialog.TYPE_ADD) &&
-                                <Button onClick={this.handleCreateData} variant='contained' color="secondary">{t("btnRegist")}</Button>
-                            }
-                            {(dialogType === ThemeDialog.TYPE_EDIT) &&
-                                <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
-                            }
+                            <Button onClick={this.handleCreateData} variant='contained' color="secondary">{t("btnRegist")}</Button>
+                        }
+                        {(dialogType === ThemeDialog.TYPE_EDIT) &&
+                            <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
+                        }
                             <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
                         </DialogActions>
                     </ValidatorForm>
                 </Dialog>
-            
-            // <Dialog open={ThemeManageProps.get('dialogOpen')} fullWidth={true} maxWidth="sm">
-            //     <ValidatorForm ref="form">
-            //     <DialogTitle>{title}</DialogTitle>
-            //     <DialogContent>
-            //     {(dialogType === ThemeDialog.TYPE_EDIT) &&
-            //         <TextField label={t("lbThemeId")} className={classes.fullWidth}
-            //             value={(editingItem.get('themeId')) ? editingItem.get('themeId') : ''}
-            //         />
-            //     }
-            //         <TextValidator label={t("lbThemeName")} className={classes.fullWidth}
-            //             value={(editingItem.get('themeNm')) ? editingItem.get('themeNm') : ''}
-            //             name="themeNm" validators={['required']} errorMessages={[t("msgThemeName")]}
-            //             onChange={this.handleValueChange("themeNm")}
-            //         />
-            //         <TextField label={t("lbThemeDesc")} className={classes.fullWidth}
-            //             value={(editingItem.get('themeCmt')) ? editingItem.get('themeCmt') : ''}
-            //             onChange={this.handleValueChange("themeCmt")}
-            //         />
-            //         <div style={{marginTop:20}}></div>
-            //         <FormLabel>{t("lbIconSetting")}</FormLabel>
-            //         <div style={{maxHeight:270,overflowY:'auto'}}>
-            //         <Table>
-            //             <TableBody>
-            //                 {ThemeDialog.APP_LIST && ThemeDialog.APP_LIST.map(n => {
-            //                     let beforeImg = '';
-            //                     if(dialogType == ThemeDialog.TYPE_EDIT) {
-            //                         const iconItem = editingItem.get('themeIcons').find(icon => {
-            //                             return icon.get('fileEtcInfo') == n.name;
-            //                         });
-            //                         if(iconItem && iconItem.get('fileName') && iconItem.get('fileName') !== '') {
-            //                             beforeImg = iconItem.get('imgUrl') + iconItem.get('fileName');
-            //                         }                                    
-            //                     }
-
-            //                     return (
-            //                         <TableRow hover key={n.no}>
-            //                             <TableCell style={{width:230}}>{n.no}. {n.title}</TableCell>
-            //                             {(dialogType === ThemeDialog.TYPE_EDIT) &&
-            //                                 <TableCell style={{width:50}}>
-            //                                 {(beforeImg && beforeImg !== '') && 
-            //                                     <img src={beforeImg} height="50" style={{border:'solid 1 red'}} />
-            //                                 }
-            //                                 </TableCell>
-            //                             }
-            //                             <TableCell style={{width:80}}>
-            //                                 <input style={{display:'none'}} id={n.name + '-file'} type="file" onChange={event => this.handleImageFileChange(event, n.name)} />
-            //                                 <label htmlFor={n.name + '-file'}>
-            //                                     <Button variant="contained" size='small' component="span" className={classes.button}>{t("btnSelectFile")}</Button>
-            //                                 </label>
-            //                             </TableCell>
-            //                             <TableCell>
-            //                                 <img src={editingItem.get(n.name + '_GRFILE')} height="50" />
-            //                             </TableCell>
-            //                         </TableRow>
-            //                     );
-            //                 })}
-            //             </TableBody>
-            //         </Table>
-            //         </div>
-            //     </DialogContent>
-            //     <DialogActions>
-            //     {(dialogType === ThemeDialog.TYPE_ADD) &&
-            //         <Button onClick={this.handleCreateData} variant='contained' color="secondary">{t("btnRegist")}</Button>
-            //     }
-            //     {(dialogType === ThemeDialog.TYPE_EDIT) &&
-            //         <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
-            //     }
-            //     <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
-            //     </DialogActions>
-            //     </ValidatorForm>
-            // </Dialog>
             }
             </div>
         );
@@ -424,7 +420,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   ThemeManageActions: bindActionCreators(ThemeManageActions, dispatch),
-  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+  GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
 export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ThemeDialog)));

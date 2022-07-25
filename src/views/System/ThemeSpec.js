@@ -17,6 +17,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
 
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -44,12 +45,17 @@ class ThemeSpec extends Component {
             <CardHeader
               title={viewItem.get('themeNm')}
               subheader={viewItem.get('themeCmt')}
-              action={(isEditable) ?
-                <div style={{width:48,paddingTop:10}}>
+              action={
+                (isEditable) ?
+                <div style={{width:48,paddingTop:10, display:'contents'}}>
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.props.onClickEdit(viewItem)}
                   ><SettingsApplicationsIcon /></Button>
+                  <Button size="small"
+                    variant="outlined" color="primary" style={{minWidth:32, marginLeft:10, marginRight:10}}
+                    onClick={() => this.props.onClickDelete(viewItem)}
+                  ><DeleteForeverIcon/></Button>
                 </div> : <div></div>
               }
             ></CardHeader>
@@ -62,20 +68,22 @@ class ThemeSpec extends Component {
                   </Card>
                 </Grid>
 
-                {viewItem.get('themeIcons').map(n => {
-                  const iconUrl = n.get('imgUrl') + n.get('fileName');
+                {
+                ThemeDialog.APP_LIST.map( n => {
+                  const themeItem = viewItem.get('themeIcons').find (o => o.get('fileEtcInfo') === n.name);
+                  const iconUrl = themeItem.get('imgUrl');
                   return (
-                <Grid key={iconUrl} item xs={12} md={6} lg={4} xl={3}>
-                  <Card>
-                  <CardHeader
-                    avatar={
-                      <Avatar src={iconUrl} style={{ borderRadius: 0 }} />
-                    }
-                    title={n.get('fileEtcInfo')}
-                    subheader={n.get('fileName')}
-                  />
-                  </Card>
-                </Grid>
+                    <Grid key={iconUrl} item xs={12} md={6} lg={4} xl={3}>
+                      <Card>
+                      <CardHeader
+                        avatar={
+                          <Avatar src={iconUrl} style={{ borderRadius: 0 }} />
+                        }
+                        title={n.title}
+                        subheader={themeItem.get('fileName')}
+                      />
+                      </Card>
+                    </Grid>
                   )})
                 }
               </Grid>
@@ -89,7 +97,7 @@ class ThemeSpec extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ThemeManageProps: state.BrowserRuleModule
+  ThemeManageProps: state.ThemeManageModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

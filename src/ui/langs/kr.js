@@ -155,7 +155,7 @@ export default {
   "btnCopy": "복사",
   "btnSelect": "선택",
   "btnSelectFile": "File선택",
-  "btnUploadFile": "Upload File",
+  "btnUploadFile": "업로드",
   "btnOK": "확인",
   "btnYes": "예",
   "btnNo": "아니오",
@@ -662,7 +662,14 @@ export default {
   "lbThemeDesc": "테마 설명",
   "lbIconSetting": "업무환경(Application) 아이콘 설정",
   "lbBackgroundSetting": "배경화면 설정",
+  "dtAddThemeError": "등록 오류",
+  "msgBackgroundSettingError": "배경화면 등록이 필요합니다",
+  // 테마 카테고리
   "lbUtility": "유틸리티",
+  "lbNetwork": "네트워크",
+  "lbSystem": "시스템",
+  "lbAudioVideo": "오디오 & 비디오",
+  "lbGraphics": "그래픽",
   
   // 관리서버설정
   "lbSaveServerConfig": "구름관리서버설정 저장",

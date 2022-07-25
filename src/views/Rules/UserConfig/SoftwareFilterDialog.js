@@ -77,7 +77,7 @@ class SoftwareFilterDialog extends Component {
             {no:1, tag:'org.gnome.Totem.desktop,,,io.github.GnomeMpv.desktop,,,io.github.celluloid_player.Celluloid.desktop', name:'Videos', name_kr:'동영상',icon:'1_io.github.GnomeMpv.svg'}
         ]},
         {no:5, tag:'Graphics', name: 'graphics', name_kr: '그래픽', list: [
-            {no:1, tag:'eog.desktop', name:'Image Viewer', name_kr:'이미지 보기',icon:'1_gooroom-other-applications.svg'}
+            {no:1, tag:'org.gnome.eog.desktop', name:'Image Viewer', name_kr:'이미지 보기',icon:'1_gooroom-other-applications.svg'}
         ]}
     ]
 
@@ -99,7 +99,7 @@ class SoftwareFilterDialog extends Component {
         {no:15, tag:'xfce4-screenshooter.desktop,,,org.gnome.Screenshot.desktop', name:'Screenshot', name_kr:'스크린샷'},
         {no:16, tag:'xfce4-terminal.desktop,,,org.gnome.Terminal.desktop', name:'Terminal', name_kr:'터미널'},
         {no:17, tag:'veyon-master.desktop', name:'Veyon Master', name_kr:'Veyon Master'},
-        {no:18, tag:'eog.desktop', name:'Image Viewer', name_kr:'이미지 보기'},
+        {no:18, tag:'org.gnome.eog.desktop', name:'Image Viewer', name_kr:'이미지 보기'},
         {no:19, tag:'blueman-manager.desktop', name:'Bluetooth Manager', name_kr:'블루투스 관리자'},
         {no:20, tag:'org.gnome.gedit.desktop', name:'Mousepad', name_kr:'메모'},
         {no:21, tag:'gooroom-guide.desktop', name:'Gooroom Guide', name_kr:'구름 도움말'},
