@@ -358,7 +358,7 @@ class ThemeDialog extends Component {
                                                         actionType = 'ADD';
                                                     }
                                                     return (                                                        
-                                                        <div key={i} style={{display: 'inline-block',width:200,height:160,marginRight:8,marginBottom:8,padding:10,background: '#ffffff',borderRadius: 16}}>
+                                                        <div key={i} style={{display: 'inline-block',width:200,height:180,position:'relative',marginRight:8,marginBottom:8,padding:'16px 10px 10px',background: '#ffffff',borderRadius: 16}}>
                                                             <div>{t(n.group)}</div>
                                                             <div style={{position:'relative',margin: '16px 10px 0'}}>
                                                                 <div style={{display: 'inline-block',width:50,height:50}}>
@@ -384,7 +384,7 @@ class ThemeDialog extends Component {
                                                                     }
                                                                 </div> 
                                                             </div>                                                            
-                                                            <div style={{height:50,marginTop:8,fontSize:14}}>
+                                                            <div style={{height:50,position:'absolute',right:10,bottom:10,left:10,fontSize:14}}>
                                                                 {/*넘버 주석처리 {n.no}. */}
                                                                 {n.title}</div>
                                                             </div>                                                       
