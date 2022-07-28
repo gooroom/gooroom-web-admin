@@ -71,7 +71,7 @@ class ThemeSpec extends Component {
                 {
                 ThemeDialog.APP_LIST.map( n => {
                   const themeItem = viewItem.get('themeIcons').find (o => o.get('fileEtcInfo') === n.name);
-                  const iconUrl = themeItem.get('imgUrl');
+                  const iconUrl = themeItem && themeItem.get('imgUrl');
                   return (
                     <Grid key={iconUrl} item xs={12} md={6} lg={4} xl={3}>
                       <Card>

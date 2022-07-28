@@ -430,9 +430,10 @@ class DividedAdminManageDialog extends Component {
                         />
                     }
 
-                    {(editingItem.get('adminTp') !== Constants.SUPER_TYPECODE) &&
+                    {
+                    (editingItem.get('adminTp') !== Constants.SUPER_TYPECODE) &&
                         <DeptMultiSelector compId={compId} title={t('lbManagedDept')} 
-                            isCheckMasterOnly={true}
+                            isCheckMasterOnly={false}
                             selectedDept={selectedDept} 
                             onSelectDept={this.handleSelectDept}
                             selectedUser={selectedUser} 

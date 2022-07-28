@@ -437,6 +437,13 @@ class GRExtendedTreeList extends Component {
 
     // JSX: array of listItems
     const listItemsJSX = listItemsModified.map((listItem, i) => {
+      
+      let masterChecked = this.state.isCheckMasterOnly;
+
+      if (!masterChecked) {
+        if (listItem.key == 'DEPTDEFAULT')
+          masterChecked = true;
+      }
 
       if (listItem._shouldRender) {
         return (
@@ -451,7 +458,7 @@ class GRExtendedTreeList extends Component {
             isShowDetail={false}
             isShowMemberCnt={true}
             isEnableEdit={this.state.isEnableEdit}
-            isCheckMasterOnly={this.state.isCheckMasterOnly}
+            isCheckMasterOnly={masterChecked}
             checked={this.state.checked}
             imperfect={this.state.imperfect}
             leftIcon={getLeftIcon(listItem, this.props)}
