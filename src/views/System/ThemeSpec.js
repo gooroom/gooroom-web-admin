@@ -80,7 +80,7 @@ class ThemeSpec extends Component {
                           <Avatar src={iconUrl} style={{ borderRadius: 0 }} />
                         }
                         title={n.title}
-                        subheader={themeItem.get('fileName')}
+                        subheader={themeItem && themeItem.get('fileName')}
                       />
                       </Card>
                     </Grid>

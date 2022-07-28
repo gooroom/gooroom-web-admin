@@ -31,7 +31,6 @@ import TableRow from '@material-ui/core/TableRow';
 
 import DeleteOutline from '@material-ui/icons/DeleteOutline';
 import EditOutlined from '@material-ui/icons/EditOutlined';
-//import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -45,13 +44,13 @@ class ThemeDialog extends Component {
 
     static APP_LIST = [
         {no:1, title:'gooroom browser', name:'gooroom-browser', group:'lbNetwork', default:'1_gooroom-browser.svg'},
-        {no:2, title:'image viewer', name:'org.gnome.eog', group:'lbGraphics', default:'1_gooroom-other-applications.svg'},
+        {no:2, title:'image viewer', name:'org.gnome.eog', group:'lbGraphics', default:'1_org.gnome.eog.svg'},
         {no:3, title:'multimedia', name:'io.github.GnomeMpv', group:'lbAudioVideo', default:'1_io.github.GnomeMpv.svg'},
         {no:4, title:'updater', name:'gooroomupdater', group:'lbSystem', default:'1_gooroomupdater.svg'},
         {no:5, title:'package management', name:'synaptic', group:'lbSystem', default:'1_synaptic.svg'},
-        {no:6, title:'gnome control center', name:'gnome-control-center', group:'lbSystem', default:'1_gooroom-other-applications.svg'},
-        {no:7, title:'grac editor', name:'grac-editor', group:'lbSystem', default:'1_gooroom-other-applications.svg'},
-        {no:8, title:'software', name:'kr.gooroom.Software', group:'lbSystem', default:'1_gooroom-other-applications.svg'},
+        {no:6, title:'gnome control center', name:'gnome-control-center', group:'lbSystem', default:'1_gnome-control-center.svg'},
+        {no:7, title:'grac editor', name:'grac-editor', group:'lbSystem', default:'1_grac-editor.svg'},
+        {no:8, title:'software', name:'kr.gooroom.Software', group:'lbSystem', default:'1_kr.gooroom.Software.svg'},
         {no:9, title:'cloud storage', name:'gooroom-cloud-storage', group:'lbUtility', default:'1_gooroom-cloud-storage.svg'},
         {no:10, title:'web office', name:'gooroom-web-office', group:'lbUtility', default:'1_gooroom-web-office.svg'},
         {no:11, title:'office SNS', name:'gooroom-sns', group:'lbUtility', default:'1_gooroom-sns.svg'},
@@ -72,12 +71,12 @@ class ThemeDialog extends Component {
         {no:26, title:'calculator', name:'galculator', group:'lbUtility', default:'1_galculator.svg'},
         {no:27, title:'network management', name:'preferences-system-network', group:'lbUtility', default:'1_preferences-system-network.svg'},
         {no:28, title:'file manager', name:'org.gnome.Nautilus', group:'lbUtility', default:'1_org.gnome.Nautilus.svg'},
-        {no:29, title:'appointment', name:'appointment', group:'lbUtility', default:'1_gooroom-other-applications.svg'},
-        {no:30, title:'calender', name:'calender', group:'lbUtility', default:'1_gooroom-other-applications.svg'}, 
-        {no:31, title:'gooroom guide', name:'gooroom-guide', group:'lbUtility', default:'1_gooroom-other-applications.svg'},
-        {no:32, title:'gooroom toolkit', name:'gooroom-toolkit', group:'lbUtility', default:'1_gooroom-other-applications.svg'},
-        {no:33, title:'terminal', name:'org.gnome.Terminal', group:'lbUtility', default:'1_gooroom-other-applications.svg'},
-        {no:34, title:'yelp browser', name:'yelp-browser', group:'lbUtility', default:'1_gooroom-other-applications.svg'}
+        {no:29, title:'appointment', name:'appointment', group:'lbUtility', default:'1_appointment.svg'},
+        {no:30, title:'calendar', name:'calendar', group:'lbUtility', default:'1_calendar.svg'}, 
+        {no:31, title:'gooroom guide', name:'gooroom-guide', group:'lbUtility', default:'1_gooroom-guide.svg'},
+        {no:32, title:'gooroom toolkit', name:'gooroom-toolkit', group:'lbUtility', default:'1_gooroom-toolkit.svg'},
+        {no:33, title:'terminal', name:'org.gnome.Terminal', group:'lbUtility', default:'1_org.gnome.Terminal.svg'},
+        {no:34, title:'yelp browser', name:'yelp-browser', group:'lbUtility', default:'1_yelp-browser.svg'}
     ];
 
     handleClose = (event) => {
