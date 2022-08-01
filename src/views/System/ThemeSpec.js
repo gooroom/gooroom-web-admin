@@ -33,14 +33,20 @@ class ThemeSpec extends Component {
     const { compId, selectedItem, isEditable } = this.props;
 
     let viewItem = null;
+    let appList = null;
     if(selectedItem) {
-      //viewItem = generateThemeObject(selectedItem.get('viewItem'));
       viewItem = selectedItem.get('viewItem')
+      if ( viewItem && viewItem.get('themeId') > 3) {
+        appList = ThemeDialog.NEW_LIST;
+      }
+      else {
+        appList = ThemeDialog.APP_LIST;
+      }
     }
 
     return (
       <React.Fragment>
-        {(viewItem) && 
+        {(viewItem) &&
           <Card elevation={4} style={{marginBottom:20}}>
             <CardHeader
               title={viewItem.get('themeNm')}
@@ -69,7 +75,7 @@ class ThemeSpec extends Component {
                 </Grid>
 
                 {
-                ThemeDialog.APP_LIST.map( n => {
+                  appList && appList.map( n => {
                   const themeItem = viewItem.get('themeIcons').find (o => o.get('fileEtcInfo') === n.name);
                   const iconUrl = themeItem && themeItem.get('imgUrl');
                   return (
