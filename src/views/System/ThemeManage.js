@@ -284,7 +284,7 @@ class ThemeManage extends Component {
         <ThemeSpec compId={compId}
           specType="inform" 
           selectedItem={listObj}
-          isEditable={selectId > 3 ? true : false}
+          isEditable={selectId > 4 ? true : false}
           onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleClickEdit}
           onClickDelete={this.handleDeleteClick}
