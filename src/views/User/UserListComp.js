@@ -218,7 +218,7 @@ class UserListComp extends Component {
 
     let columnHeaders = [
       { id: "chCheckbox", isCheckbox: true},
-      { id: "chCategory", isOrder: true, numeric: false, disablePadding: true, label: t("colCategory") },
+      { id: "chUserType", isOrder: true, numeric: false, disablePadding: true, label: t("colCategory") },
       { id: "chUserId", isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
       { id: "chUserNm", isOrder: true, numeric: false, disablePadding: true, label: t("colUserNm") },
       { id: "chDeptNm", isOrder: true, numeric: false, disablePadding: true, label: t("colDeptNm") },

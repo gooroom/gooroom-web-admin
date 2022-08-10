@@ -97,6 +97,7 @@ class UserBasicDialog extends Component {
                                 userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
                                 userNm: UserProps.getIn(['editingItem', 'userNm']),
                                 userEmail: UserProps.getIn(['editingItem', 'userEmail']),
+                                userType: UserProps.getIn(['viewItems', compId, 'viewItem', 'userType']),
                                 expireDate: userExpireDate,
                                 passwordExpireDate: passwordExpireDate
                             }).then((res) => {
