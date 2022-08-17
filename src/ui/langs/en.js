@@ -662,8 +662,9 @@ export default {
   "lbThemeDesc": "Theme Description",
   "lbIconSetting": "Application icon setting",
   "lbBackgroundSetting": "Background setting",
-  "dtAddThemeError": "Registration Error",
+  "dtAddThemeError": "Theme Error",
   "msgBackgroundSettingError": "Wallpaper registration is required.",
+  "msgImageTypeMismatchError": "Image type mismatch.",
   // 테마 카테고리
   "lbUtility": "Utility",
   "lbNetwork": "Netowrk",

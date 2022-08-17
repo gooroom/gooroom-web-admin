@@ -63,8 +63,10 @@ class DesktopConfSpec extends Component {
 
     let viewItem = null;
     let RuleAvartar = null;
+    let themeId = 0;
     if(selectedItem) {
       viewItem = selectedItem;
+      themeId = viewItem.get('themeId');
       RuleAvartar = getAvatarForRuleGrade(targetType, ruleGrade);
     }
 
@@ -72,7 +74,16 @@ class DesktopConfSpec extends Component {
     if(viewItem && viewItem.get('apps') && viewItem.get('apps').size > 0) {
       appPaneWidth = viewItem.get('apps').size * (120 + 16) + 40;
     }
-    
+  
+    let currentThemeIcons = '';
+    if (viewItem && themeId > 4) {
+      const themeListData = this.props.DesktopConfProps.get('themeListData');
+      if (themeListData) {
+        const curentTheme = themeListData.find (o => o && o.get('themeId') == themeId); 
+        currentThemeIcons = curentTheme &&  curentTheme.get('themeIcons');
+      }
+    }
+
     return (
       <React.Fragment>
         {viewItem && 
@@ -126,6 +137,7 @@ class DesktopConfSpec extends Component {
                       <Grid key={n.get('appId')} item>
                         <DesktopApp key={n.get('appId')} appObj={n}
                             themeId={viewItem.get('themeId')}
+                            themeIcons={currentThemeIcons && currentThemeIcons.find (o => o.fileEtcInfo == n.get('iconId'))}
                             hasAction={false}
                             onEditClick={this.handleEditAppClick}
                           />

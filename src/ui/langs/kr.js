@@ -662,8 +662,9 @@ export default {
   "lbThemeDesc": "테마 설명",
   "lbIconSetting": "업무환경(Application) 아이콘 설정",
   "lbBackgroundSetting": "배경화면 설정",
-  "dtAddThemeError": "등록 오류",
+  "dtAddThemeError": "테마 오류",
   "msgBackgroundSettingError": "배경화면 등록이 필요합니다",
+  "msgImageTypeMismatchError": "이미지 유형이 맞지 않습니다.",
   // 테마 카테고리
   "lbUtility": "유틸리티",
   "lbNetwork": "네트워크",

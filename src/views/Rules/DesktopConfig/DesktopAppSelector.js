@@ -86,6 +86,15 @@ class DesktopAppSelector extends Component {
     const { t, i18n } = this.props;
 
     let appAllDatas = (DesktopAppProps.get('listAllData')) ? DesktopAppProps.get('listAllData') : List([]);
+
+    let currentThemeIcons = '';
+    if (themeId > 4 ) {
+      const themeListData = this.props.DesktopConfProps.get('themeListData');
+      if (themeListData) {
+        const curentTheme = themeListData.find (o => o && o.get('themeId') == themeId); 
+        currentThemeIcons = curentTheme &&  curentTheme.get('themeIcons');
+      }
+    }
     
     return (
       <React.Fragment>
@@ -103,6 +112,7 @@ class DesktopAppSelector extends Component {
                       themeId={themeId}
                       onEditClick={this.handleEditAppClick}
                       onDeleteClick={this.handleDeleteSelected}
+                      themeIcons={currentThemeIcons && currentThemeIcons.find (o => o.fileEtcInfo == n.get('iconId'))}
                       isSelected={true}
                       isEnableDelete={true}
                   />
@@ -129,6 +139,7 @@ class DesktopAppSelector extends Component {
                       onEditClick={this.handleEditAppClick}
                       onDeleteClick={this.handleDeleteApp}
                       isSelected={this.isSelected(n.get('appId'))}
+                      themeIcons={currentThemeIcons && currentThemeIcons.find (o => o && o.fileEtcInfo == n.get('iconId'))}
                       isEnableDelete={this.props.isEnableDelete}
                   />
               </Grid>

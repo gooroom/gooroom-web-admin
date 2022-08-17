@@ -277,8 +277,23 @@ class ThemeDialog extends Component {
     }
     // file select
     handleImageFileChange = (event, gubunName) => {
+        const { t } = this.props;
         const selectedFile = event.target.files[0];
         const viewFileName = gubunName + '_GRFILE';
+
+        if (event.target.accept !== selectedFile.type) {
+            this.props.ThemeManageActions.setEditingItemObject({
+                [gubunName]: '',
+                [viewFileName]: '' 
+            });
+
+            this.props.GRAlertActions.showAlert({
+                alertTitle: t("dtAddThemeError"),
+                alertMsg: t("msgImageTypeMismatchError") 
+            });
+            return;
+        }
+
         this.readFileContent(event.target.files[0]).then(content => {
             if(content) {
                 this.props.ThemeManageActions.setEditingItemObject({
@@ -349,7 +364,7 @@ class ThemeDialog extends Component {
                                         alignItems="flex-start" style={{width:'auto',margin:(20, 0)}}
                                     >
                                        <div><span style={{verticalAlign: 'middle'}}>{t("lbBackgroundSetting")}</span>
-                                            <input style={{display:'none'}} id={'background-file'} type="file" accept=".png" onChange={event => this.handleImageFileChange(event, 'wallpaper')}/>
+                                            <input style={{display:'none'}} id={'background-file'} type="file" accept="image/png" onChange={event => this.handleImageFileChange(event, 'wallpaper')}/>
                                             <label style={{marginLeft: '10px'}} htmlFor={'background-file'}>
                                                 <Button variant="contained" size='small' component="span" className={classes.button} style={{width:120,height:28,background:'#666666',color:'#ffffff',borderRadius:4,border:0}}>{t("btnUploadFile")}</Button>
                                             </label></div>
@@ -412,7 +427,7 @@ class ThemeDialog extends Component {
                                                                         </div>
                                                                         :
                                                                         <div style={{position:'relative',width:30,height:30,borderRadius:4,border:'1px solid rgb(206, 206, 206)',background:'#e9e9e9'}}>
-                                                                            <input style={{display:'none'}} id={n.name + '-file'} type="file" accept=".svg" onChange={event => this.handleImageFileChange(event, n.name)}/>
+                                                                            <input style={{display:'none'}} id={n.name + '-file'} type="file" accept="image/svg+xml" onChange={event => this.handleImageFileChange(event, n.name)}/>
                                                                             <label style={{marginLeft: '10px'}} htmlFor={n.name + '-file'}>
                                                                                 <EditOutlined style={{minWidth:24,minHeight:24,position:'absolute',top:2,left:3,cursor:'pointer'}}/>
                                                                             </label>
