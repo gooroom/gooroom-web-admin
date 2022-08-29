@@ -224,6 +224,7 @@ export default {
   "dtSystemError": "System Error",
   "dtSystemNotice": "System Notice",
   "dtEditOK": "Edit Success",
+  "dtDateError": "Date Error",
   "selBasic": "Basic",
   "selStandard": "Standard",
   "selOrdinary": "Ordinary",
@@ -248,6 +249,7 @@ export default {
   "msgInvalidValue": "Please enter a valid setting value.",
   "lbSelectAll": "Select All",
   "lbSample": "Sample",
+  "msgDateError": "Wrong date setting",
 
   // options
   "stBeforeJob": "Before",

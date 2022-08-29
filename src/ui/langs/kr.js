@@ -224,6 +224,7 @@ export default {
   "dtSystemError": "시스템오류",
   "dtSystemNotice": "시스템알림",
   "dtEditOK": "수정 완료",
+  "dtDateError": "날짜오류",
   "selBasic": "기본",
   "selStandard": "표준",
   "selOrdinary": "일반",
@@ -248,6 +249,7 @@ export default {
   "msgInvalidValue": "유효한 설정값을 입력하세요.",
   "lbSelectAll": "전체선택",
   "lbSample": "샘플",
+  "msgDateError": "날짜 설정이 잘못됐습니다.",
 
   // options
   "stBeforeJob": "작업전",

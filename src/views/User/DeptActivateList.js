@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Map, List, fromJS } from 'immutable';
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
 import KeywordOption from "views/Options/KeywordOption";
 
@@ -30,6 +32,9 @@ import { translate, Trans } from "react-i18next";
 import { InlineDatePicker } from 'material-ui-pickers';
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 
+import * as GRAlertActions from "modules/GRAlertModule";
+
+
 class DeptActivateList extends Component {
 
   constructor(props) {
@@ -55,13 +60,14 @@ class DeptActivateList extends Component {
   }
 
   handleGetActivateList = (newListParam) => {
+    const date = formatDateToSimple (new Date(), 'YYYY-MM-DD');
     requestPostAPI('readActivateGroupList', {
       deptCd: newListParam.get('deptCd'),
       objectId: newListParam.get('objectId'),
       gubun: newListParam.get('gubun'),
       keyword: newListParam.get('keyword'),
-      toDate: newListParam.get('toDate') ? newListParam.get('toDate') : '',
-      fromDate: newListParam.get('fromDate') ? newListParam.get('fromDate') : '',
+      toDate: newListParam.get('toDate') ? newListParam.get('toDate') : date,
+      fromDate: newListParam.get('fromDate') ? newListParam.get('fromDate') : date,
       status: newListParam.get('status'),
       page: newListParam.get('page'),
       draw: newListParam.get('page'),
@@ -145,15 +151,36 @@ class DeptActivateList extends Component {
     });
   }
 
-  handleDateChange = (date, name) => {
+    handleDateChange = (name, otherDate) => event => {
     const { stateData } = this.state;
+
+    let toDate, fromDate;
+    if (name == 'fromDate') {
+        toDate  = new Date(otherDate);
+        fromDate = event._d;
+    }
+    else {
+        toDate  = event._d;
+        fromDate = new Date(otherDate);
+    }
+
+    if (fromDate > toDate) {
+      this.props.GRAlertActions.showAlert({
+        alertTitle: this.props.t("dtDateError"),
+        alertMsg: this.props.t("msgDateError")
+      });
+      event._d = new Date (event._i);
+      return;
+    }
+
     let newListParam = (stateData.get('listParam')).merge({
-      [name]: date.format('YYYY-MM-DD'),
+      [name]: formatDateToSimple (event._d, 'YYYY-MM-DD'),
       page: 0
     });
     this.setState({
       stateData: stateData.set('listParam', newListParam)
     });
+
     this.handleGetActivateList(newListParam);
   };
 
@@ -162,6 +189,19 @@ class DeptActivateList extends Component {
     const newListParam = stateData.get('listParam');
     this.handleGetActivateList(newListParam);
   };
+
+  setDefaultDate = (date) => {
+    const { stateData } = this.state;
+    let newListParam = (stateData.get('listParam')).merge({
+      fromDate: date,
+      toDate: date,
+      page: 0
+    });
+    this.setState({
+      stateData: stateData.set('listParam', newListParam)
+    });
+  };
+
   // .................................................
 
   render() {
@@ -183,7 +223,14 @@ class DeptActivateList extends Component {
     }
 
     const date = formatDateToSimple (new Date(), 'YYYY-MM-DD');
-
+    if (listObj) {
+      const fromDate = listObj.getIn(['listParam', 'fromDate']);
+      const toDate = listObj.getIn(['listParam', 'toDate']);
+      if (fromDate === undefined && 
+          toDate === undefined) {
+          this.setDefaultDate (date);
+      }
+    }
     return (
       <div>
         {/* data option area */}
@@ -215,13 +262,13 @@ class DeptActivateList extends Component {
             <Grid item xs={4} style={{paddingLeft:20}} >
               <InlineDatePicker label={t('searchStartDate')} format='YYYY-MM-DD'
                 value={(listObj && listObj.getIn(['listParam', 'fromDate'])) ? listObj.getIn(['listParam', 'fromDate']) : date}
-                onChange={(date) => {this.handleDateChange(date, 'fromDate');}} 
+                onChange={this.handleDateChange('fromDate', listObj.getIn(['listParam', 'toDate']))} 
                 className={classes.fullWidth} />
             </Grid>
             <Grid item xs={4} >
               <InlineDatePicker label={t('searchEndDate')} format='YYYY-MM-DD'
                 value={(listObj && listObj.getIn(['listParam', 'toDate'])) ? listObj.getIn(['listParam', 'toDate']) : date}
-                onChange={(date) => {this.handleDateChange(date, 'toDate');}} 
+                onChange={this.handleDateChange('toDate', listObj.getIn(['listParam', 'fromDate']))} 
                 className={classes.fullWidth} />
             </Grid>
             <Grid item xs={4} style={{textAlign:'right'}} >
@@ -229,7 +276,7 @@ class DeptActivateList extends Component {
                 <Search />{t("btnSearch")}
               </Button>
             </Grid>
-          </Grid> 
+          </Grid>
           }
        </Grid>
       {(listObj) &&
@@ -294,5 +341,17 @@ class DeptActivateList extends Component {
   }
 }
 
-export default translate("translations")(withStyles(GRCommonStyle)(DeptActivateList));
+
+const mapStateToProps = state => ({});
+
+const mapDispatchToProps = dispatch => ({
+  GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
+});
+
+export default translate("translations")(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(withStyles(GRCommonStyle)(DeptActivateList))
+);
 
