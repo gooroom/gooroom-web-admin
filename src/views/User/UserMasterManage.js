@@ -685,8 +685,8 @@ class UserMasterManage extends Component {
       } else {
         this.props.DeptActions.readChildrenDeptList(
           this.state.compId,
-          "DEPTDEFAULT",
-          0
+          0,
+          undefined
         );
       }
     });

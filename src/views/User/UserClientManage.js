@@ -65,6 +65,7 @@ class UserClientManage extends Component {
   }
 
   componentDidMount() {
+    this.props.UserActions.readUserListPaged(this.props.UserProps, this.state.compId);
   }
 
   componentWillUnmount() {
