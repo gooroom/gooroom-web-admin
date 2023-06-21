@@ -54,7 +54,7 @@ class SoftwareFilterDialog extends Component {
         {no:2, tag:'Utility', name: 'utility', name_kr: '유틸리티', list: [
             {no:1, tag:'org.gnome.Calculator.desktop', name:'Galculator', name_kr:'계산기',icon:'1_galculator.svg'},
             {no:2, tag:'gooroom-security-status-settings.desktop,,,gooroom-secuity-status-tool', name:'Gooroom Management Settings', name_kr:'구름 관리 설정',icon:'1_gooroom-other-applications.svg'},
-            {no:3, tag:'gooroom-security-status-view.desktop', name:'Gooroom Security Status View', name_kr:'구름 보안 상태 보기',icon:'1_gooroom-other-applications.svg'},
+            {no:3, tag:'gooroom-security-status-tool.desktop', name:'Gooroom Security Status View', name_kr:'구름 보안 상태 보기',icon:'1_gooroom-other-applications.svg'},
             {no:4, tag:'gooroom-toolkit.desktop', name:'Gooroom Toolkit', name_kr:'구름 도구모음',icon:'1_gooroom-other-applications.svg'},
             {no:5, tag:'hwpviewer.desktop', name:'Hancom Office Hwp 2014 Viewer', name_kr:'한컴오피스 한글 2014 뷰어',icon:'1_gooroom-web-office.svg'},
             {no:6, tag:'org.gnome.FileRoller.desktop', name:'Archive Manager', name_kr:'압축 관리자',icon:'1_file-roller.svg'},
@@ -87,7 +87,7 @@ class SoftwareFilterDialog extends Component {
         {no:3, tag:'gooroom-browser.desktop', name:'Gooroom Web Browser', name_kr:'구름 브라우저'},
         {no:4, tag:'gooroom-control-center.desktop,,,gnome-control-center.desktop', name:'Gnome Control Center', name_kr:'설정'},
         {no:5, tag:'gooroom-security-status-settings.desktop,,,gooroom-secuity-status-tool', name:'Gooroom Management Settings', name_kr:'구름 관리 설정'},
-        {no:6, tag:'gooroom-security-status-view.desktop', name:'Gooroom Security Status View', name_kr:'구름 보안 상태 보기'},
+        {no:6, tag:'gooroom-security-status-tool.desktop', name:'Gooroom Security Status View', name_kr:'구름 보안 상태 보기'},
         {no:7, tag:'gooroom-toolkit.desktop', name:'Gooroom Toolkit', name_kr:'구름 도구모음'},
         {no:8, tag:'grac-editor.desktop', name:'Grac Editor', name_kr:'매체제어 편집기'},
         {no:9, tag:'hwpviewer.desktop', name:'Hancom Office Hwp 2014 Viewer', name_kr:'한컴오피스 한글 2014 뷰어'},
