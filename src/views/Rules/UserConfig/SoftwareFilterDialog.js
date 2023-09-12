@@ -48,7 +48,7 @@ class SoftwareFilterDialog extends Component {
 
     static SW_GROUP_LIST =  [
         {no:1, tag:'Network', name: 'network', name_kr: '인터넷', list: [
-            {no:1, tag:'chromium.desktop', name:'Chromium Web Browser', name_kr:'Chromium 웹 브라우저', icon:'2_gooroom-browser.svg'},
+            {no:1, tag:'chromium.desktop,,,google-chrome.desktop', name:'Chromium Web Browser', name_kr:'Chromium 웹 브라우저', icon:'2_gooroom-browser.svg'},
             {no:2, tag:'gooroom-browser.desktop', name:'Gooroom Web Browser', name_kr:'구름 브라우저', icon:'1_gooroom-browser.svg'}
         ]},
         {no:2, tag:'Utility', name: 'utility', name_kr: '유틸리티', list: [
@@ -63,7 +63,7 @@ class SoftwareFilterDialog extends Component {
             {no:9, tag:'xfce4-screenshooter.desktop,,,org.gnome.Screenshot.desktop', name:'Screenshot', name_kr:'스크린샷',icon:'1_applets-screenshooter.svg'},
             {no:10, tag:'veyon-master.desktop', name:'Veyon Master', name_kr:'Veyon Master',icon:'1_gooroom-other-applications.svg'},
             {no:11, tag:'blueman-manager.desktop', name:'Bluetooth Manager', name_kr:'블루투스 관리자',icon:'1_gooroom-other-applications.svg'},
-            {no:12, tag:'org.gnome.gedit.desktop', name:'Mousepad', name_kr:'메모',icon:'1_accessories-text-editor.svg'},
+            {no:12, tag:'org.gnome.gedit.desktop', name:'Notepad', name_kr:'메모',icon:'1_accessories-text-editor.svg'},
             {no:13, tag:'gooroom-guide.desktop', name:'Gooroom Guide', name_kr:'구름 도움말',icon:'1_gooroom-other-applications.svg'}
         ]},
         {no:3, tag:'System', name: 'system ', name_kr: '시스템 도구', list: [
@@ -82,7 +82,7 @@ class SoftwareFilterDialog extends Component {
     ]
 
     static SW_LIST = [
-        {no:1, tag:'chromium.desktop', name:'Chromium Web Browser', name_kr:'Chromium 웹 브라우저'},
+        {no:1, tag:'chromium.desktop,,,google-chrome.desktop', name:'Chromium Web Browser', name_kr:'Chromium 웹 브라우저'},
         {no:2, tag:'org.gnome.Calculator.desktop', name:'Galculator', name_kr:'계산기'},
         {no:3, tag:'gooroom-browser.desktop', name:'Gooroom Web Browser', name_kr:'구름 브라우저'},
         {no:4, tag:'gooroom-control-center.desktop,,,gnome-control-center.desktop', name:'Gnome Control Center', name_kr:'설정'},
