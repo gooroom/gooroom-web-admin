@@ -190,7 +190,7 @@ class SoftwareFilterSpec extends Component {
                             n.list && n.list.map(item => {
                               const selected = (viewItem.getIn(['SWITEM', item.tag])) ? true : false;
                               const swStyle = (selected) ? { color: 'red', fontWeight: 'bold' } : { color: '#8484', fontWeight: 'bold' };
-                              const iconUrl = location.origin + '/gpms/images/gr_icons/' + item.icon;
+                              const iconUrl = location.origin + '/gpms/images/gr_icons/icons/' + item.icon;
 
                               return (
                                 <li style={{ padding: '20px 30px' }} key={item.no}>
