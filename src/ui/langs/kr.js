@@ -747,7 +747,7 @@ export default {
   "lbAdminCheckApprove": "관리자 승인",
   "lbAdminCheckDeny": "관리자 거절",
   "lbMediaRuleReqList": "매체제어 승인목록",
-  "lbReqCnt": "횟",
+  "lbReqCnt": "횟수",
   "msgApproveUserRequest": "선택한 사용자 요청({{checkedIds}}개)를 승인하시겠습니까?",
   "msgDenyUserRequest": "선택한 사용자 요청({{checkedIds}}개)를 거절하시겠습니까?",
   "msgUnregister": "선택한 사용자 매체제어 요청번호 '{{reqSeq}}'의 권한을 회수하시겠습니까?",
