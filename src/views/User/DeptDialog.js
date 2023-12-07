@@ -295,7 +295,7 @@ class DeptDialog extends Component {
                                     <Grid item xs={12}>
                                     <InlineDatePicker label={t('lbDeptExpireDate')} format='YYYY-MM-DD'
                                     value={(editingItem && editingItem.get('expireDate')) ? editingItem.get('expireDate') : initDate.toJSON().slice(0,10)}
-                                    maxDate={editingItem && editingItem.get('parentExpireDate') ? editingItem.get('expireDate') : '9999-12-31'}
+                                    maxDate={editingItem && editingItem.get('parentExpireDate') ? editingItem.get('parentExpireDate') : '9999-12-31'}
                                     onChange={(date) => {this.handleDateChange(date, 'expireDate');}} 
                                     className={classes.fullWidth} 
                                     disabled={!isUseDeptExpireDate} />
