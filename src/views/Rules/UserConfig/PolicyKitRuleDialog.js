@@ -207,13 +207,22 @@ class PolicyKitRuleDialog extends Component {
         </Grid>
 
         <Grid item >
+            {(type !== 'type3') &&
             <FormControlLabel value="auth_self" control={
                 <Radio color="primary" value="auth_self" onChange={this.handleValueChange(itemName)} checked={editingItem.get(itemName) === 'auth_self'} />
             } label={t("dtPkitUserAuth")} labelPlacement="end" />
+            }
+            {(type !== undefined && type == 'type3') &&
+            <Tooltip title={t("msgCantAvailable")}>
+            <FormControlLabel value="auth_self" control={
+                <Radio color="primary" value="auth_self" onChange={this.handleValueChange(itemName)} checked={editingItem.get(itemName) === 'auth_self'} disabled={true} />
+            } label={t("dtPkitUserAuth")} labelPlacement="end" style={{textDecoration: 'line-through'}} />
+            </Tooltip>
+            }
         </Grid>
 
         <Grid item >
-            {(type === undefined || type == 'type1') &&
+            {(type !== 'type2') &&
             <FormControlLabel value="auth_self_keep" control={
                 <Radio color="primary" value="auth_self_keep" onChange={this.handleValueChange(itemName)} checked={editingItem.get(itemName) === 'auth_self_keep'} />
             } label={t("dtPkitUserAuthKeep")} labelPlacement="end" />
@@ -228,13 +237,22 @@ class PolicyKitRuleDialog extends Component {
         </Grid>
         
         <Grid item >
+            {(type !== 'type3') &&
             <FormControlLabel value="auth_admin" control={
                 <Radio color="primary" value="auth_admin" onChange={this.handleValueChange(itemName)} checked={editingItem.get(itemName) === 'auth_admin'} />
             } label={t("dtPkitAdminAuth")} labelPlacement="end" />
+            }
+            {(type !== undefined && type == 'type3') &&
+            <Tooltip title={t("msgCantAvailable")}>
+            <FormControlLabel value="auth_admin" control={
+                <Radio color="primary" value="auth_admin" onChange={this.handleValueChange(itemName)} checked={editingItem.get(itemName) === 'auth_admin'} disabled={true} />
+            } label={t("dtPkitAdminAuth")} labelPlacement="end" style={{textDecoration: 'line-through'}} />
+            </Tooltip>
+            }
         </Grid>
 
         <Grid item >
-            {(type === undefined || type == 'type1') &&
+            {(type !== 'type2') &&
             <FormControlLabel value="auth_admin_keep" control={
                     <Radio color="primary" value="auth_admin_keep" onChange={this.handleValueChange(itemName)} checked={editingItem.get(itemName) === 'auth_admin_keep'} />
             } label={t("dtPkitAdminAuthKeep")} labelPlacement="end" />
@@ -336,7 +354,7 @@ class PolicyKitRuleDialog extends Component {
                         }
                         {selectedTab === 2 && 
                             <div style={{border:'1px solid lightGray',padding:'10px 20px 20px 20px'}}>
-                                {this.generateItem(editingItem, t("dtPkitPrinter"), 'printer')}
+                                {this.generateItem(editingItem, t("dtPkitPrinter"), 'printer', 'type3')}
                                 {this.generateItem(editingItem, t("dtPkitMount"), 'diskMount')}
                             </div>
                         }
