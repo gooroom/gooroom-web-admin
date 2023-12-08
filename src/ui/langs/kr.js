@@ -628,7 +628,7 @@ export default {
   "msgAddDeptInfo": "조직정보를 등록하시겠습니까?",
   "dtDeleteDept": "조직정보 삭제",
   "msgDeletedDept": "조직정보({{deptCnt}}개)를 삭제하시겠습니까? (최상위조직제외)",
-  "lbDeleteInUser": "조직내 사용자삭제여부",
+  "lbDeleteInUser": "조직내 사용자삭제",
   "lbUsePasswordExpire": "Password 만료일 사용여부",
   "lbPasswordExpireDate": "Password 만료일",
   "lbUseUserExpire": "사용자 만료일 사용여부",
