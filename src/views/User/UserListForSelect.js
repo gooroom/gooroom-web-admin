@@ -73,11 +73,14 @@ class UserListForSelect extends Component {
       (response) => {
         const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = response.data;
         const { stateData } = this.state;
-        const type = this.props.userType === 'DEPTDEFAULT' ? 'normal' : 'nouser';
-        const newData = data.filter(e => e.userType === type )
+
+        // Side effect rollback by bugs#5605
+        //const type = this.props.userType === 'DEPTDEFAULT' ? 'normal' : 'nouser';
+        //const newData = data.filter(e => e.userType === type )
+
         this.setState({
           stateData: stateData
-            .set('listData', List(newData.map((e) => {
+            .set('listData', List(data.map((e) => {
                 return Map(e)
             })))
             .set('listParam', newListParam.merge({
