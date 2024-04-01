@@ -75,6 +75,18 @@ module.exports = (env = {}) => {
           })
         },
         {
+          test: /\.(svg|png|jpe?g|gif)$/i,
+          use: [
+            {
+              loader: "file-loader",
+              options: {
+                outputPath: "resources/image",
+                name: "[name].[ext]",
+              },
+            },
+          ],
+        },
+        {
           test: /\.(js|jsx)$/,
           exclude: /node_modules/,
           use: {

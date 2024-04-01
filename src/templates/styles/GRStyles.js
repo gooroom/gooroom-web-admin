@@ -670,5 +670,12 @@ export const GRCommonStyle = theme => ({
         textAlign: "center",
         width: "210px",
     },
+
+    GuideDialog: {
+      padding: "0px 34px 0px 34px",
+    },
+    GuideDialogButton: {
+      margin: "4px",
+    },
 });
 

@@ -36,6 +36,8 @@ import Typography from '@material-ui/core/Typography';
 import GRTheme from 'ui/theme/GRTheme';
 import * as Constants from "components/GRComponents/GRConstants";
 
+import { DialogProvider } from '../../contexts/dialog';
+
 class GRFull extends Component {
 
   constructor(props) {
@@ -104,6 +106,7 @@ class GRFull extends Component {
     
     return (
       <MuiThemeProvider theme={createMuiTheme(GRTheme)}>
+      <DialogProvider>
         <CssBaseline />
         <div className={classes.fullRoot} >
           <GRHeader toggleDrawer={this.toggleDrawer} onAdminClick={this.handleClickAdmin} onSystemClick={this.handleClickSystem} />
@@ -144,7 +147,8 @@ class GRFull extends Component {
           <Typography className={classes.popoverMsg}>
             {GlobalProps.get('popoverText')}
           </Typography>
-        </Popover>          
+        </Popover>
+      </DialogProvider>
       </MuiThemeProvider>
 
     );
