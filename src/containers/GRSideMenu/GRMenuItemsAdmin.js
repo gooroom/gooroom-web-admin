@@ -3,8 +3,22 @@ export default {
     {
       name: 'menuDashboard',
       id: 'dashboard',
-      url: '/dashboard/GRM0901/menuDashboard',
-      level: 1
+      url: '/dashboard',
+      level: 1,
+      children:[
+        {
+          name:'menuClientDashboard',
+          id:'GRM0901',
+          url:'/dashboard/GRM0901/clientDashboard',
+          level:2
+        },
+        {
+          name:'menuServerDashboard',
+          id:'GRM0902',
+          url:'/dashboard/GRM0902/serverDashboard',
+          level:2
+        },
+      ]
     }, {
       name: 'menuStatistic',
       id: 'statistic',

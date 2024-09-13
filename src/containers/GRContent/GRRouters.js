@@ -4,7 +4,8 @@ import PropTypes from "prop-types";
 import { Switch, Route, Redirect } from "react-router-dom";
 import * as Constants from "components/GRComponents/GRConstants";
 
-import Dashboard from "containers/Dashboard/";
+import ClientDashboard from "containers/Dashboard/Client";
+import ServerDashboard from "containers/Dashboard/Server";
 import PartMain from "containers/PartMain/";
 import PortableUserMain from "views/Portable/User/PortableUserMain";
 // Client - client management
@@ -72,7 +73,7 @@ class GRRouters extends Component {
     if(window.gpmsain === Constants.SUPER_RULECODE) {
       return PartMain;
     } else if(window.gpmsain === Constants.ADMIN_RULECODE) {
-        return Dashboard;
+        return ClientDashboard;
     } else if(window.gpmsain === Constants.PART_RULECODE) {
         return PartMain;
     }
@@ -101,7 +102,8 @@ class GRRouters extends Component {
     return (
       <Switch>
         <Route path="/portable/ptgrservermng/:grMenuId/:grMenuName" component={PortableServerManage} />
-        <Route path="/dashboard" name="Dashboard" component={Dashboard} />
+        <Route path="/dashboard/GRM0901/clientDashboard" name="ClientDashboard" component={ClientDashboard} />
+        <Route path="/dashboard/GRM0902/serverDashboard" name="ServerDashboard" component={ServerDashboard} />
 
         <Route path="/system/adminusermng/:grMenuId/:grMenuName" component={DividedAdminManage} />
 

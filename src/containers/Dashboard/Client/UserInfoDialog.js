@@ -6,7 +6,7 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as DashboardActions from 'modules/DashboardModule';
+import * as ClientDashboardActions from 'modules/ClientDashboardModule';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
@@ -127,11 +127,11 @@ class UserInfoDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    DashboardProps: state.DashboardModule
+    DashboardProps: state.ClientDashboardModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    DashboardActions: bindActionCreators(DashboardActions, dispatch)
+    DashboardActions: bindActionCreators(ClientDashboardActions, dispatch)
 });
 
 export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserInfoDialog)));

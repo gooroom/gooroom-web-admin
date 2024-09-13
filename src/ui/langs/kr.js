@@ -164,6 +164,8 @@ export default {
   // Menus
   "home": "",
   "menuDashboard": "Dashboard",
+  "menuClientDashboard":"클라이언트 대시보드",
+  "menuServerDashboard":"서버 대시보드",
   "menuStatistic": "통계",
   "menuDailyViolated": "일별침해통계",
   "menuDailyConnected": "일별접속통계",
@@ -1097,6 +1099,20 @@ export default {
   "msgRepairJobFail": "침해단말 조치작업이 생성되지 못하였습니다.",
   "msgShowOnlyClientGroupRule": "로컬계정으로 접속한 단말입니다. 단말정책만 표시됩니다.",
   "lbViolatedClientList": "침해 단말 목록",
+
+  //GPMS Module Heath
+  "lbGPMSModuleManage":"서비스 모듈 관리",
+  "lbGPMSModuleStatus":"서비스 모듈 상태",
+  "msgGPMSModuleManage":"서버 주요 모듈(GLM,GKM,GRM)의 시작,중지,재시작 작업을 실행합니다.",
+  "GPMSModuleCurrentState":"현재 상태",
+  "GPMSModuleWork":"작업",
+  "GPMSModuleStart":"시작",
+  "GPMSModuleStop":"중지",
+  "GPMSModuleRestart":"재시작",
+  "GPMSModuleOnline":"실행 중",
+  "GPMSModuleOffline":"중지",
+  "GPMSModuleError":"에러",
+
 
   // 공지
   "dtAddNotice": "공지글 작성",

@@ -46,7 +46,7 @@ import DailyViolatedModule from './DailyViolatedModule';
 import DailyLoginCountModule from './DailyLoginCountModule';
 import DailyClientCountModule from './DailyClientCountModule';
 
-import DashboardModule from './DashboardModule';
+import ClientDashboardModule from './ClientDashboardModule';
 
 import SiteManageModule from './SiteManageModule';
 import NoticeModule from './NoticeModule';
@@ -62,6 +62,7 @@ import PortableUserApplyModule from './PortableUserApplyModule';
 import PortableUserReviewModule from './PortableUserReviewModule';
 import UserInfoModule from './UserInfoModule';
 import PortableCertModule from './PortableCertModule';
+import HealthModule from './HealthModule';
 
 export default combineReducers({
 
@@ -111,7 +112,7 @@ export default combineReducers({
     DailyLoginCountModule,
     DailyClientCountModule,
 
-    DashboardModule,
+    ClientDashboardModule,
 
 	SiteManageModule,
     NoticeModule,
@@ -125,4 +126,6 @@ export default combineReducers({
     PortableUserReviewModule,
     UserInfoModule,
     PortableCertModule,
+
+    HealthModule,
 });

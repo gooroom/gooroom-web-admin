@@ -4,7 +4,7 @@ import { Redirect } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as DashboardActions from 'modules/DashboardModule';
+import * as ClientDashboardActions from 'modules/ClientDashboardModule';
 import * as AdminActions from 'modules/AdminModule';
 import * as SecurityLogActions from 'modules/SecurityLogModule';
 
@@ -27,7 +27,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 
-class Dashboard extends Component {
+class ClientDashboard extends Component {
 
     constructor(props) {
         super(props);
@@ -199,17 +199,17 @@ class Dashboard extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    DashboardProps: state.DashboardModule,
+    DashboardProps: state.ClientDashboardModule,
     AdminProps: state.AdminModule,
     SecurityLogProps: state.SecurityLogModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    DashboardActions: bindActionCreators(DashboardActions, dispatch),
+    DashboardActions: bindActionCreators(ClientDashboardActions, dispatch),
     AdminActions: bindActionCreators(AdminActions, dispatch),
     SecurityLogActions: bindActionCreators(SecurityLogActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(Dashboard));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientDashboard));
 
 

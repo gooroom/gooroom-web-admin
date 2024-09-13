@@ -11,6 +11,8 @@ import { connect } from 'react-redux';
 
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
+import * as HealthActions from "modules/HealthModule";
+import { GPMSModuleActionType, GPMSModuleStatusType, GPMSModuleType } from "modules/HealthModule";
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -50,6 +52,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { translate, Trans } from "react-i18next";
 
 
+
 class ServerSiteConfig extends Component {
 
   constructor(props) {
@@ -78,7 +81,17 @@ class ServerSiteConfig extends Component {
   }
 
   componentDidMount() {
+    const { GPMSHealthActions, HealthState } = this.props;
     this.getSeverUrlInfo();
+
+    GPMSHealthActions.getGPMSModuleStatusALL();
+    this.timer = setInterval(() => {
+      GPMSHealthActions.getGPMSModuleStatusALL()
+    }, 5000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
   }
 
   getSeverUrlInfo = () => {
@@ -222,6 +235,19 @@ class ServerSiteConfig extends Component {
     });
   }
 
+  handleGPMSModuleControl = (moduleType, moduleActionType) => (event) => {
+    const { GPMSHealthActions } = this.props;
+    const param = {
+      moduleType,
+      moduleActionType,
+    };
+
+    GPMSHealthActions.controlGPMSModule(param).finally(() => {
+      GPMSHealthActions.getGPMSModuleStatusALL();
+    });
+  };
+
+
   checkInclude = value => {
     return (value == '-1');
   }
@@ -229,6 +255,8 @@ class ServerSiteConfig extends Component {
   render() {
     const { stateData } = this.state;
     const { t } = this.props;
+
+    const { HealthState } = this.props;
 
     const tempArray = new Array(13).fill(0);
     const minLength = 8;
@@ -370,6 +398,92 @@ class ServerSiteConfig extends Component {
             </Card>
           </Grid>
           <Grid item xs={6}>
+            <Card style={{ minWidth: 600, marginTop: 16 }}>
+              <CardHeader style={{ paddingBottom: 0 }} title={t("lbGPMSModuleManage")} subheader={t("msgGPMSModuleManage")} />
+                <CardContent style={{ paddingTop: 0 }}>
+                  <Grid container style={{ gap: "12px", borderStyle: "solid", borderWidth: 1, borderRadius: 4, borderColor: "#0000003b", margin: 10, padding: 10 }}>
+                    <Grid container item spacing={24} justify="center">
+                      <Grid item xs={2}></Grid>
+                      <Grid item xs={3} container justify="center" alignItems="center">
+                        {t("GPMSModuleCurrentState")}
+                      </Grid>
+                      <Grid item xs={7} container justify="center" alignItems="center" style={{ minWidth: 300 }}>
+                        {t("GPMSModuleWork")}
+                      </Grid>
+                    </Grid>
+                    {Object.values(GPMSModuleType).map((moduleType) => {
+                      const moduleData = HealthState.get(moduleType);
+                      const moduleStatus = moduleData ? moduleData.get("status") : null;
+
+                      return (
+                        <Grid container item spacing={24} justify="center">
+                          <Grid item xs={2} container justify="center" alignItems="center">
+                            <PropItemIcon style={{ width: "16px" }} />
+                            <ListItemText primary={moduleType} style={{ padding: 0 }} />
+                          </Grid>
+                          <Grid item xs={3} container justify="center" alignItems="center">
+                            <Typography
+                              style={{
+                                width: "105px",
+                                padding: "8px 0px",
+                                borderRadius: "4px",
+                                textAlign: "center",
+                                backgroundColor: moduleStatus === GPMSModuleStatusType.ONLINE ? "#1280E633" : moduleStatus === GPMSModuleStatusType.OFFLINE ? "#66666633" : moduleStatus === GPMSModuleStatusType.ERROR ? "#FF616133" : "white",
+                                color: moduleStatus === GPMSModuleStatusType.ONLINE ? "#1280E6" : moduleStatus === GPMSModuleStatusType.OFFLINE ? "#666666" : moduleStatus === GPMSModuleStatusType.ERROR ? "#FF6161" : "white",
+                              }}
+                            >
+                              {moduleStatus === GPMSModuleStatusType.ONLINE ? t("GPMSModuleOnline") : moduleStatus === GPMSModuleStatusType.OFFLINE ? t("GPMSModuleOffline") : t("GPMSModuleError")}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={7} container justify="center" alignItems="center" style={{ minWidth: 300, display: "flex", gap: "8px" }}>
+                            <Button
+                              disabled={moduleStatus === GPMSModuleStatusType.ONLINE}
+                              onClick={this.handleGPMSModuleControl(moduleType, GPMSModuleActionType.START)}
+                              style={{
+                                padding: "8px 24px",
+                                backgroundColor: moduleStatus === GPMSModuleStatusType.ONLINE ? "#E3E3E3" : "#121212",
+                                borderRadius: "4px",
+                                marginLeft: "16px",
+                                color: moduleStatus === GPMSModuleStatusType.ONLINE ? "#999999" : "white",
+                                fontWeight: 700,
+                              }}
+                            >
+                              {t("GPMSModuleStart")}
+                            </Button>
+                            <Button
+                              disabled={moduleStatus !== GPMSModuleStatusType.ONLINE}
+                              onClick={this.handleGPMSModuleControl(moduleType, GPMSModuleActionType.SHUTDOWN)}
+                              style={{
+                                padding: "8px 24px",
+                                backgroundColor: moduleStatus === GPMSModuleStatusType.ONLINE ? "" : "#E3E3E3",
+                                borderRadius: "4px",
+                                border: moduleStatus === GPMSModuleStatusType.ONLINE ? "2px solid black" : "",
+                                color: moduleStatus === GPMSModuleStatusType.ONLINE ? "black" : "#999999",
+                                fontWeight: 700,
+                              }}
+                            >
+                              {t("GPMSModuleStop")}
+                            </Button>
+                            <Button
+                              onClick={this.handleGPMSModuleControl(moduleType, GPMSModuleActionType.RESTART)}
+                              style={{
+                                padding: "8px 24px",
+                                border: "2px solid black",
+                                borderRadius: "4px",
+                                marginRight: 0,
+                                fontWeight: 700,
+                                color: "black",
+                              }}
+                            >
+                              {t("GPMSModuleRestart")}
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      );
+                    })}
+                  </Grid>
+                </CardContent>
+              </Card>
             <Card style={{marginTop: 16}}>
               <CardHeader style={{paddingBottom: 0}}
                 title={t("lbLoginTrialCount")}
@@ -509,9 +623,11 @@ class ServerSiteConfig extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  HealthState: state.HealthModule,
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  GPMSHealthActions: bindActionCreators(HealthActions, dispatch),
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
   GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
