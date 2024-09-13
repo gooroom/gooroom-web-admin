@@ -1,5 +1,5 @@
+import { fromJS } from 'immutable';
 import { handleActions } from 'redux-actions';
-import { Map, List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
@@ -16,11 +16,13 @@ const CLOSE_PACKAGE_LIST = 'dashboard/CLOSE_PACKAGE_LIST';
 const GET_CLIENT_STATUS_INFO = 'dashboard/GET_CLIENT_STATUS_INFO';
 const GET_VIOLATED_STATUS_INFO = 'dashboard/GET_VIOLATED_STATUS_INFO';
 
-const initialState = commonHandleActions.getCommonInitialState('', '', {userInfoDialog: false});
+// const GET_RESOURCE_METRICS_SUCCESS = 'dashboard/GET_RESOURCE_METRICS';
+
+const initialState = commonHandleActions.getCommonInitialState('', '', { userInfoDialog: false });
 
 export const showUserInfo = (param) => dispatch => {
-    
-    dispatch({type: COMMON_PENDING});
+
+    dispatch({ type: COMMON_PENDING });
     return requestPostAPI('readTotalRule', param).then(
         (response) => {
             dispatch({
@@ -41,7 +43,7 @@ export const closeUserInfo = (param) => dispatch => {
 };
 
 export const showPackgeListInfo = (param) => dispatch => {
-    dispatch({type: COMMON_PENDING});
+    dispatch({ type: COMMON_PENDING });
     return requestPostAPI('readTotalRule', param).then(
         (response) => {
             dispatch({
@@ -88,13 +90,29 @@ export const readViolatedClientStatus = (param) => dispatch => {
     });
 }
 
+// export const readResourceMetrics = (param) => dispatch => {
+//     try {
+//         return requestPostAPI("readResourceMetrics", param).then(
+//             (response) => {
+//                 dispatch({
+//                     type: GET_RESOURCE_METRICS_SUCCESS,
+//                     resourceType: param.resourceType,
+//                     response: response,
+//                 });
+//             });
+//     } catch (error) {
+//         dispatch({ type: COMMON_FAILURE, error: error });
+//     }
+// }
+
 export default handleActions({
 
     [COMMON_PENDING]: (state, action) => {
         return state.merge({ pending: true, error: false });
     },
     [COMMON_FAILURE]: (state, action) => {
-        return state.merge({ pending: false, error: true,
+        return state.merge({
+            pending: false, error: true,
             resultMsg: (action.error.data && action.error.data.status) ? action.error.data.status.message : '',
             errorObj: (action.error) ? action.error : ''
         });
@@ -117,7 +135,7 @@ export default handleActions({
     },
     [GET_CLIENT_STATUS_INFO]: (state, action) => {
         const statusInfo = (action.response.data && action.response.data.data && action.response.data.data.length > 0) ? action.response.data.data[0] : null;
-        if(statusInfo) {
+        if (statusInfo) {
             return state.merge({
                 clientStatus: {
                     clientOnCount: statusInfo.onCount,
@@ -157,7 +175,7 @@ export default handleActions({
     },
     [GET_VIOLATED_STATUS_INFO]: (state, action) => {
         const statusInfo = (action.response.data && action.response.data.data) ? action.response.data.data : null;
-        if(statusInfo) {
+        if (statusInfo) {
             return state.merge({
                 violatedStatusInfo: statusInfo,
                 periodType: action.periodType
@@ -168,7 +186,22 @@ export default handleActions({
                 periodType: action.periodType
             });
         }
-    }
+    },
+    // [GET_RESOURCE_METRICS_SUCCESS] : (state, action) => {
+    //     const statusInfo = (action.response.data && action.response.data.data) ? action.response.data.data : null;
+    //     let initData = [];
+
+    //     if(action.resourceType === "net") {
+    //         initData = {timeStamp: 0, recv: 0, sent: 0};
+    //     } else {
+    //         initData = {timeStamp: 0, value: 0};
+    //     }
+
+    //     return state.merge({
+    //         resourceMetricsInfo: statusInfo.length > 0 ? statusInfo : initData,
+    //         resourceType: action.resourceType
+    //     });
+    // }
 
 }, initialState);
 

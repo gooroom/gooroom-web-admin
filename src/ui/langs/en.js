@@ -1113,6 +1113,9 @@ export default {
   "GPMSModuleOffline":"Offline",
   "GPMSModuleError":"Error",
 
+  // GPMS Resource Metrics
+  "lbGPMSResourceMetrics": "Server Resource Monitoring",
+
   // 공지
   "dtAddNotice": "Add Notice",
   "msgAddNotice": "Do you want to register the notice?",

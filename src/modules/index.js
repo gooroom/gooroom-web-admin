@@ -1,22 +1,22 @@
 import { combineReducers } from 'redux';
 
-import GlobalModule from './GlobalModule';
-import GRConfirmModule from './GRConfirmModule';
 import GRAlertModule from './GRAlertModule';
+import GRConfirmModule from './GRConfirmModule';
+import GlobalModule from './GlobalModule';
 
-import ClientRegKeyModule from './ClientRegKeyModule';
 import ClientProfileSetModule from './ClientProfileSetModule';
+import ClientRegKeyModule from './ClientRegKeyModule';
 
 import ClientGroupModule from './ClientGroupModule';
 import ClientPackageModule from './ClientPackageModule';
+import DeptModule from './DeptModule';
 import UserModule from './UserModule';
 import UserReqModule from './UserReqModule';
-import DeptModule from './DeptModule';
 
 import ClientManageModule from './ClientManageModule';
 
-import JobManageModule from './JobManageModule';
 import CommonOptionModule from './CommonOptionModule';
+import JobManageModule from './JobManageModule';
 
 import ClientConfSettingModule from './ClientConfSettingModule';
 import ClientHostNameModule from './ClientHostNameModule';
@@ -24,51 +24,53 @@ import ClientUpdateServerModule from './ClientUpdateServerModule';
 
 import TotalRuleModule from './TotalRuleModule';
 
-import MediaRuleModule from './MediaRuleModule';
 import BrowserRuleModule from './BrowserRuleModule';
+import CtrlCenterItemModule from './CtrlCenterItemModule';
+import MediaRuleModule from './MediaRuleModule';
+import PolicyKitRuleModule from './PolicyKitRuleModule';
 import SecurityRuleModule from './SecurityRuleModule';
 import SoftwareFilterModule from './SoftwareFilterModule';
-import CtrlCenterItemModule from './CtrlCenterItemModule';
-import PolicyKitRuleModule from './PolicyKitRuleModule';
 
 import ClientMasterManageModule from './ClientMasterManageModule';
 
+import AdminUserModule from './AdminUserModule';
 import DesktopAppModule from './DesktopAppModule';
 import DesktopConfModule from './DesktopConfModule';
-import AdminUserModule from './AdminUserModule';
 import GcspManageModule from './GcspManageModule';
 import ThemeManageModule from './ThemeManageModule';
 
 import AdminModule from './AdminModule';
-import SecurityLogModule from './SecurityLogModule';
-import GeneralLogModule from './GeneralLogModule';
-import DailyViolatedModule from './DailyViolatedModule';
-import DailyLoginCountModule from './DailyLoginCountModule';
 import DailyClientCountModule from './DailyClientCountModule';
+import DailyLoginCountModule from './DailyLoginCountModule';
+import DailyViolatedModule from './DailyViolatedModule';
+import GeneralLogModule from './GeneralLogModule';
+import SecurityLogModule from './SecurityLogModule';
 
 import ClientDashboardModule from './ClientDashboardModule';
 
-import SiteManageModule from './SiteManageModule';
 import NoticeModule from './NoticeModule';
-import NoticePublishModule from './NoticePublishModule';
 import NoticePublishExtensionModule from './NoticePublishExtensionModule';
+import NoticePublishModule from './NoticePublishModule';
+import SiteManageModule from './SiteManageModule';
+
+import ResourceMetricsModule from './ResourceMetricsModule';
 
 /* for PTGR */
-import PortableBulkModule from './PortableBulkModule';
 import PortableApplyModule from './PortableApplyModule';
+import PortableBulkModule from './PortableBulkModule';
 import PortableImageModule from './PortableImageModule';
 
+import HealthModule from './HealthModule';
+import PortableCertModule from './PortableCertModule';
 import PortableUserApplyModule from './PortableUserApplyModule';
 import PortableUserReviewModule from './PortableUserReviewModule';
 import UserInfoModule from './UserInfoModule';
-import PortableCertModule from './PortableCertModule';
-import HealthModule from './HealthModule';
 
 export default combineReducers({
 
     GlobalModule,
-    
-    ClientRegKeyModule, 
+
+    ClientRegKeyModule,
     ClientProfileSetModule,
 
     ClientConfSettingModule,
@@ -76,7 +78,7 @@ export default combineReducers({
     ClientUpdateServerModule,
 
     TotalRuleModule,
-    
+
     MediaRuleModule,
     BrowserRuleModule,
     SecurityRuleModule,
@@ -85,7 +87,7 @@ export default combineReducers({
     PolicyKitRuleModule,
 
     ClientMasterManageModule,
-    
+
     ClientManageModule,
     ClientGroupModule,
     ClientPackageModule,
@@ -93,8 +95,8 @@ export default combineReducers({
     UserReqModule,
     DeptModule,
 
-    JobManageModule, 
-    
+    JobManageModule,
+
     GRConfirmModule,
     GRAlertModule,
     CommonOptionModule,
@@ -114,10 +116,12 @@ export default combineReducers({
 
     ClientDashboardModule,
 
-	SiteManageModule,
+    SiteManageModule,
     NoticeModule,
     NoticePublishModule,
     NoticePublishExtensionModule,
+
+    ResourceMetricsModule,
 
     PortableBulkModule,
     PortableApplyModule,

@@ -1113,6 +1113,8 @@ export default {
   "GPMSModuleOffline":"중지",
   "GPMSModuleError":"에러",
 
+  // GPMS Resource Metrics
+  "lbGPMSResourceMetrics": "서버 자원 모니터링",
 
   // 공지
   "dtAddNotice": "공지글 작성",
