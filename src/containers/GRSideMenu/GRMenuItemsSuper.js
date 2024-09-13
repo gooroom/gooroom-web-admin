@@ -18,6 +18,12 @@ export default {
       url: '/system/deptuserreg/GRM9903/menuDeptAndUser',
       level: 1
     },
+    {
+      name: 'menuHealthCheck',
+      id: 'menuHealthCheck',
+      url: '/system/healthCheck/GRM9904/menuHealthCheck',
+      level: 1
+    },
   ]
 };
 

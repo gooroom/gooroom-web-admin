@@ -53,6 +53,7 @@ import NoticePublishExtensionModule from './NoticePublishExtensionModule';
 import NoticePublishModule from './NoticePublishModule';
 import SiteManageModule from './SiteManageModule';
 
+import HealthCheckModule from './HealthCheckModule';
 import ResourceMetricsModule from './ResourceMetricsModule';
 
 /* for PTGR */
@@ -121,6 +122,7 @@ export default combineReducers({
     NoticePublishModule,
     NoticePublishExtensionModule,
 
+    HealthCheckModule,
     ResourceMetricsModule,
 
     PortableBulkModule,

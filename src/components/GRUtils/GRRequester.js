@@ -118,3 +118,13 @@ export function grRequestGetAPI(url, data) {
     data: data,
   });
 }
+
+export function requestPostJsonAPI(url, param, headers) {
+  return axios({
+    method: "post",
+    url: GPMS_URL + url,
+    headers: { "Content-Type": "application/json", ...headers },
+    data: JSON.stringify(param), // JSON 데이터로 변환
+    withCredentials: false
+  });
+}

@@ -6,19 +6,17 @@ import { bindActionCreators } from "redux";
 
 import { Grid, Paper, Typography, withStyles } from "@material-ui/core";
 import { GRCommonStyle } from "templates/styles/GRStyles";
-import { Grid, Paper, Typography, withStyles } from "@material-ui/core";
 
 import * as AdminActions from "modules/AdminModule";
 import * as ResourceMetricsActions from "modules/ResourceMetricsModule";
 import * as SecurityLogActions from "modules/SecurityLogModule";
-import * as HealthActions from "modules/HealthModule";
-
-import GRPane from "containers/GRContent/GRPane";
-import GPMSModuleHealth from "./GPMSModuleStatus";
+import * as HealthCheckActions from "modules/HealthCheckModule";
 
 import GRPane from "containers/GRContent/GRPane";
 import GPMSModuleHealth from "./GPMSModuleStatus";
 import ResourceMetrics from "./ResourceMetrics";
+import GPMSServerHealth from "./GPMSServerHealth";
+import { translate } from "react-i18next";
 
 class ServerDashboard extends Component {
   constructor(props) {
@@ -29,6 +27,7 @@ class ServerDashboard extends Component {
       isRunningTimer: false,
       linkType: "",
       redirect: false,
+      serverList: [],
     };
   }
 
@@ -42,6 +41,7 @@ class ServerDashboard extends Component {
     this.refreshDashboard();
     this.handleClickChangeResource("cpu");
     this.dashboardTimer = setInterval(() => this.refreshDashboard(), 1000);
+
   }
 
   componentWillUnmount() {
@@ -60,7 +60,15 @@ class ServerDashboard extends Component {
           isRunningTimer: true,
         });
         // refresh action to here
-        this.props.GPMSHealthActions.getGPMSModuleStatusALL();
+        this.props.HealthCheckActions.getServerList()
+        .then((response) => {
+          this.setState({
+            serverList: response.data.data || [],
+          });
+        })
+        .catch((error) => {
+          console.error("Failed to load server list:", error);
+        });
         // -- metric --
         const resourceType = this.props.ResourceMetricsProps.get("resourceType");
         console.log("[Debug Refresh Dashbaord] resourceType : ", resourceType);
@@ -80,8 +88,6 @@ class ServerDashboard extends Component {
   }
 
   render() {
-    const {classes, t} = this.props;
-
     if (this.state.redirect) {
       if (this.state.linkType == "package") {
         return (
@@ -104,6 +110,8 @@ class ServerDashboard extends Component {
       }
     }
 
+    const { classes, t } = this.props;
+
     // Determine if repo or db servers are present
 
     return (
@@ -120,16 +128,28 @@ class ServerDashboard extends Component {
           </Grid>
           <Grid item xs={12}>
             <Paper className={classes.paper}>
-              <GPMSModuleHealth/>
+              <GPMSModuleHealth />
             </Paper>
           </Grid>
+          <Grid item xs={12}>
+            <Paper className={classes.paper}>
+              <GPMSServerHealth serverList={this.state.serverList} t={t} classes={classes}/>
+            </Paper>
+          </Grid>
+          <div style={{ marginTop: 20, display: "inline-flex", flex: "1 1 0" }}>
+            <span>
+              {this.state.isRunningTimer && (
+                <img
+                  src="/gpms/images/loading-icon-animated-gif.jpg"
+                  width="30"
+                />
+              )}
+            </span>
+            <span>
+              <Typography>{this.state.currentCount}</Typography>
+            </span>
+          </div>
         </Grid>
-        <div style={{ marginTop: 20, display: "inline-flex", flex: "1 1 0" }}>
-          <span>{this.state.isRunningTimer && <img src="/gpms/images/loading-icon-animated-gif.jpg" width="30" />}</span>
-          <span>
-            <Typography>{this.state.currentCount}</Typography>
-          </span>
-        </div>
       </GRPane>
     );
   }
@@ -145,10 +165,10 @@ const mapDispatchToProps = (dispatch) => ({
   ResourceMetricsActions: bindActionCreators(ResourceMetricsActions, dispatch),
   AdminActions: bindActionCreators(AdminActions, dispatch),
   SecurityLogActions: bindActionCreators(SecurityLogActions, dispatch),
-  GPMSHealthActions: bindActionCreators(HealthActions, dispatch),
+  HealthCheckActions: bindActionCreators(HealthCheckActions, dispatch),
 });
 
-export default connect(
+export default translate("translations")(connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(GRCommonStyle)(ServerDashboard));
+)(withStyles(GRCommonStyle)(ServerDashboard)))

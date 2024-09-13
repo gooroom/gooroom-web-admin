@@ -208,6 +208,7 @@ export default {
   "menuSiteConfig": "구름관리서버설정",
   "menuAdminUserMng": "관리자관리",
   "menuDeptAndUser": "조직/사용자 일괄등록",
+  "menuHealthCheck" : "연동 시스템 헬스체크",
 
   "menuNotice": "공지",
   "menuNoticeManage": "공지관리",
@@ -692,6 +693,8 @@ export default {
   "msgLoginTrialCountAndLockTime": "구름단말에 사용자 로그인중 인증실패시 재시도 횟수와 계정잠금시간(분)을 지정합니다.",
   "msgLoginLockTime": "• 계정잠금시간을 '0'으로 하면 잠금시간이 무제한으로 설정 됩니다.",
   "lbLoginDuplicatgeEnable": "사용자 로그인 중복 설정",
+  "lbLoginOtpLoginEnable": "관리자 로그인 2FA 설정",
+  "lbAdminLoginTrialEnable": "관리자 로그인 시도 횟수 설정",
   "lbSelectLoginDuplicatgeEnable": "허용/비허용",
   "lbLoginDuplicatgeNotiType": "중복 로그인 요청시 알림방법",
   "lbLoginDuplicatgeNotiType0": "없음",
@@ -702,6 +705,8 @@ export default {
   "selHasNoInclude": "비포함",
 
   "msgLoginDuplicatgeEnable": "구름단말에 사용자가 중복 로그인 할 수 있는 기능을 허용할지 결정 합니다.",
+  "msgLoginOtpLoginEnable": "관리자 로그인 시, 2Factor 적용할 수 있는 기능을 허용할 지 결정합니다.",
+
   "lbPasswordRule": "사용자 비밀번호 복잡도",
   "msgPasswordRule": "구름단말 사용자의 비밀번호 설정시 복잡도를 설정합니다.",
 
@@ -1100,22 +1105,6 @@ export default {
   "msgShowOnlyClientGroupRule": "로컬계정으로 접속한 단말입니다. 단말정책만 표시됩니다.",
   "lbViolatedClientList": "침해 단말 목록",
 
-  //GPMS Module Heath
-  "lbGPMSModuleManage":"서비스 모듈 관리",
-  "lbGPMSModuleStatus":"서비스 모듈 상태",
-  "msgGPMSModuleManage":"서버 주요 모듈(GLM,GKM,GRM)의 시작,중지,재시작 작업을 실행합니다.",
-  "GPMSModuleCurrentState":"현재 상태",
-  "GPMSModuleWork":"작업",
-  "GPMSModuleStart":"시작",
-  "GPMSModuleStop":"중지",
-  "GPMSModuleRestart":"재시작",
-  "GPMSModuleOnline":"실행 중",
-  "GPMSModuleOffline":"중지",
-  "GPMSModuleError":"에러",
-
-  // GPMS Resource Metrics
-  "lbGPMSResourceMetrics": "서버 자원 모니터링",
-
   // 공지
   "dtAddNotice": "공지글 작성",
   "msgAddNotice": "공지글을 등록하시겠습니까?",
@@ -1349,4 +1338,71 @@ export default {
   "msgPortableInputDomain": "도메인을 입력하세요.",
   "msgPortableInputId": "아이디를 입력하세요.",
   "msgPortableInputToken": "토큰값을 입력하세요.",
+
+  //health check server manage
+  "repoServerMng":"Repository 서버 관리",
+  "repoServerMngDtl":"Repository 서버 상태를 조회하기 위한 시스템 정보를 관리합니다.",
+  "noRegisteredServers":"현재 등록된 {{target}}서버 정보가 존재하지 않습니다. 관리할 서버 정보를 등록해 주세요.",
+  "registerSever":"{{target}} 서버 등록",
+
+  "dbServerMng":"DB 서버 관리",
+  "dbServerMngDtl":"DB 서버 상태를 조회하기 위한 시스템 정보를 관리합니다.",
+
+  "lblErrorEmpty":"해당 항목은 공백일 수 없습니다.",
+  "lblErrorTitle":"1글자 이상, 100글자 미만의 영문,한글,숫자만 사용 가능합니다.",
+  "lblErrorUrl":"URL 또는 IP 형식이 아닙니다.",
+  "lblErrorPort":"Port값은 1부터 65535까지 가능합니다.",
+  "lblErrorDist":"레포지토리 배포판 이름은 공백을 포함할 수 없습니다.",
+  "registerFailTitle":"{{target}} 서버 등록 실패",
+  "registerSuccessTitle":"{{target}} 서버 등록 성공",
+  "registerSuccessMsg":"{{target}} 서버가 성공적으로 등록되었습니다.",
+  "registerSuccessMsgDtl":"서버 대시보드에서 서버 상태를 확인하실 수 있습니다.",
+
+  "registerServerInfo":"{{target}} 서버 정보 등록",
+  "maxLength100":"최대 100자까지 입력 가능합니다.",
+  "lblValidUrl":"URL 또는 IP 형식으로 입력 가능합니다.",
+  "lblValidDist":"레포지토리 배포판 이름을 공백없이 입력 가능합니다.",
+  "noteHint":"최대 300자까지 입력할 수 있으며, 선택 항목입니다.",
+  "cancel":"취소",
+  "register": "등록",
+  "serverName": "서버 이름",
+  "serverLocation": "서버 위치",
+  "repoUrl": "레포지토리 URL",
+  "repoDist": "레포지토리 DIST",
+  "healthCheckSchedule": "Health Check 주기",
+  "note": "설명",
+
+  "dltnOptn":"이 서버 정보를 삭제할 수 있습니다.",
+  "registerServerInfoAdd":"{{target}} 서버 정보 추가 등록",
+
+  "intgSystStts":"연동 시스템 상태",
+  "intgSystSttsHealthMng":"{{target}} 서버 Health Check",
+  "serverNameDot":"• 서버 이름",
+  "serverLocationDot":"• 서버 위치",
+  "repoUrlDot":"• 레포지토리 URL",
+  "repoDistDot":"• 레포지토리 DIST",
+  "checkDateDot":"• 체크 시간",
+  "healthStatusDot":"• Health Check 상태",
+  "statusCodeDot":"• 상태 코드",
+  "noteDot":"• 설명",
+  "dbconnectionDot":"• DB 연결 상태",
+  "noRegServers":"현재 등록된 {{target}} 서버 정보가 존재하지 않습니다.",
+  "regInfo":"[ 연동 시스템 관리 ]에서 서버 정보를 등록한 후 확인할 수 있습니다.",
+
+  "error":"에러",
+
+  "dbSidName" : "DB SID 이름",
+  "dbUser" : "유저 ID",
+  "dbPassword" : "비밀번호",
+  "hostHint": "host 명을 적어주세요.",
+  "item":"헬스체크 할 항목",
+  "query":"쿼리",
+  "port":"포트",
+
+  "deleteItem":"항목 삭제",
+  "addItem":"항목 추가",
+  "dbType":"DB 유형",
+  "connectionSc" : "연결 성공",
+  "connectionEr" : "연결 실패"
+
 };

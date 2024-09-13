@@ -208,6 +208,7 @@ export default {
   "menuSiteConfig": "GPMS settings",
   "menuAdminUserMng": "Admin Mng.",
   "menuDeptAndUser": "Dept/User Batch registration",
+  "menuHealthCheck": "Health Check",
 
   "menuNotice": "Notice",
   "menuNoticeManage": "NoticeMng",
@@ -690,8 +691,11 @@ export default {
   "lbLoginTrialCount": "User login attempts and account lockout times",
   "msgLoginTrialCount": "Specifies the number of retry attempts and the number of minutes to lock the account when authentication fails during user login to the client. If the account lock time is set to '0', the lock time is set to unlimited.",
   "msgLoginTrialCountAndLockTime": "Specifies the number of retry attempts and the number of minutes to lock the account when authentication fails during user login to the client.",
+  "msgAdminLoginTrialCountAndLockTime": "Specifies the number of retry attempts and the number of minutes to lock the account when authentication fails during user login to the client.",
   "msgLoginLockTime": "• If the account lock time is set to '0', the lock time is set to unlimited.",
   "lbLoginDuplicatgeEnable": "Duplicate user login settings",
+  "lbLoginOtpLoginEnable": "Administrator login 2-factor settings",
+  "lbAdminLoginTrialEnable": "Administrator login trial count settings",
   "lbSelectLoginDuplicatgeEnable": "Allow/Disallow",
   "lbLoginDuplicatgeNotiType": "How to notify when a duplicate login is requested",
   "lbLoginDuplicatgeNotiType0": "None",
@@ -702,6 +706,7 @@ export default {
   "selHasNoInclude": "Not included",
 
   "msgLoginDuplicatgeEnable": "Determine if the Gooroom client allows users to log in multiple times.",
+  "msgLoginOtpLoginEnable": "Determines to apply 2FA when logging in as an administrator",
   "lbPasswordRule": "User password complexity",
   "msgPasswordRule": "Set the complexity when setting the password of the user.",
 
@@ -1100,22 +1105,6 @@ export default {
   "msgShowOnlyClientGroupRule": "This is the Client connected to the local account. Only client rules are displayed.",
   "lbViolatedClientList": "List of infringing devices",
 
-  //health
-  "lbGPMSModuleManage":"Service Module Management",
-  "lbGPMSModuleStatus":"Service Module Status",
-  "msgGPMSModuleManage":"Run start, stop, and restart operations of the server main modules (GLM, GKM, GRM).",
-  "GPMSModuleCurrentState":"Current State",
-  "GPMSModuleWork":"Work",
-  "GPMSModuleStart":"start",
-  "GPMSModuleStop":"stop",
-  "GPMSModuleRestart":"restart",
-  "GPMSModuleOnline":"Online",
-  "GPMSModuleOffline":"Offline",
-  "GPMSModuleError":"Error",
-
-  // GPMS Resource Metrics
-  "lbGPMSResourceMetrics": "Server Resource Monitoring",
-
   // 공지
   "dtAddNotice": "Add Notice",
   "msgAddNotice": "Do you want to register the notice?",
@@ -1348,4 +1337,72 @@ export default {
   "msgPortableInputDomain": "Enter the Domain server.",
   "msgPortableInputId": "Enter the server Id value.",
   "msgPortableInputToken": "Enter the server token value.",
+
+  //health check server manage
+  "repoServerMng":"Repository Server Management",
+  "repoServerMngDtl": "Manages system information to check the status of the repository server.",
+  "noRegisteredServers": "There is no registered {{target}} server information at the moment. Please register the server information to manage.",
+  "registerSever":"add {{target}} Server",
+
+  "dbServerMng": "DB Server Management",
+  "dbServerMngDtl":"Manages system information to check the status of the DB server.",
+
+  "lblErrorEmpty": "This field cannot be empty.",
+  "lblErrorTitle": "Must be between 1 and 100 characters, and can include English letters, Korean characters, and numbers.",
+  "lblErrorUrl": "Invalid URL or IP format.",
+  "lblErrorPort": "Port value must be between 1 and 65535.",
+  "lblErrorDist": "Distribution name cannot contain whitespace characters.",
+  "registerFailTitle": "{{target}} Server Registration Failed",
+  "registerSuccessTitle": "{{target}} Server Registration Successful",
+  "registerSuccessMsg": "{{target}} server has been successfully registered.",
+  "registerSuccessMsgDtl": "You can check the server status on the server dashboard.",
+  
+  "registerServerInfo": "{{target}} Server Information Registration",
+  "maxLength100": "Up to 100 characters are allowed.",
+  "lblValidUrl": "Must be in a valid URL or IP format.",
+  "lblValidDist": "Must be in a valid distribution name.",
+  "noteHint": "You can enter up to 300 characters. This is an optional field.",
+  "cancel": "Cancel",
+  "register": "Register",
+  "serverName": "Server Name",
+  "serverLocation": "Server Location",
+  "repoUrl": "Repository URL",
+  "repoDist": "Repository DIST",
+  "healthCheckSchedule": "Health Check Schedule",
+  "note": "Note",
+
+  "dltnOptn": "You can delete this server information.",
+  "registerServerInfoAdd": "Add {{target}} Server Information",
+
+  "intgSystStts": "Integrated System Status",
+  "intgSystSttsHealthMng": "{{target}} Server Health Check",
+  "serverNameDot": "• Server Name",
+  "serverLocationDot": "• Server Location",
+  "repoUrlDot":"• Repository URL",
+  "repoDistDot":"• Repository DIST",
+  "checkDateDot": "• Check Schedule",
+  "healthStatusDot": "• Health Check Status",
+  "statusCodeDot": "• Status Code",
+  "noteDot": "• Note",
+  "dbconnectionDot": "• DB Connection Status",
+  "dbInfraDot": "• DB Connection Status",
+  "noRegServers": "No registered {{target}} server information available.",
+  "regInfo": "You can check the server information after registering it in [Integrated System Management].",
+
+  "error":"error",
+
+  "dbSidName" : "DB SID name",
+  "dbUser" : "user ID",
+  "dbPassword" : "password",
+  "hostHint": "Please enter the host name.",
+  "item":"health check item",
+  "query":"query",
+  "port":"port",
+
+  "deleteItem":"delete item",
+  "addItem":"add item",
+  "dbType":"DB Type",
+
+   "connectionSc" : "Connection Success",
+  "connectionEr" : "Connection Fail"
 };

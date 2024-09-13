@@ -35,6 +35,7 @@ import UserClientManage from "views/User/UserClientManage";
 import AdminUserManage from "views/System/AdminUserManage";
 import ServerSiteConfig from "views/System/ServerSiteConfig";
 import DeptUserReg from "views/System/DeptUserReg";
+import HealthCheck from "views/System/HealthCheck";
 import GcspManage from "views/System/GcspManage";
 import ThemeManage from "views/System/ThemeManage";
 
@@ -90,6 +91,7 @@ class GRRouters extends Component {
         <Route path="/system/adminusermng/:grMenuId/:grMenuName" component={DividedAdminManage} />
         <Route path="/system/siteconfig/:grMenuId/:grMenuName" component={ServerSiteConfig} />
         <Route path="/system/deptuserreg/:grMenuId/:grMenuName" component={DeptUserReg} />
+        <Route path="/system/healthCheck/:grMenuId/:grMenuName" component={HealthCheck} />
 
         {/* 사용 안함 */}
         {/*<Route path="/portable/ptgrservermng/:grMenuId/:grMenuName" component={PortableServerManage} />*/}
