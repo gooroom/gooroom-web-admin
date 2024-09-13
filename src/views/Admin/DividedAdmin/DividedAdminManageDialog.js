@@ -53,7 +53,9 @@ import MenuItem from "@material-ui/core/MenuItem";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
-import { translate, Trans } from "react-i18next";
+import { translate } from "react-i18next";
+import Checkbox from '@material-ui/core/Checkbox';
+import { Typography } from "@material-ui/core";
 
 //
 //  ## Dialog ########## ########## ########## ########## ##########
@@ -64,6 +66,10 @@ class DividedAdminManageDialog extends Component {
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
 
+    handleCheckChange = name => event => {
+        this.setState({ [name]: event.target.checked });
+    };
+
     handleClose = (event) => {
         this.props.AdminUserActions.closeDialog(this.props.compId);
     }
@@ -72,6 +78,21 @@ class DividedAdminManageDialog extends Component {
         this.props.AdminUserActions.setEditingItemValue({
             name: name,
             value: event.target.value
+        });
+    }
+
+    handleStateChange = (name) => event => {
+        // const { AdminUserProps, AdminUserActions } = this.props;
+        // const oldSecretSaved = AdminUserProps.getIn(['editingItem', 'secretSaved']);
+        let checkValue = '0';
+        if(event.target.checked === false) {
+            checkValue = '1';
+        } else {
+            checkValue = '0';
+        }
+        this.props.AdminUserActions.setEditingItemValue({
+            name: name,
+            value: checkValue,
         });
     }
 
@@ -285,6 +306,8 @@ class DividedAdminManageDialog extends Component {
         const selectedGroup = (editingItem && editingItem.get('grpInfoList')) ? editingItem.get('grpInfoList') : null;
         // const selectedClient = (editingItem && editingItem.get('clientInfoList')) ? editingItem.get('clientInfoList') : null;
 
+        const secretSaved = (editingItem && editingItem.get('secretSaved')) ? editingItem.get('secretSaved') : false;
+
         let title = "";
         let passwordCheck = [];
         if(dialogType === DividedAdminManageDialog.TYPE_ADD) {
@@ -418,6 +441,26 @@ class DividedAdminManageDialog extends Component {
                         <Grid item xs={12} >
                             <DividedAdminManageRuleSelector compId={compId} editingItem={editingItem} />
                         </Grid>
+                        {
+                        (editingItem.get('adminTp') == Constants.ADMIN_TYPECODE) &&
+                            <Grid item xs={12} >
+                                <Card>
+                                    <CardHeader style={{padding:3,backgroundColor:'#a1b1b9'}} titleTypographyProps={{variant:'body2', style:{fontWeight:'bold'}}} title={t("lbResetOtpSecretStatus")}></CardHeader>
+                                    <CardContent style={{padding:0, height:82, display:'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                        {/* <Typography style={{margin:'2px 8px'}}>{t("msgResetOtpSecretStatus")}</Typography> */}
+                                        <FormControl style={{width:'100%', display: 'inline-block', alignItems: 'center'}}>
+                                            <Typography>{t("msgResetOtpSecretStatus")}
+                                            <Checkbox 
+                                                checked={secretSaved ? secretSaved : false}
+                                                onChange={this.handleStateChange('secretSaved')}
+                                                disabled={false}
+                                            />
+                                            </Typography>
+                                        </FormControl>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        }
                     </Grid>
                     {/*(editingItem.get('isPortableAdmin') === '1') &&
                       <div style={{color: "red"}}>{t("msgCreatePortableBuildServerBefore")}</div>

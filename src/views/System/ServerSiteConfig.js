@@ -65,6 +65,8 @@ class ServerSiteConfig extends Component {
         pollingTime: '',
         trialCount: '',
         lockTime: '',
+        adminLoginTrialCount: '',
+        adminLoginLockTime: '',
         passwordRule: '',
         pwMinLength: '8',
         pwIncludeNumber: '0',
@@ -72,6 +74,7 @@ class ServerSiteConfig extends Component {
         pwIncludeLower: '0',
         pwIncludeSpecial: '0',
         enableDuplicateLogin: false,
+        enableOtpLogin: false,
         duplicateLoginNotiType: '1',
         maxMediaCnt: '',
         registerReq: '1',
@@ -110,8 +113,17 @@ class ServerSiteConfig extends Component {
             dupValue = Math.abs(data[0].enableDuplicateLogin);
           }
 
+          let otpValue = 0;
+          if(data[0].enableOtpLogin) {
+            otpValue = Math.abs(data[0].enableOtpLogin);
+          }
+
           if(dupValue === 0) {
             dupValue = 1;
+          }
+
+          if(otpValue === 0) {
+            otpValue = 1;
           }
 
           this.setState(({stateData}) => ({
@@ -120,7 +132,10 @@ class ServerSiteConfig extends Component {
             .set('grmDomain', data[0].rmUrl)
             .set('pollingTime', data[0].pollingTime)
             .set('trialCount', data[0].trialCount)
-            .set('lockTime', data[0].lockTime)            
+            .set('lockTime', data[0].lockTime)
+            .set('adminLoginTrialCount', data[0].adminLoginTrialCount)
+            .set('adminLoginLockTime', data[0].adminLoginLockTime)
+            .set('otpLoginTrialCount', data[0].otpLoginTrialCount)
             .set('passwordRule', data[0].passwordRule)
             .set('pwMinLength', pwRule ? pwRule.minlen : '8')
             .set('pwIncludeNumber', pwRule ? pwRule.dcredit : false)
@@ -128,6 +143,7 @@ class ServerSiteConfig extends Component {
             .set('pwIncludeLower', pwRule ? pwRule.lcredit : false)
             .set('pwIncludeSpecial', pwRule ? pwRule.ocredit : false)
             .set('enableDuplicateLogin', (data[0].enableDuplicateLogin > 0) ? true : false)
+            .set('enableOtpLogin', (data[0].enableOtpLogin > 0) ? true : false)
             .set('duplicateLoginNotiType', dupValue.toString())
             .set('maxMediaCnt', data[0].maxMediaCnt ? data[0].maxMediaCnt : '')
             .set('registerReq', data[0].registerReq ? data[0].registerReq : '1')
@@ -161,6 +177,7 @@ class ServerSiteConfig extends Component {
                 });
 
                 const dupValue = (stateData.get('enableDuplicateLogin')) ? stateData.get('duplicateLoginNotiType') : stateData.get('duplicateLoginNotiType') * -1;
+                const otpValue = (stateData.get('enableOtpLogin')) ? stateData.get('duplicateLoginNotiType') : stateData.get('duplicateLoginNotiType') * -1;
                 
                 requestPostAPI('createMgServerConf', {
                   pmUrl: stateData.get('gpmsDomain'),
@@ -169,8 +186,12 @@ class ServerSiteConfig extends Component {
                   pollingTime: stateData.get('pollingTime'),
                   trialCount: stateData.get('trialCount'),
                   lockTime: stateData.get('lockTime'),
+                  adminLoginTrialCount: stateData.get('adminLoginTrialCount'),
+                  adminLoginLockTime: stateData.get('adminLoginLockTime'),
+                  otpLoginTrialCount: stateData.get('otpLoginTrialCount'),
                   passwordRule: newPasswordRule,
                   enableDuplicateLogin: dupValue,
+                  enableOtpLogin: otpValue,
                   maxMediaCnt: stateData.get('maxMediaCnt'),
                   registerReq: stateData.get('registerReq'),
                   deleteReq: stateData.get('deleteReq')
@@ -265,6 +286,11 @@ class ServerSiteConfig extends Component {
       <Typography variant="body2" gutterBottom>{t("msgLoginTrialCountAndLockTime")}</Typography>
       <Typography variant="body2" gutterBottom>{t("msgLoginLockTime")}</Typography>
       </div>;
+    
+    const adminSubLogin = <div>
+      <Typography variant="body2" gutterBottom>{t("msgAdminLoginTrialCountAndLockTime")}</Typography>
+      <Typography variant="body2" gutterBottom>{t("msgLoginLockTime")}</Typography>
+    </div>
 
     return (
       <React.Fragment>
@@ -608,6 +634,59 @@ class ServerSiteConfig extends Component {
                     </ListItem>
                   </List>
                 </Grid>
+              </CardContent>
+            </Card>
+
+            <Card style={{marginTop: 16}}>
+              <CardHeader style={{paddingBottom: 0}}
+                title={t("lbLoginOtpLoginEnable")}
+                subheader={t("msgLoginOtpLoginEnable")}
+              />
+              <CardContent style={{paddingTop: 0}}>
+
+                <List dense={true} style={{maxWidth:440,borderStyle:'solid',borderWidth:1,borderRadius:4,borderColor:'#0000003b',margin:10,padding:10}}>
+                  <ListItem>
+                    <ListItemIcon><PropItemIcon style={{width:'16px'}} /></ListItemIcon>
+                    <ListItemText primary={t("lbSelectLoginDuplicatgeEnable")} style={{padding:0}} />
+                    <ListItemSecondaryAction>
+                    <FormControlLabel style={{heigth:32}}
+                        control={<Switch onChange={this.handleValueChange('enableOtpLogin')} 
+                            checked={stateData.get('enableOtpLogin')}
+                            color="primary" />}
+                        label={(stateData.get('enableOtpLogin')) ? t("selPermitRule") : t("selNoPermitRule")}
+                    />
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </List>
+              </CardContent>
+            </Card>
+
+            {/* 관리자 login trial count 설정 */}
+            <Card style={{marginTop: 16}}>
+              <CardHeader style={{paddingBottom: 0}}
+                title={t("lbAdminLoginTrialEnable")}
+                subheader={adminSubLogin}
+              />
+              <CardContent style={{paddingBottom: 20}}>
+                <TextValidator label="Login Trial Count" 
+                  name="adminLoginTrialCount" style={{ marginLeft: 8 }}
+                  validators={['required', 'matchRegexp:^[0-9]+$']}
+                  errorMessages={[t("msgTypeNumberOnly")]}
+                  variant="outlined"
+                  value={stateData.get('adminLoginTrialCount')}
+                  onChange={this.handleValueChange("adminLoginTrialCount")}
+                />
+                <TextValidator label="Account Lockout Time"
+                  name="adminLoginLockoutTime" style={{ marginLeft:8,width:223 }}
+                  validators={['required', 'matchRegexp:^[0-9]+$']}
+                  errorMessages={[t("msgTypeNumberOnly")]}
+                  variant="outlined"
+                  InputProps={{
+                    endAdornment: <InputAdornment position="start">Minutes</InputAdornment>,
+                  }}
+                  value={stateData.get('adminLoginLockTime')}
+                  onChange={this.handleValueChange("adminLoginLockTime")}
+                />
               </CardContent>
             </Card>
           </Grid>

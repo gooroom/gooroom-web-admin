@@ -834,6 +834,10 @@ export default {
   "lbAdminSpecifiedRole": "Admin Info. - Role",
   "lbUserStatus": "UserStatus",
   "lbAdminUserStatus": "AdminStatus",
+  "msgResetOtpSecretStatus" : "Click checkbox to reset admin OTP login code",
+  "lbResetOtpSecretStatus" : "Reset Admin OTP Login Code",
+  "lbOtpSecretReset" : "Reset",
+  "lbOtpSecretAsIs" : "Do not Reset",
 
   // 호스트정보 관리
   "lbHosts": "Hosts",

@@ -834,6 +834,10 @@ export default {
   "lbAdminSpecifiedRole": "관리자 정보 - 권한",
   "lbUserStatus": "사용자상태",
   "lbAdminUserStatus": "관리자상태",
+  "msgResetOtpSecretStatus" : "관리자의 2차 인증 코드를 초기화합니다",
+  "lbResetOtpSecretStatus" : "관리자 2차 인증 코드 초기화",
+  "lbOtpSecretReset" : "초기화",
+  "lbOtpSecretAsIs" : "초기화하지 않음",
   
   // 호스트정보 관리
   "lbHosts": "Hosts정보",

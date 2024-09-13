@@ -166,9 +166,10 @@ const makeParameter = (po) => {
         noticeClient: (po.get('noticeClient') !== undefined) ? po.get('noticeClient') : '0',
 
         connIps: (po.get('connIps') !== undefined) ? po.get('connIps').toJS() : [],
-        grpInfoList: (po.get('grpInfoList') !== undefined) ? po.get('grpInfoList').toJS() : [],
+        grpInfoList: (po.get('grpIsecretSavednfoList') !== undefined) ? po.get('grpInfoList').toJS() : [],
         deptInfoList: (po.get('deptInfoList') !== undefined) ? po.get('deptInfoList').toJS() : [],
 
+        secretSaved: (po.get('secretSaved') !== undefined) ? po.get('secretSaved') : '0',
         isPortableAdmin: (po.get('isPortableAdmin') !== undefined) ? po.get('isPortableAdmin') : '0',
     };
 }
@@ -237,8 +238,6 @@ export const deleteAdminUserData = (param) => dispatch => {
         dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
-
-
 
 export const showConnDialog = (param) => dispatch => {
     return dispatch({
