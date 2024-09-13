@@ -115,11 +115,28 @@ export default {
 
   "colLogNo": "로그번호",
   "colLogDate": "로그날짜",
-  "colLogType": "로그타입",
+  "colLogType": "활동 타입",
+  "colLogTarget":"관리 대상",
   "colAccessIp": "접속아이피",
-  "colLogItem": "로그아이템",
-  "colLogData": "로그정보",
+  "colLogItem": "활동명",
+  "colLogDetail": "활동 상세 정보",
 
+  "colLogSuccess":"성공",
+  "colLogFail":"실패",
+
+  "lblAll":"전체",
+  "lblAccessIp": "접속 IP",
+  "lblActType":"활동 타입",
+  "lblActItem":"활동명",
+  "lblActData":"활동 상세 정보",
+
+  "logResultMsg":"의 처리 내용",
+  "lblLogRequestValue":"서버에 요청한 내용",
+  "lblLogResponseValue":"요청 처리 결과",
+  "colLogDetailKey":"인자",
+  "colLogDetailValue":"값",
+  "lblNoDataFound":"해당하는 데이터 없음",
+  
   "colCategory": "유형",
   "colClientList": "사용자 단말",
 

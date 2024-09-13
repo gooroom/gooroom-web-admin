@@ -14,6 +14,10 @@ class GPMSModuleStatus extends Component {
   componentDidMount() {
     const { GPMSHealthActions, HealthState } = this.props;
 
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+
     GPMSHealthActions.getGPMSModuleStatusALL();
     this.timer = setInterval(() => {
       GPMSHealthActions.getGPMSModuleStatusALL();
@@ -21,7 +25,10 @@ class GPMSModuleStatus extends Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.timer);
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null; // 타이머 참조를 명시적으로 제거
+    }
   }
 
   render() {
@@ -42,6 +49,7 @@ class GPMSModuleStatus extends Component {
             const moduleStatus = moduleData ? moduleData.get("status") : null;
             return (
               <div
+                key={moduleType}
                 style={{
                   display: "flex",
                   alignItems: "center",

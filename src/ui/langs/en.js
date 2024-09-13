@@ -116,10 +116,26 @@ export default {
   "colLogNo": "LogNo",
   "colLogDate": "LogDate",
   "colLogType": "LogType",
+  "colLogTarget":"Management target",
   "colAccessIp": "AccessIp",
   "colLogItem": "LogItem",
-  "colLogData": "LogData",
+  "colLogDetail": "Detailed Log Info",
 
+  "colLogSuccess":"Success",
+  "colLogFail":"Failed",
+
+  "lblAll":"All",
+  "lblAccessIp": "Access Ip",
+  "lblActType":"Log Type",
+  "lblActItem":"Log Item",
+  "lblActData":"Log Detail",
+
+  "logResultMsg":"The Result Of",
+  "lblLogRequestValue":"Request Value",
+  "lblLogResponseValue":"Response Value",
+  "colLogDetailKey":"Key",
+  "colLogDetailValue":"Value",
+  "lblNoDataFound":"No Data Found",
   "colCategory": "Type",
   "colClientList": "UserClient",
 
