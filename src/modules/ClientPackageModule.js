@@ -17,6 +17,7 @@ const SHOW_CLIENTPACKAGE_DIALOG = 'clientPackage/SHOW_CLIENTPACKAGE_DIALOG';
 const CLOSE_CLIENTPACKAGE_DIALOG = 'clientPackage/CLOSE_CLIENTPACKAGE_DIALOG';
 
 const GET_CLIENTPACKAGE_LISTPAGED_SUCCESS = 'clientPackage/GET_CLIENTPACKAGE_LISTPAGED_SUCCESS';
+const GET_PACKAGEVERSION_COMPARE_SUCCESS = 'clientPackage/GET_PACKAGEVERSION_COMPARE_SUCCESS';
 
 const UPDATE_PACKAGETOCLIENT_SUCCESS = 'clientPackage/UPDATE_PACKAGETOCLIENT_SUCCESS';
 const DELETE_PACKAGETOCLIENT_SUCCESS = 'clientPackage/DELETE_PACKAGETOCLIENT_SUCCESS';
@@ -26,7 +27,7 @@ const UPDATE_PACKAGEALLLIST_SUCCESS = 'clientPackage/UPDATE_PACKAGEALLLIST_SUCCE
 const UPDATE_TOTLAPACKAGELIST_SUCCESS = 'clientPackage/UPDATE_TOTLAPACKAGELIST_SUCCESS';
 
 // ...
-const initialState = commonHandleActions.getCommonInitialState('chPackageId', 'asc', {dialogTabValue: 0});
+const initialState = commonHandleActions.getCommonInitialState('chPackageId', 'asc', { dialogTabValue: 0 });
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
@@ -88,16 +89,16 @@ export const changeCompVariable = (param) => dispatch => {
 
 export const readProfilePackageListPaged = (module, compId, extParam) => dispatch => {
     let newListParam = Map({});
-    if(module.getIn(['viewItems', compId])) {
+    if (module.getIn(['viewItems', compId])) {
         newListParam = module.getIn(['viewItems', compId, 'listParam']).merge(extParam)
     } else {
         newListParam = module.get('defaultListParam');
-        if(extParam) {
+        if (extParam) {
             newListParam = newListParam.merge(extParam);
         }
     }
 
-    dispatch({type: COMMON_PENDING});
+    dispatch({ type: COMMON_PENDING });
     return requestPostAPI('readProfilePackageListPaged', {
         keyword: newListParam.get('keyword'),
         profileNo: newListParam.get('profileNo'),
@@ -124,17 +125,17 @@ export const readProfilePackageListPaged = (module, compId, extParam) => dispatc
 
 export const readPackageListPagedInClient = (module, compId, extParam) => dispatch => {
     let newListParam = Map({});
-    
-    if(module.getIn(['viewItems', compId])) {
+
+    if (module.getIn(['viewItems', compId])) {
         newListParam = module.getIn(['viewItems', compId, 'listParam']).merge(extParam)
     } else {
         newListParam = module.get('defaultListParam');
-        if(extParam) {
+        if (extParam) {
             newListParam = newListParam.merge(extParam);
         }
     }
 
-    dispatch({type: COMMON_PENDING});
+    dispatch({ type: COMMON_PENDING });
     return requestPostAPI('readPackageListPagedInClient', {
         keyword: newListParam.get('keyword'),
         clientId: newListParam.get('clientId'),
@@ -159,11 +160,11 @@ export const readPackageListPagedInClient = (module, compId, extParam) => dispat
 };
 
 export const readClientPackageListPaged = (module, compId, extParam) => dispatch => {
-    const newListParam = (module.getIn(['viewItems', compId])) ? 
-        module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
+    const newListParam = (module.getIn(['viewItems', compId])) ?
+        module.getIn(['viewItems', compId, 'listParam']).merge(extParam) :
         module.get('defaultListParam');
 
-    dispatch({type: COMMON_PENDING});
+    dispatch({ type: COMMON_PENDING });
     return requestPostAPI('readTotalPackageListPaged', {
         keyword: newListParam.get('keyword'),
         page: newListParam.get('page'),
@@ -186,17 +187,17 @@ export const readClientPackageListPaged = (module, compId, extParam) => dispatch
 };
 
 export const updatePackageInClient = (param) => dispatch => {
-    dispatch({type: COMMON_PENDING});
+    dispatch({ type: COMMON_PENDING });
     return requestPostAPI('updatePackageInClient', param).then(
         (response) => {
             try {
-                if(response.data.status && response.data.status.result === 'success') {
+                if (response.data.status && response.data.status.result === 'success') {
                     dispatch({
                         type: UPDATE_PACKAGETOCLIENT_SUCCESS,
                         response: response
                     });
                 }
-            } catch(error) {
+            } catch (error) {
                 dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
@@ -206,17 +207,17 @@ export const updatePackageInClient = (param) => dispatch => {
 };
 
 export const updatePackageInGroup = (param) => dispatch => {
-    dispatch({type: COMMON_PENDING});
+    dispatch({ type: COMMON_PENDING });
     return requestPostAPI('updatePackageInGroup', param).then(
         (response) => {
             try {
-                if(response.data.status && response.data.status.result === 'success') {
+                if (response.data.status && response.data.status.result === 'success') {
                     dispatch({
                         type: UPDATE_PACKAGETOCLIENT_SUCCESS,
                         response: response
                     });
                 }
-            } catch(error) {
+            } catch (error) {
                 dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
@@ -226,20 +227,20 @@ export const updatePackageInGroup = (param) => dispatch => {
 };
 
 export const deletePackageInClient = (param) => dispatch => {
-    dispatch({type: COMMON_PENDING});
+    dispatch({ type: COMMON_PENDING });
     return requestPostAPI('deletePackageInClient', {
         clientId: param.clientIds,
         packageIds: param.packageIds
     }).then(
         (response) => {
             try {
-                if(response.data.status && response.data.status.result === 'success') {
+                if (response.data.status && response.data.status.result === 'success') {
                     dispatch({
                         type: DELETE_PACKAGETOCLIENT_SUCCESS,
                         response: response
                     });
                 }
-            } catch(error) {
+            } catch (error) {
                 dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
@@ -251,14 +252,14 @@ export const deletePackageInClient = (param) => dispatch => {
 
 // 선택한 단말 또는 그룹에 전체 패키지 업데이트
 export const createPackageAllUpgrade = (param) => dispatch => {
-    dispatch({type: COMMON_PENDING});
+    dispatch({ type: COMMON_PENDING });
     return requestPostAPI('createPackageAllUpgrade', param).then(
         (response) => {
             dispatch({
                 type: UPDATE_PACKAGEALLLIST_SUCCESS,
                 compId: param.compId
             });
-            return {response: response};
+            return { response: response };
         }
     ).catch(error => {
         dispatch({
@@ -270,14 +271,14 @@ export const createPackageAllUpgrade = (param) => dispatch => {
 
 
 export const createTotalPackageUpgradeForClient = (param) => dispatch => {
-    dispatch({type: COMMON_PENDING});
+    dispatch({ type: COMMON_PENDING });
     return requestPostAPI('createTotalPackageUpgradeForClient', param).then(
         (response) => {
             dispatch({
                 type: UPDATE_PACKAGEALLLIST_SUCCESS,
                 compId: param.compId
             });
-            return {response: response};
+            return { response: response };
         }
     ).catch(error => {
         dispatch({
@@ -288,14 +289,14 @@ export const createTotalPackageUpgradeForClient = (param) => dispatch => {
 };
 
 export const createTotalPackageUpgradeForGroup = (param) => dispatch => {
-    dispatch({type: COMMON_PENDING});
+    dispatch({ type: COMMON_PENDING });
     return requestPostAPI('createTotalPackageUpgradeForGroup', param).then(
         (response) => {
             dispatch({
                 type: UPDATE_PACKAGEALLLIST_SUCCESS,
                 compId: param.compId
             });
-            return {response: response};
+            return { response: response };
         }
     ).catch(error => {
         dispatch({
@@ -307,7 +308,7 @@ export const createTotalPackageUpgradeForGroup = (param) => dispatch => {
 
 
 export const updateTotalPackage = (param) => dispatch => {
-    dispatch({type: COMMON_PENDING});
+    dispatch({ type: COMMON_PENDING });
     return requestPostAPI('updateTotalPackage', { clientId: param.clientId }).then(
         (response) => {
             dispatch({
@@ -315,7 +316,7 @@ export const updateTotalPackage = (param) => dispatch => {
                 compId: param.compId,
                 grpId: param.grpId
             });
-            return {response: response};
+            return { response: response };
         }
     ).catch(error => {
         dispatch({
@@ -332,19 +333,55 @@ export const setDataInit = (param) => dispatch => {
     });
 }
 
+//버전 비교 API
+export const readpackageSpecListPagedInVersionCompare = (module, compId, extParam, extOption = { isResetSelect: false, isInitParam: false }) => dispatch => {
+    let newListParam = (module.getIn(['viewItems', compId])) ?
+        module.getIn(['viewItems', compId, 'listParam']).merge(extParam) :
+        module.get('defaultListParam');
+
+    if (extOption.isInitParam) {
+        newListParam = module.get('defaultListParam');
+    }
+    dispatch({ type: COMMON_PENDING });
+    return requestPostAPI('readpackageSpecListPagedInVersionCompare', {
+        keyword: newListParam.get('keyword'),
+        version1: newListParam.get('version1'),
+        version2: newListParam.get('version2'),
+        isFiltered: (newListParam.get('isFiltered')) ? newListParam.get('isFiltered') : false,
+        page: newListParam.get('page'),
+        start: newListParam.get('page') * newListParam.get('rowsPerPage'),
+        length: newListParam.get('rowsPerPage'),
+        orderColumn: newListParam.get('orderColumn'),
+        orderDir: newListParam.get('orderDir')
+    }).then(
+        (response) => {
+            dispatch({
+                type: GET_PACKAGEVERSION_COMPARE_SUCCESS,
+                compId: compId,
+                listParam: newListParam,
+                extOption: extOption,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
 export default handleActions({
 
     [COMMON_PENDING]: (state, action) => {
         return state.merge({ pending: true, error: false });
     },
     [COMMON_FAILURE]: (state, action) => {
-        return state.merge({ pending: false, error: true,
+        return state.merge({
+            pending: false, error: true,
             resultMsg: (action.error && action.error.status) ? action.error.status.message : '',
             errorObj: (action.error) ? action.error : ''
         });
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
-        return state.merge({ editingItem: state.get('editingItem').merge({[action.name]: action.value}) });
+        return state.merge({ editingItem: state.get('editingItem').merge({ [action.name]: action.value }) });
     },
     [CHG_LISTPARAM_DATA]: (state, action) => {
         return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
@@ -366,7 +403,7 @@ export default handleActions({
     },
     [SET_INITDATA_SUCCESS]: (state, action) => {
         return state.setIn(['viewItems', action.compId, 'listData'], List([]))
-        .setIn(['viewItems', action.compId, 'listParam'], state.get('defaultListParam'));
+            .setIn(['viewItems', action.compId, 'listParam'], state.get('defaultListParam'));
     },
 
     [GET_CLIENTPACKAGE_LISTPAGED_SUCCESS]: (state, action) => {
@@ -397,6 +434,8 @@ export default handleActions({
             pending: false, error: false
         });
     },
-
+    [GET_PACKAGEVERSION_COMPARE_SUCCESS]: (state, action) => {
+        return commonHandleActions.handleListPagedAction(state, action);
+    },
 }, initialState);
 

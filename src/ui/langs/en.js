@@ -65,6 +65,10 @@ export default {
   "colInstalledVersion": "InstalledVer.",
   "colVersion": "Version",
   "colAvailVersion": "AvailableVer.",
+  "colSwSpec": "SBoM",
+  "colLicense": "License",
+  "colSupplier": "Supplier",
+  "colOsVersion": "OS Version",
 
   "colJobNo": "JobNo",
   "colJobName": "JobName",
@@ -116,26 +120,26 @@ export default {
   "colLogNo": "LogNo",
   "colLogDate": "LogDate",
   "colLogType": "LogType",
-  "colLogTarget":"Management target",
+  "colLogTarget": "Management target",
   "colAccessIp": "AccessIp",
   "colLogItem": "LogItem",
   "colLogDetail": "Detailed Log Info",
 
-  "colLogSuccess":"Success",
-  "colLogFail":"Failed",
+  "colLogSuccess": "Success",
+  "colLogFail": "Failed",
 
-  "lblAll":"All",
+  "lblAll": "All",
   "lblAccessIp": "Access Ip",
-  "lblActType":"Log Type",
-  "lblActItem":"Log Item",
-  "lblActData":"Log Detail",
+  "lblActType": "Log Type",
+  "lblActItem": "Log Item",
+  "lblActData": "Log Detail",
 
-  "logResultMsg":"The Result Of",
-  "lblLogRequestValue":"Request Value",
-  "lblLogResponseValue":"Response Value",
-  "colLogDetailKey":"Key",
-  "colLogDetailValue":"Value",
-  "lblNoDataFound":"No Data Found",
+  "logResultMsg": "The Result Of",
+  "lblLogRequestValue": "Request Value",
+  "lblLogResponseValue": "Response Value",
+  "colLogDetailKey": "Key",
+  "colLogDetailValue": "Value",
+  "lblNoDataFound": "No Data Found",
   "colCategory": "Type",
   "colClientList": "UserClient",
 
@@ -154,11 +158,11 @@ export default {
   "optClientStatus": "ClientStatus",
   "optKeyword": "Keyword",
 
-  "optMinutes" : "Min",
-  "optHours" : "Hours",
+  "optMinutes": "Min",
+  "optHours": "Hours",
 
-  "optUse" : "Use",
-  "optNoUse" : "No Use",
+  "optUse": "Use",
+  "optNoUse": "No Use",
 
   // Buttons
   "btnSearch": "Search",
@@ -180,8 +184,8 @@ export default {
   // Menus
   "home": "",
   "menuDashboard": "Dashboard",
-  "menuClientDashboard":"Client Dashboard",
-  "menuServerDashboard":"Server Dashboard",
+  "menuClientDashboard": "Client Dashboard",
+  "menuServerDashboard": "Server Dashboard",
   "menuStatistic": "Statistic",
   "menuDailyViolated": "DailyViolatedStatics",
   "menuDailyConnected": "DailyConnectedStatics",
@@ -199,6 +203,10 @@ export default {
   "menuSoftware": "Software",
   "menuPackageManage": "PackageMng",
   "menuProfileManage": "ProfileMng",
+
+  "menuSBoM": "SBoM",
+  "menuClientInform": "Client Information",
+  "menuVersionInform": "Versions Information",
 
   "menuUser": "User",
   "menuUserManage": "UserMng",
@@ -240,6 +248,7 @@ export default {
   "lbId": "ID",
   "lbClientId": "ClientId",
   "lbClientName": "ClientName",
+  "lbOsVersion": "OS Version",
   "dtSystemError": "System Error",
   "dtSystemNotice": "System Notice",
   "dtEditOK": "Edit Success",
@@ -264,7 +273,7 @@ export default {
   "lbClientSelect": "Select Client",
   "msgTypeNumberOnly": "Please enter only numbers.",
   "msgInvalidMacAddress": "The MAC address is not correct.",
-  "msgInvalidNumber":"Please enter setting value.",
+  "msgInvalidNumber": "Please enter setting value.",
   "msgInvalidValue": "Please enter a valid setting value.",
   "lbSelectAll": "Select All",
   "lbSample": "Sample",
@@ -372,6 +381,7 @@ export default {
   "ttUpdateSelectedPackgeInClient": "Update selected package on Client",
   "ttUpdateTotalPackgeInGroup": "Updating the entire package in Client Group",
   "ttUpdateSelectedPackgeInGroup": "Update selected package on Client Group",
+  "ttComparePackgeVersion": "You can only compare two versions.",
 
   // 단말 등록키 관리
   "dtAddClientKey": "Registration of client registration key",
@@ -412,7 +422,7 @@ export default {
   "msgSelectClientInRight": "Select the terminal using the right button.",
   "lbTargetClient": "Target for Profiling",
   "lbPackageInfo": "Package Information",
-  
+
   // 패키지관리
   "selShowDiffPackage": "View differences",
   "selShowAllPackage": "View all",
@@ -452,6 +462,9 @@ export default {
   "msgCompUpdateAndJob": "A task has been created to update the package list. Please wait for 1 ~ 3 minutes before checking.",
   "msgFailCompUpdate": "Package list update job could not be created.",
 
+  // 소프트웨어 명세
+  "btnCompareVer": "Compare Versions",
+
   // 작업관리
   "dtJobStatus": "Job Status",
   "msgNoResult": "No results found.",
@@ -489,7 +502,7 @@ export default {
   "lbUpgradeAll": "Upgrade All Package",
   "lbInsertAllPackageToServer": "Request All Package List",
   "lbProfiling": "Profiling",
-  "lbProfilingPackages": "Request Profiling Package List", 
+  "lbProfilingPackages": "Request Profiling Package List",
   "lbSetHomefolderOperation": "Set Home Folder Operation",
 
   // 에이전트설정
@@ -692,7 +705,7 @@ export default {
   "lbSystem": "System",
   "lbAudioVideo": "Audio & Video",
   "lbGraphics": "Graphics",
-  
+
   // 관리서버설정
   "lbSaveServerConfig": "Save management server settings",
   "msgSaveServerConfig": "Do you want to save the management server settings?",
@@ -750,7 +763,7 @@ export default {
   "colActionType": "Action Type",
   "colUsbSerial": "USB Serial No",
   "colAdminChk": "Status",
-  "colReqDate" : "Request Date",
+  "colReqDate": "Request Date",
   "colReqHistory": "Request History",
   "lbUserMediaRuleReqDetail": "User Request Media Control Rule Detail",
   "lbUsbNm": "USB Name",
@@ -850,10 +863,10 @@ export default {
   "lbAdminSpecifiedRole": "Admin Info. - Role",
   "lbUserStatus": "UserStatus",
   "lbAdminUserStatus": "AdminStatus",
-  "msgResetOtpSecretStatus" : "Click checkbox to reset admin OTP login code",
-  "lbResetOtpSecretStatus" : "Reset Admin OTP Login Code",
-  "lbOtpSecretReset" : "Reset",
-  "lbOtpSecretAsIs" : "Do not Reset",
+  "msgResetOtpSecretStatus": "Click checkbox to reset admin OTP login code",
+  "lbResetOtpSecretStatus": "Reset Admin OTP Login Code",
+  "lbOtpSecretReset": "Reset",
+  "lbOtpSecretAsIs": "Do not Reset",
 
   // 호스트정보 관리
   "lbHosts": "Hosts",
@@ -973,7 +986,7 @@ export default {
   "dtBluetoothMac": "Connectable Bluetooth Mac Address",
   "selUsbMemoryOn": "USB memory permission",
   "selUsbMemoryOff": "Prohibit USB memory",
-  "dtUsbMemorySerial": "Connectable USB Serial Information",  
+  "dtUsbMemorySerial": "Connectable USB Serial Information",
   "dtWifi": "Wireless LAN",
   "dtCdDvd": "CD/DVD",
   "dtPrinter": "Printer",
@@ -989,7 +1002,7 @@ export default {
   "dtBluetooth": "Bluetooth",
   "lbBluetoothMac": "Bluetooth MAC address",
   "lbReadOnly": "ReadOnly",
-  
+
   // 단말보안정책 관리
   "lbSecuRule": "ClientSecuRule",
   "lbDeleteSecuRule": "Delete a client security rule",
@@ -1079,7 +1092,7 @@ export default {
   "dtCopyPolicyKitRule": "Copy Policy Kit Rule",
   "dtCategoryPolicyKitRule": "Policy Kit Rule",
   "msgCantAvailable": "Not supported in this version.",
-  
+
   "dtPkitGooroom": "Gooroom App",
   "dtPkitUpdate": "Gooroom Update",
   "dtPkitAgent": "Gooroom Agent",
@@ -1217,7 +1230,7 @@ export default {
   "msgUserFromFileHelp06": "# The 'expiration date' format is 8 digits in order of 'year month date'. (E.g. '20191030')",
   "msgMustHaveSelectedFile": "The file is not selected.",
 
-  
+
   // 1.3
   "menuSite": "site",
   "menuSiteManage": "SiteMng",
@@ -1343,7 +1356,7 @@ export default {
   "colTransferDate": "Transfer Time",
   "dtCertDialog": "Cert log",
   "btnPtgrSearch": "Search",
-  "stEnterDirect":"Enter Manually",
+  "stEnterDirect": "Enter Manually",
 
   // ptgr build server
   "lbPortableServerConf": "Build Server Conf",
@@ -1359,13 +1372,13 @@ export default {
   "msgPortableInputToken": "Enter the server token value.",
 
   //health check server manage
-  "repoServerMng":"Repository Server Management",
+  "repoServerMng": "Repository Server Management",
   "repoServerMngDtl": "Manages system information to check the status of the repository server.",
   "noRegisteredServers": "There is no registered {{target}} server information at the moment. Please register the server information to manage.",
-  "registerSever":"add {{target}} Server",
+  "registerSever": "add {{target}} Server",
 
   "dbServerMng": "DB Server Management",
-  "dbServerMngDtl":"Manages system information to check the status of the DB server.",
+  "dbServerMngDtl": "Manages system information to check the status of the DB server.",
 
   "lblErrorEmpty": "This field cannot be empty.",
   "lblErrorTitle": "Must be between 1 and 100 characters, and can include English letters, Korean characters, and numbers.",
@@ -1376,7 +1389,7 @@ export default {
   "registerSuccessTitle": "{{target}} Server Registration Successful",
   "registerSuccessMsg": "{{target}} server has been successfully registered.",
   "registerSuccessMsgDtl": "You can check the server status on the server dashboard.",
-  
+
   "registerServerInfo": "{{target}} Server Information Registration",
   "maxLength100": "Up to 100 characters are allowed.",
   "lblValidUrl": "Must be in a valid URL or IP format.",
@@ -1398,8 +1411,8 @@ export default {
   "intgSystSttsHealthMng": "{{target}} Server Health Check",
   "serverNameDot": "• Server Name",
   "serverLocationDot": "• Server Location",
-  "repoUrlDot":"• Repository URL",
-  "repoDistDot":"• Repository DIST",
+  "repoUrlDot": "• Repository URL",
+  "repoDistDot": "• Repository DIST",
   "checkDateDot": "• Check Schedule",
   "healthStatusDot": "• Health Check Status",
   "statusCodeDot": "• Status Code",
@@ -1409,20 +1422,20 @@ export default {
   "noRegServers": "No registered {{target}} server information available.",
   "regInfo": "You can check the server information after registering it in [Integrated System Management].",
 
-  "error":"error",
+  "error": "error",
 
-  "dbSidName" : "DB SID name",
-  "dbUser" : "user ID",
-  "dbPassword" : "password",
+  "dbSidName": "DB SID name",
+  "dbUser": "user ID",
+  "dbPassword": "password",
   "hostHint": "Please enter the host name.",
-  "item":"health check item",
-  "query":"query",
-  "port":"port",
+  "item": "health check item",
+  "query": "query",
+  "port": "port",
 
-  "deleteItem":"delete item",
-  "addItem":"add item",
-  "dbType":"DB Type",
+  "deleteItem": "delete item",
+  "addItem": "add item",
+  "dbType": "DB Type",
 
-   "connectionSc" : "Connection Success",
-  "connectionEr" : "Connection Fail"
+  "connectionSc": "Connection Success",
+  "connectionEr": "Connection Fail"
 };

@@ -30,7 +30,7 @@ import Button from '@material-ui/core/Button';
 import Checkbox from "@material-ui/core/Checkbox";
 import InputLabel from "@material-ui/core/InputLabel";
 
-import Search from '@material-ui/icons/Search'; 
+import Search from '@material-ui/icons/Search';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -54,7 +54,7 @@ class ClientManageCompWithPackage extends Component {
   handleChangeRowsPerPage = event => {
     const { ClientManageActions, ClientManageProps, compId } = this.props;
     ClientManageActions.readClientListPaged(ClientManageProps, compId, {
-      rowsPerPage: event.target.value, page:0
+      rowsPerPage: event.target.value, page: 0
     });
   };
 
@@ -79,7 +79,7 @@ class ClientManageCompWithPackage extends Component {
   handleCheckClick = (event, id) => {
     event.stopPropagation();
     const { ClientManageActions, ClientManageProps, compId } = this.props;
-    const newCheckedIds = setCheckedIdsInComp(ClientManageProps, compId, id);  
+    const newCheckedIds = setCheckedIdsInComp(ClientManageProps, compId, id);
 
     ClientManageActions.changeCompVariable({
       name: 'checkedIds',
@@ -101,18 +101,18 @@ class ClientManageCompWithPackage extends Component {
     //   compId: compId
     // });
 
-    if(this.props.onSelect) {
+    if (this.props.onSelect) {
       this.props.onSelect(selectRowObject);
     }
-    
+
     // rest actions..
-    
+
   };
 
   isChecked = id => {
     const { ClientManageProps, compId } = this.props;
     const checkedIds = getDataObjectVariableInComp(ClientManageProps, compId, 'checkedIds');
-    if(checkedIds) {
+    if (checkedIds) {
       return checkedIds.includes(id);
     } else {
       return false;
@@ -134,13 +134,13 @@ class ClientManageCompWithPackage extends Component {
     // });
     const { ClientManageProps, ClientManageActions, compId } = this.props;
     ClientManageActions.readClientListPaged(ClientManageProps, compId, {
-      clientType: property, page:0
+      clientType: property, page: 0
     });
   };
 
   handleKeywordChange = (name, value) => {
     this.props.ClientManageActions.changeListParamData({
-      name: name, 
+      name: name,
       value: value,
       compId: this.props.compId
     });
@@ -148,16 +148,16 @@ class ClientManageCompWithPackage extends Component {
 
   handleSelectBtnClick = () => {
     const { ClientManageActions, ClientManageProps, compId } = this.props;
-    ClientManageActions.readClientListPaged(ClientManageProps, compId, {page: 0});
+    ClientManageActions.readClientListPaged(ClientManageProps, compId, { page: 0 });
   };
 
   render() {
     const { classes } = this.props;
-    const { ClientManageProps, compId } = this.props;
+    const { ClientManageProps, compId, isSpec } = this.props;
     const { t, i18n } = this.props;
 
     const columnHeaders = [
-      { id: "checkbox", isOrder: false, isCheckbox: true},
+      { id: "checkbox", isOrder: false, isCheckbox: true },
       { id: 'STATUS_CD', isOrder: false, numeric: false, disablePadding: true, label: t("colStatus") },
       { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colClientId") },
       { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: t("colClientName") },
@@ -165,10 +165,10 @@ class ClientManageCompWithPackage extends Component {
       { id: 'TOTAL_CNT', isOrder: true, numeric: false, disablePadding: true, label: t("colPackageCnt") },
       { id: 'UPDATE_TARGET_CNT', isOrder: true, numeric: false, disablePadding: true, label: t("colPackageUpdateCnt") }
     ];
-    
+    const filteredColumnHeaders = columnHeaders.filter(column => !column.isCheckbox).concat({ id: 'OS_VER', isOrder: true, numeric: false, disablePadding: true, label: t("colOsVersion") });
     const listObj = ClientManageProps.getIn(['viewItems', compId]);
-    let emptyRows = 0; 
-    if(listObj && listObj.get('listData')) {
+    let emptyRows = 0;
+    if (listObj && listObj.get('listData')) {
       emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
     }
 
@@ -178,14 +178,14 @@ class ClientManageCompWithPackage extends Component {
         {/* data option area */}
         <Grid container spacing={8} alignItems="flex-end" direction="row" justify="space-between" >
           <Grid item xs={4} >
-              <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect}
-                value={(listObj && listObj.getIn(['listParam', 'clientType'])) ? listObj.getIn(['listParam', 'clientType']) : 'ALL'}
-              />
+            <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect}
+              value={(listObj && listObj.getIn(['listParam', 'clientType'])) ? listObj.getIn(['listParam', 'clientType']) : 'ALL'}
+            />
           </Grid>
           <Grid item xs={4} >
-              <KeywordOption paramName="keyword" keywordValue={(listObj && listObj.get('listParam')) ? listObj.getIn(['listParam', 'keyword']) : ''}
-                handleKeywordChange={this.handleKeywordChange} 
-                handleSubmit={() => this.handleSelectBtnClick()} />
+            <KeywordOption paramName="keyword" keywordValue={(listObj && listObj.get('listParam')) ? listObj.getIn(['listParam', 'keyword']) : ''}
+              handleKeywordChange={this.handleKeywordChange}
+              handleSubmit={() => this.handleSelectBtnClick()} />
           </Grid>
           <Grid item xs={4} >
             <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
@@ -196,75 +196,80 @@ class ClientManageCompWithPackage extends Component {
 
         {/* data area */}
         {(listObj && listObj.get('listData')) &&
-        <Table>
-          <GRCommonTableHead
-            classes={classes}
-            keyId="clientId"
-            orderDir={listObj.getIn(['listParam', 'orderDir'])}
-            orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
-            onRequestSort={this.handleChangeSort}
-            onClickAllCheck={this.handleClickAllCheck}
-            checkedIds={listObj.get('checkedIds')}
-            listData={listObj.get('listData')}
-            columnData={columnHeaders}
-          />
-          <TableBody>
-            {listObj.get('listData').map(n => {
-              const isChecked = this.isChecked(n.get('clientId'));
-              const isSelected = this.isSelected(n.get('clientId'));
+          <Table>
+            <GRCommonTableHead
+              classes={classes}
+              keyId="clientId"
+              orderDir={listObj.getIn(['listParam', 'orderDir'])}
+              orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+              onRequestSort={this.handleChangeSort}
+              onClickAllCheck={this.handleClickAllCheck}
+              checkedIds={listObj.get('checkedIds')}
+              listData={listObj.get('listData')}
+              columnData={isSpec ? filteredColumnHeaders : columnHeaders}
+            />
+            <TableBody>
+              {listObj.get('listData').map(n => {
+                const isChecked = this.isChecked(n.get('clientId'));
+                const isSelected = this.isSelected(n.get('clientId'));
 
-              return (
-                <TableRow
-                  hover
-                  className={(isSelected) ? classes.grSelectedRow : ''}
-                  onClick={event => this.handleSelectRow(event, n.get('clientId'))}
-                  role="checkbox"
-                  key={n.get('clientId')}
-                >
-                  <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                    {(n.get('viewStatus') != 'RVK') &&
-                      <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('clientId'))}/>
+                return (
+                  <TableRow
+                    hover
+                    className={(isSelected) ? classes.grSelectedRow : ''}
+                    onClick={event => this.handleSelectRow(event, n.get('clientId'))}
+                    role="checkbox"
+                    key={n.get('clientId')}
+                  >
+                    {!isSpec &&
+                      <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
+                        {(n.get('viewStatus') != 'RVK') &&
+                          <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('clientId'))} />
+                        }
+                      </TableCell>
                     }
-                  </TableCell>
-                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{getClientStatusIcon(n.get('viewStatus'))}</TableCell>
-                  <TableCell className={classes.grSmallAndClickAnd}>{n.get('clientId')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickCell}>{n.get('clientName')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientGroupName')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('totalCnt')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('updateTargetCnt')}</TableCell>
-                </TableRow>
-              );
-            })}
+                    <TableCell className={classes.grSmallAndClickAndCenterCell}>{getClientStatusIcon(n.get('viewStatus'))}</TableCell>
+                    <TableCell className={classes.grSmallAndClickAnd}>{n.get('clientId')}</TableCell>
+                    <TableCell className={classes.grSmallAndClickCell}>{n.get('clientName')}</TableCell>
+                    <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientGroupName')}</TableCell>
+                    <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('totalCnt')}</TableCell>
+                    <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('updateTargetCnt')}</TableCell>
+                    {isSpec && <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('osVer')}</TableCell>}
+                  </TableRow>
+                );
+              })}
 
-            {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
-              <TableRow key={e}>
-                <TableCell
-                  colSpan={columnHeaders.length + 1}
-                  className={classes.grSmallAndClickCell}
-                />
-              </TableRow>
-            )}))}
-          </TableBody>
-        </Table>
+              {emptyRows > 0 && ((Array.from(Array(emptyRows).keys())).map(e => {
+                return (
+                  <TableRow key={e}>
+                    <TableCell
+                      colSpan={columnHeaders.length + 1}
+                      className={classes.grSmallAndClickCell}
+                    />
+                  </TableRow>
+                )
+              }))}
+            </TableBody>
+          </Table>
         }
         {listObj && listObj.get('listData') && listObj.get('listData').size > 0 &&
-        <TablePagination
-          component='div'
-          count={listObj.getIn(['listParam', 'rowsFiltered'])}
-          rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
-          rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
-          page={listObj.getIn(['listParam', 'page'])}
-          backIconButtonProps={{
-            'aria-label': 'Previous Page'
-          }}
-          nextIconButtonProps={{
-            'aria-label': 'Next Page'
-          }}
-          onChangePage={this.handleChangePage}
-          onChangeRowsPerPage={this.handleChangeRowsPerPage}
-        />
-      }
-    </div>
+          <TablePagination
+            component='div'
+            count={listObj.getIn(['listParam', 'rowsFiltered'])}
+            rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
+            rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
+            page={listObj.getIn(['listParam', 'page'])}
+            backIconButtonProps={{
+              'aria-label': 'Previous Page'
+            }}
+            nextIconButtonProps={{
+              'aria-label': 'Next Page'
+            }}
+            onChangePage={this.handleChangePage}
+            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+          />
+        }
+      </div>
     );
   }
 }

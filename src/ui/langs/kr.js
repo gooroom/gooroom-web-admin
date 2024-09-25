@@ -65,6 +65,10 @@ export default {
   "colVersion": "버전",
   "colInstalledVersion": "설치버전",
   "colAvailVersion": "업데이트가능버전",
+  "colSwSpec": "소프트웨어 명세",
+  "colLicense": "라이선스",
+  "colSupplier": "공급처",
+  "colOsVersion": "OS버전",
 
   "colJobNo": "작업번호",
   "colJobName": "작업이름",
@@ -116,27 +120,27 @@ export default {
   "colLogNo": "로그번호",
   "colLogDate": "로그날짜",
   "colLogType": "활동 타입",
-  "colLogTarget":"관리 대상",
+  "colLogTarget": "관리 대상",
   "colAccessIp": "접속아이피",
   "colLogItem": "활동명",
   "colLogDetail": "활동 상세 정보",
 
-  "colLogSuccess":"성공",
-  "colLogFail":"실패",
+  "colLogSuccess": "성공",
+  "colLogFail": "실패",
 
-  "lblAll":"전체",
+  "lblAll": "전체",
   "lblAccessIp": "접속 IP",
-  "lblActType":"활동 타입",
-  "lblActItem":"활동명",
-  "lblActData":"활동 상세 정보",
+  "lblActType": "활동 타입",
+  "lblActItem": "활동명",
+  "lblActData": "활동 상세 정보",
 
-  "logResultMsg":"의 처리 내용",
-  "lblLogRequestValue":"서버에 요청한 내용",
-  "lblLogResponseValue":"요청 처리 결과",
-  "colLogDetailKey":"인자",
-  "colLogDetailValue":"값",
-  "lblNoDataFound":"해당하는 데이터 없음",
-  
+  "logResultMsg": "의 처리 내용",
+  "lblLogRequestValue": "서버에 요청한 내용",
+  "lblLogResponseValue": "요청 처리 결과",
+  "colLogDetailKey": "인자",
+  "colLogDetailValue": "값",
+  "lblNoDataFound": "해당하는 데이터 없음",
+
   "colCategory": "유형",
   "colClientList": "사용자 단말",
 
@@ -155,11 +159,11 @@ export default {
   "optClientStatus": "단말상태",
   "optKeyword": "검색어",
 
-  "optMinutes" : "분",
-  "optHours" : "시간",
+  "optMinutes": "분",
+  "optHours": "시간",
 
-  "optUse" : "사용",
-  "optNoUse" : "미사용",
+  "optUse": "사용",
+  "optNoUse": "미사용",
 
   // Buttons
   "btnSearch": "조회",
@@ -176,13 +180,13 @@ export default {
   "btnOK": "확인",
   "btnYes": "예",
   "btnNo": "아니오",
-  "btnDel" : " - 삭제",
+  "btnDel": " - 삭제",
 
   // Menus
   "home": "",
   "menuDashboard": "Dashboard",
-  "menuClientDashboard":"클라이언트 대시보드",
-  "menuServerDashboard":"서버 대시보드",
+  "menuClientDashboard": "클라이언트 대시보드",
+  "menuServerDashboard": "서버 대시보드",
   "menuStatistic": "통계",
   "menuDailyViolated": "일별침해통계",
   "menuDailyConnected": "일별접속통계",
@@ -201,6 +205,10 @@ export default {
   "menuPackageManage": "패키지관리",
   "menuProfileManage": "프로파일정보",
 
+  "menuSBoM": "소프트웨어 명세",
+  "menuClientInform": "단말 별 정보",
+  "menuVersionInform": "버전 별 정보",
+
   "menuUser": "사용자",
   "menuUserManage": "사용자관리",
   "menuUserReqManage": "사용자 요청관리",
@@ -212,7 +220,7 @@ export default {
   "menuSoftwareRuleManage": "소프트웨어제한정책",
   "menuCtrlCenterItemRuleManage": "제어센터항목정책",
   "menuPolicyKitRuleManage": "PolicyKit정책",
-  
+
   "menuDesktop": "데스크톱",
   "menuDesktopManage": "데스크톱정보",
   "menuDesktopAppManage": "데스크톱앱관리",
@@ -225,7 +233,7 @@ export default {
   "menuSiteConfig": "구름관리서버설정",
   "menuAdminUserMng": "관리자관리",
   "menuDeptAndUser": "조직/사용자 일괄등록",
-  "menuHealthCheck" : "연동 시스템 헬스체크",
+  "menuHealthCheck": "연동 시스템 헬스체크",
 
   "menuNotice": "공지",
   "menuNoticeManage": "공지관리",
@@ -235,12 +243,13 @@ export default {
   "selOnline": "온라인",
   "selViolated": "침해",
   "selUnviolated": "미침해",
-  "lbHelp":"도움말",
+  "lbHelp": "도움말",
   "lbDesc": "설명",
   "lbName": "이름",
   "lbId": "아이디",
   "lbClientId": "단말아이디",
   "lbClientName": "단말이름",
+  "lbOsVersion": "OS 버전",
   "dtSystemError": "시스템오류",
   "dtSystemNotice": "시스템알림",
   "dtEditOK": "수정 완료",
@@ -308,7 +317,7 @@ export default {
   "stActiveUser": "사용자",
   "stActiveClient": "단말",
   "stActiveDate": "기간별",
-  
+
   // 일별접속통계
   "connectRequestCount": "접속요청수",
   "connReqUserCount": "접속요청 사용자수",
@@ -359,7 +368,7 @@ export default {
   "dtDeleteClientFromGroup": "그룹에서 단말 삭제",
   "dtChangGroupMultiple": "단말그룹 일괄 변경",
   "spClientDeptRegDate": "단말그룹 등록일",
-  
+
   "msgAddGroup": "단말그룹을 등록하시겠습니까?",
   "msgEditGroup": "단말그룹을 수정하시겠습니까?",
   "msgInputGroupName": "단말그룹이름을 입력하세요.",
@@ -373,6 +382,7 @@ export default {
   "ttUpdateSelectedPackgeInClient": "단말에 선택 패키지 업데이트",
   "ttUpdateTotalPackgeInGroup": "단말그룹에 전체 패키지 업데이트",
   "ttUpdateSelectedPackgeInGroup": "단말그룹에 선택 패키지 업데이트",
+  "ttComparePackgeVersion": "2개의 버전만 비교 할 수 있습니다.",
 
   // 단말 등록키 관리
   "dtAddClientKey": "단말 등록키 등록",
@@ -413,7 +423,7 @@ export default {
   "msgSelectClientInRight": "우측 버튼을 이용하여 단말을 선택하세요.",
   "lbTargetClient": "프로파일대상 선택",
   "lbPackageInfo": "패키지 정보",
-  
+
   // 패키지관리
   "selShowDiffPackage": "차이있는 패키지만 보기",
   "selShowAllPackage": "전체 패키지 보기",
@@ -452,7 +462,10 @@ export default {
   "dtCompUpdate": "업데이트 완료",
   "msgCompUpdateAndJob": "패키지 리스트를 업데이트 하기 위하여 작업이 생성되었습니다. 1~3분 정도 기다린후 확인하시기 바랍니다.",
   "msgFailCompUpdate": "패키지 리스트 업데이트 작업이 생성되지 못하였습니다.",
-  
+
+  // 소프트웨어 명세
+  "btnCompareVer": "버전 비교",
+
   // 작업관리
   "dtJobStatus": "작업상태",
   "msgNoResult": "결과가 없습니다.",
@@ -490,7 +503,7 @@ export default {
   "lbUpgradeAll": "전체패키지 업그레이드",
   "lbInsertAllPackageToServer": "전체패키지 리스트 요청",
   "lbProfiling": "프로파일링",
-  "lbProfilingPackages": "프로파일링 패키지리스트 요청", 
+  "lbProfilingPackages": "프로파일링 패키지리스트 요청",
   "lbSetHomefolderOperation": "홈폴더초기화 설정",
 
   // 에이전트설정
@@ -590,7 +603,7 @@ export default {
   "dtInheritDesktopConf": "데스크톱정보 상속",
   "lbTheme": "테마",
   "lbDesktopConf": "데스크톱정보",
-  
+
   // 사용자관리
   "ttAddNewDept": "신규조직등록",
   "ttDeleteDept": "조직삭제",
@@ -693,7 +706,7 @@ export default {
   "lbSystem": "시스템",
   "lbAudioVideo": "오디오 & 비디오",
   "lbGraphics": "그래픽",
-  
+
   // 관리서버설정
   "lbSaveServerConfig": "구름관리서버설정 저장",
   "msgSaveServerConfig": "구름관리서버설정을 저장하시겠습니까?",
@@ -751,7 +764,7 @@ export default {
   "colActionType": "요청종류",
   "colUsbSerial": "USB 시리얼",
   "colAdminChk": "상태",
-  "colReqDate" : "요청일",
+  "colReqDate": "요청일",
   "colReqHistory": "요청이력",
   "lbUserMediaRuleReqDetail": "사용자 요청 매체제어 상세정보",
   "lbUsbNm": "USB 이름",
@@ -851,11 +864,11 @@ export default {
   "lbAdminSpecifiedRole": "관리자 정보 - 권한",
   "lbUserStatus": "사용자상태",
   "lbAdminUserStatus": "관리자상태",
-  "msgResetOtpSecretStatus" : "관리자의 2차 인증 코드를 초기화합니다",
-  "lbResetOtpSecretStatus" : "관리자 2차 인증 코드 초기화",
-  "lbOtpSecretReset" : "초기화",
-  "lbOtpSecretAsIs" : "초기화하지 않음",
-  
+  "msgResetOtpSecretStatus": "관리자의 2차 인증 코드를 초기화합니다",
+  "lbResetOtpSecretStatus": "관리자 2차 인증 코드 초기화",
+  "lbOtpSecretReset": "초기화",
+  "lbOtpSecretAsIs": "초기화하지 않음",
+
   // 호스트정보 관리
   "lbHosts": "Hosts정보",
   "lbAddHosts": "Hosts 정보 등록",
@@ -974,7 +987,7 @@ export default {
   "dtBluetoothMac": "연결가능 블루투스 Mac 주소",
   "selUsbMemoryOn": "USB 메모리 허가",
   "selUsbMemoryOff": "USB 메모리 금지",
-  "dtUsbMemorySerial": "연결가능 USB 시리얼 정보",  
+  "dtUsbMemorySerial": "연결가능 USB 시리얼 정보",
   "dtWifi": "무선랜",
   "dtCdDvd": "CD/DVD",
   "dtPrinter": "프린터",
@@ -990,7 +1003,7 @@ export default {
   "dtBluetooth": "블루투스",
   "lbBluetoothMac": "블루투스 맥주소",
   "lbReadOnly": "읽기전용",
-  
+
   // 단말보안정책 관리
   "lbSecuRule": "단말보안정책",
   "lbDeleteSecuRule": "단말보안정책 삭제",
@@ -1023,8 +1036,8 @@ export default {
   "selPackageStopOff": "꺼짐",
   "dtBasicNetwork": "기본네트워크허용여부",
   "msgValidFirewallAddress": "알파벳(a~f) 또는 숫자를 입력하세요.",
-  "msgValidIptablesCmd": "알파벳(a~z) 또는 숫자를 입력하세요.", 
-  
+  "msgValidIptablesCmd": "알파벳(a~z) 또는 숫자를 입력하세요.",
+
   // 소프트웨어정책 관리
   "lbDeleteSWRule": "소프트웨어제한정책 삭제",
   "msgDeleteSWRule": "소프트웨어제한정책({{objId}})을 삭제하시겠습니까?",
@@ -1104,7 +1117,7 @@ export default {
 
   // 활성화 그룹
   "lbActivateGroup": "활성화 그룹",
-  
+
   // 관리자 개인 설정
   "lbAdminTitle": "관리자",
   "lbAdminTitleName": "이름",
@@ -1244,7 +1257,7 @@ export default {
   "msgApplyUpdateServerChild": "업데이트서버정보가 하위 그룹에 적용되었습니다.",
 
   "lbAdminActHistory": "관리자 작업 이력",
- 
+
   /* for PTGR  */
   "lbPortablePart": "휴대형구름 권한",
   "colMngPortable": "휴대형구름관리",
@@ -1335,7 +1348,7 @@ export default {
   "msgInvalidEmail": "유효하지 않은 이메일입니다.",
   "msgEmptyEmail": "이메일을 입력하세요.",
   "msgRegistPortable": "휴대형 구름 신청을 완료하였습니다.",
-  "stEnterDirect":"직접 입력",
+  "stEnterDirect": "직접 입력",
 
   // client apply list
   "menuPortableClient": "휴대형구름",
@@ -1361,30 +1374,30 @@ export default {
   "msgPortableInputToken": "토큰값을 입력하세요.",
 
   //health check server manage
-  "repoServerMng":"Repository 서버 관리",
-  "repoServerMngDtl":"Repository 서버 상태를 조회하기 위한 시스템 정보를 관리합니다.",
-  "noRegisteredServers":"현재 등록된 {{target}}서버 정보가 존재하지 않습니다. 관리할 서버 정보를 등록해 주세요.",
-  "registerSever":"{{target}} 서버 등록",
+  "repoServerMng": "Repository 서버 관리",
+  "repoServerMngDtl": "Repository 서버 상태를 조회하기 위한 시스템 정보를 관리합니다.",
+  "noRegisteredServers": "현재 등록된 {{target}}서버 정보가 존재하지 않습니다. 관리할 서버 정보를 등록해 주세요.",
+  "registerSever": "{{target}} 서버 등록",
 
-  "dbServerMng":"DB 서버 관리",
-  "dbServerMngDtl":"DB 서버 상태를 조회하기 위한 시스템 정보를 관리합니다.",
+  "dbServerMng": "DB 서버 관리",
+  "dbServerMngDtl": "DB 서버 상태를 조회하기 위한 시스템 정보를 관리합니다.",
 
-  "lblErrorEmpty":"해당 항목은 공백일 수 없습니다.",
-  "lblErrorTitle":"1글자 이상, 100글자 미만의 영문,한글,숫자만 사용 가능합니다.",
-  "lblErrorUrl":"URL 또는 IP 형식이 아닙니다.",
-  "lblErrorPort":"Port값은 1부터 65535까지 가능합니다.",
-  "lblErrorDist":"레포지토리 배포판 이름은 공백을 포함할 수 없습니다.",
-  "registerFailTitle":"{{target}} 서버 등록 실패",
-  "registerSuccessTitle":"{{target}} 서버 등록 성공",
-  "registerSuccessMsg":"{{target}} 서버가 성공적으로 등록되었습니다.",
-  "registerSuccessMsgDtl":"서버 대시보드에서 서버 상태를 확인하실 수 있습니다.",
+  "lblErrorEmpty": "해당 항목은 공백일 수 없습니다.",
+  "lblErrorTitle": "1글자 이상, 100글자 미만의 영문,한글,숫자만 사용 가능합니다.",
+  "lblErrorUrl": "URL 또는 IP 형식이 아닙니다.",
+  "lblErrorPort": "Port값은 1부터 65535까지 가능합니다.",
+  "lblErrorDist": "레포지토리 배포판 이름은 공백을 포함할 수 없습니다.",
+  "registerFailTitle": "{{target}} 서버 등록 실패",
+  "registerSuccessTitle": "{{target}} 서버 등록 성공",
+  "registerSuccessMsg": "{{target}} 서버가 성공적으로 등록되었습니다.",
+  "registerSuccessMsgDtl": "서버 대시보드에서 서버 상태를 확인하실 수 있습니다.",
 
-  "registerServerInfo":"{{target}} 서버 정보 등록",
-  "maxLength100":"최대 100자까지 입력 가능합니다.",
-  "lblValidUrl":"URL 또는 IP 형식으로 입력 가능합니다.",
-  "lblValidDist":"레포지토리 배포판 이름을 공백없이 입력 가능합니다.",
-  "noteHint":"최대 300자까지 입력할 수 있으며, 선택 항목입니다.",
-  "cancel":"취소",
+  "registerServerInfo": "{{target}} 서버 정보 등록",
+  "maxLength100": "최대 100자까지 입력 가능합니다.",
+  "lblValidUrl": "URL 또는 IP 형식으로 입력 가능합니다.",
+  "lblValidDist": "레포지토리 배포판 이름을 공백없이 입력 가능합니다.",
+  "noteHint": "최대 300자까지 입력할 수 있으며, 선택 항목입니다.",
+  "cancel": "취소",
   "register": "등록",
   "serverName": "서버 이름",
   "serverLocation": "서버 위치",
@@ -1393,37 +1406,37 @@ export default {
   "healthCheckSchedule": "Health Check 주기",
   "note": "설명",
 
-  "dltnOptn":"이 서버 정보를 삭제할 수 있습니다.",
-  "registerServerInfoAdd":"{{target}} 서버 정보 추가 등록",
+  "dltnOptn": "이 서버 정보를 삭제할 수 있습니다.",
+  "registerServerInfoAdd": "{{target}} 서버 정보 추가 등록",
 
-  "intgSystStts":"연동 시스템 상태",
-  "intgSystSttsHealthMng":"{{target}} 서버 Health Check",
-  "serverNameDot":"• 서버 이름",
-  "serverLocationDot":"• 서버 위치",
-  "repoUrlDot":"• 레포지토리 URL",
-  "repoDistDot":"• 레포지토리 DIST",
-  "checkDateDot":"• 체크 시간",
-  "healthStatusDot":"• Health Check 상태",
-  "statusCodeDot":"• 상태 코드",
-  "noteDot":"• 설명",
-  "dbconnectionDot":"• DB 연결 상태",
-  "noRegServers":"현재 등록된 {{target}} 서버 정보가 존재하지 않습니다.",
-  "regInfo":"[ 연동 시스템 관리 ]에서 서버 정보를 등록한 후 확인할 수 있습니다.",
+  "intgSystStts": "연동 시스템 상태",
+  "intgSystSttsHealthMng": "{{target}} 서버 Health Check",
+  "serverNameDot": "• 서버 이름",
+  "serverLocationDot": "• 서버 위치",
+  "repoUrlDot": "• 레포지토리 URL",
+  "repoDistDot": "• 레포지토리 DIST",
+  "checkDateDot": "• 체크 시간",
+  "healthStatusDot": "• Health Check 상태",
+  "statusCodeDot": "• 상태 코드",
+  "noteDot": "• 설명",
+  "dbconnectionDot": "• DB 연결 상태",
+  "noRegServers": "현재 등록된 {{target}} 서버 정보가 존재하지 않습니다.",
+  "regInfo": "[ 연동 시스템 관리 ]에서 서버 정보를 등록한 후 확인할 수 있습니다.",
 
-  "error":"에러",
+  "error": "에러",
 
-  "dbSidName" : "DB SID 이름",
-  "dbUser" : "유저 ID",
-  "dbPassword" : "비밀번호",
+  "dbSidName": "DB SID 이름",
+  "dbUser": "유저 ID",
+  "dbPassword": "비밀번호",
   "hostHint": "host 명을 적어주세요.",
-  "item":"헬스체크 할 항목",
-  "query":"쿼리",
-  "port":"포트",
+  "item": "헬스체크 할 항목",
+  "query": "쿼리",
+  "port": "포트",
 
-  "deleteItem":"항목 삭제",
-  "addItem":"항목 추가",
-  "dbType":"DB 유형",
-  "connectionSc" : "연결 성공",
-  "connectionEr" : "연결 실패"
+  "deleteItem": "항목 삭제",
+  "addItem": "항목 추가",
+  "dbType": "DB 유형",
+  "connectionSc": "연결 성공",
+  "connectionEr": "연결 실패"
 
 };

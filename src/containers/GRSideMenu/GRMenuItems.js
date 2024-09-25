@@ -87,6 +87,25 @@ export default {
         }
       ]
     }, {
+      name: 'menuSBoM',
+      id: 'sbom',
+      url: '/sbom',
+      level: 1,
+      children: [
+        {
+          name: 'menuClientInform',
+          id: 'GRM1001',
+          url: '/sbom/clientinform/GRM1001/menuClientInform',
+          level: 2,
+        },
+        {
+          name: 'menuVersionInform',
+          id: 'GRM1002',
+          url: '/sbom/versioninform/GRM1002/menuVersionInform',
+          level: 2,
+        }
+      ]
+    }, {
       name: 'menuUser',
       id: 'user',
       url: '/user',

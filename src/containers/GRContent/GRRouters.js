@@ -28,6 +28,9 @@ import PolicyKitRuleManage from "views/Rules/UserConfig/PolicyKitRuleManage";
 import JobManage from "views/Job/JobManage";
 import PackageManage from 'views/ClientPackage/ClientPackageManage';
 
+import ClientSpec from 'views/ClientPackageSpec/ClientSpecManage';
+import VersionSpec from 'views/ClientPackageSpec/VersionSpecManage';
+
 import UserMasterManage from "views/User/UserMasterManage";
 import UserReqManage from "views/User/UserReqManage";
 import UserClientManage from "views/User/UserClientManage";
@@ -71,12 +74,12 @@ class GRRouters extends Component {
   }
 
   getBasename = () => {
-    if(window.gpmsain === Constants.SUPER_RULECODE) {
+    if (window.gpmsain === Constants.SUPER_RULECODE) {
       return PartMain;
-    } else if(window.gpmsain === Constants.ADMIN_RULECODE) {
-        return ClientDashboard;
-    } else if(window.gpmsain === Constants.PART_RULECODE) {
-        return PartMain;
+    } else if (window.gpmsain === Constants.ADMIN_RULECODE) {
+      return ClientDashboard;
+    } else if (window.gpmsain === Constants.PART_RULECODE) {
+      return PartMain;
     }
     /*
     else if(window.gpmsain === Constants.USER_RULECODE) {
@@ -113,7 +116,7 @@ class GRRouters extends Component {
         <Route path="/statistic/dailyconnect/:grMenuId/:grMenuName" component={DailyLoginCountManage} />
         <Route path="/statistic/dailyregist/:grMenuId/:grMenuName" component={DailyClientCountManage} />
         <Route path="/log/secretlog/:grMenuId/:grMenuName" component={SecurityLogManage} />
-        
+
         <Route path="/clients/clientmastermanage/:grMenuId/:grMenuName" component={ClientMasterManage} />
         <Route path="/clientconfig/regkey/:grMenuId/:grMenuName" component={ClientRegKey} />
         <Route path="/clientconfig/setting/:grMenuId/:grMenuName" component={ClientConfSettingManage} />
@@ -122,7 +125,11 @@ class GRRouters extends Component {
 
         <Route path="/package/packagemanage/:grMenuId/:grMenuName" component={PackageManage} />
         <Route path="/clientconfig/profileset/:grMenuId/:grMenuName" component={ClientProfileSet} />
-        
+
+        {/* Sbom 소프트웨어 명세 */}
+        <Route path="/sbom/clientinform/:grMenuId/:grMenuName" component={ClientSpec} />
+        <Route path="/sbom/versioninform/:grMenuId/:grMenuName" component={VersionSpec} />
+
         <Route path="/user/usermastermanage/:grMenuId/:grMenuName" component={UserMasterManage} />
         <Route path="/user/userreqmanage/:grMenuId/:grMenuName" component={UserReqManage} />
         <Route path="/user/userclientmanage/:grMenuId/:grMenuName/client" component={UserClientManage} />
@@ -133,7 +140,7 @@ class GRRouters extends Component {
         <Route path="/userconfig/swfilter/:grMenuId/:grMenuName" component={SoftwareFilterManage} />
         <Route path="/userconfig/ctrlcenteritem/:grMenuId/:grMenuName" component={CtrlCenterItemManage} />
         <Route path="/userconfig/policykit/:grMenuId/:grMenuName" component={PolicyKitRuleManage} />
-        
+
         <Route path="/desktopconfig/desktopapp/:grMenuId/:grMenuName" component={DesktopAppManage} />
         <Route path="/desktopconfig/desktopconf/:grMenuId/:grMenuName" component={DesktopConfManage} />
         <Route path="/system/cloudservicemng/:grMenuId/:grMenuName" component={GcspManage} />
@@ -143,11 +150,11 @@ class GRRouters extends Component {
 
         <Route path="/jobs/jobmanage/:grMenuId/:grMenuName" component={JobManage} />
         {window.usePortable ?
-        <Switch>
-          <Route path="/portable/admin/bulk/:grMenuId/:grMenuName" component={PortableBulkManage} />
-          <Route path="/portable/admin/apply/:grMenuId/:grMenuName" component={PortableApplyManage} />
-          <Route path="/portable/admin/image/:grMenuId/:grMenuName" component={PortableImageManage} />
-        </Switch>
+          <Switch>
+            <Route path="/portable/admin/bulk/:grMenuId/:grMenuName" component={PortableBulkManage} />
+            <Route path="/portable/admin/apply/:grMenuId/:grMenuName" component={PortableApplyManage} />
+            <Route path="/portable/admin/image/:grMenuId/:grMenuName" component={PortableImageManage} />
+          </Switch>
           : null
         }
       </Switch>
@@ -169,9 +176,9 @@ class GRRouters extends Component {
             <Route path="/user/usermastermanage/:grMenuId/:grMenuName" component={UserMasterManage} />
             <Route path="/user/userreqmanage/:grMenuId/:grMenuName" component={UserReqManage} />
           </Switch>
-        : null
+          : null
         }
-        { window.roleClientAdmin === 1 || window.roleUserAdmin ?
+        {window.roleClientAdmin === 1 || window.roleUserAdmin ?
           <Switch>
             <Route path="/userconfig/media/:grMenuId/:grMenuName" component={MediaRuleManage} />
             <Route path="/userconfig/browser/:grMenuId/:grMenuName" component={BrowserRuleManage} />
@@ -180,7 +187,7 @@ class GRRouters extends Component {
             <Route path="/userconfig/ctrlcenteritem/:grMenuId/:grMenuName" component={CtrlCenterItemManage} />
             <Route path="/userconfig/policykit/:grMenuId/:grMenuName" component={PolicyKitRuleManage} />
           </Switch>
-        : null
+          : null
         }
         {window.roleDesktopAdmin === 1 ?
           <Switch>
@@ -189,13 +196,13 @@ class GRRouters extends Component {
             <Route path="/system/cloudservicemng/:grMenuId/:grMenuName" component={GcspManage} />
             <Route path="/system/thememng/:grMenuId/:grMenuName" component={ThemeManage} />
           </Switch>
-        : null
+          : null
         }
         {window.roleNoticeAdmin === 1 ?
           <Switch>
             <Route path="/notices/noticemanage/:grMenuId/:grMenuName" component={NoticeMasterManage} />
           </Switch>
-        : null
+          : null
         }
         {window.rolePortableAdmin === 1 ?
           <Switch>
@@ -203,7 +210,7 @@ class GRRouters extends Component {
             <Route path="/portable/admin/apply/:grMenuId/:grMenuName" component={PortableApplyManage} />
             <Route path="/portable/admin/image/:grMenuId/:grMenuName" component={PortableImageManage} />
           </Switch>
-        : <Route path="/jobs/jobmanage/:grMenuId/:grMenuName" component={JobManage} />
+          : <Route path="/jobs/jobmanage/:grMenuId/:grMenuName" component={JobManage} />
         }
       </div>
     )

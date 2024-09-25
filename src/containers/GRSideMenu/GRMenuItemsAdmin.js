@@ -5,18 +5,18 @@ export default {
       id: 'dashboard',
       url: '/dashboard',
       level: 1,
-      children:[
+      children: [
         {
-          name:'menuClientDashboard',
-          id:'GRM0901',
-          url:'/dashboard/GRM0901/clientDashboard',
-          level:2
+          name: 'menuClientDashboard',
+          id: 'GRM0901',
+          url: '/dashboard/GRM0901/clientDashboard',
+          level: 2
         },
         {
-          name:'menuServerDashboard',
-          id:'GRM0902',
-          url:'/dashboard/GRM0902/serverDashboard',
-          level:2
+          name: 'menuServerDashboard',
+          id: 'GRM0902',
+          url: '/dashboard/GRM0902/serverDashboard',
+          level: 2
         },
       ]
     }, {
@@ -97,6 +97,25 @@ export default {
           name: 'menuProfileManage',
           id: 'GRM0202',
           url: '/clientconfig/profileset/GRM0202/menuProfileManage',
+          level: 2,
+        }
+      ]
+    }, {
+      name: 'menuSBoM',
+      id: 'sbom',
+      url: '/sbom',
+      level: 1,
+      children: [
+        {
+          name: 'menuClientInform',
+          id: 'GRM1001',
+          url: '/sbom/clientinform/GRM1001/menuClientInform',
+          level: 2,
+        },
+        {
+          name: 'menuVersionInform',
+          id: 'GRM1002',
+          url: '/sbom/versioninform/GRM1002/menuVersionInform',
           level: 2,
         }
       ]
