@@ -624,7 +624,7 @@ class DividedAdminManageDialog extends Component {
                       editingItem={editingItem}
                     />
                   </Grid>
-                  {editingItem.get("adminTp") == Constants.ADMIN_TYPECODE && (
+                  {editingItem.get("adminTp") == Constants.ADMIN_TYPECODE && dialogType === DividedAdminManageDialog.TYPE_EDIT && (
                     <Grid item xs={12}>
                       <Card>
                         <CardHeader
