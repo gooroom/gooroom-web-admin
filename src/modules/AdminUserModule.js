@@ -169,7 +169,7 @@ const makeParameter = (po) => {
         grpInfoList: (po.get('grpIsecretSavednfoList') !== undefined) ? po.get('grpInfoList').toJS() : [],
         deptInfoList: (po.get('deptInfoList') !== undefined) ? po.get('deptInfoList').toJS() : [],
 
-        secretSaved: (po.get('secretSaved') !== undefined) ? po.get('secretSaved') : '0',
+        initSecretSaved: (po.get('initSecretSaved') !== undefined) ? po.get('initSecretSaved') : '0',
         isPortableAdmin: (po.get('isPortableAdmin') !== undefined) ? po.get('isPortableAdmin') : '0',
     };
 }
