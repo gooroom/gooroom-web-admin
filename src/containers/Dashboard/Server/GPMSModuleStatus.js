@@ -3,34 +3,13 @@ import React, { Component } from "react";
 import { translate } from "react-i18next";
 
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
 
 import { Typography } from "@material-ui/core";
 
 import { GPMSModuleType, GPMSModuleStatusType } from "modules/HealthModule";
-import * as HealthActions from "modules/HealthModule";
+
 
 class GPMSModuleStatus extends Component {
-  componentDidMount() {
-    const { GPMSHealthActions, HealthState } = this.props;
-
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
-
-    GPMSHealthActions.getGPMSModuleStatusALL();
-    this.timer = setInterval(() => {
-      GPMSHealthActions.getGPMSModuleStatusALL();
-    }, 5000);
-  }
-
-  componentWillUnmount() {
-    if (this.timer) {
-      clearInterval(this.timer);
-      this.timer = null; // 타이머 참조를 명시적으로 제거
-    }
-  }
-
   render() {
     const { t, HealthState } = this.props;
     return (
@@ -103,10 +82,6 @@ const mapStateToProps = (state) => ({
   HealthState: state.HealthModule,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  GPMSHealthActions: bindActionCreators(HealthActions, dispatch),
-});
-
 export default translate("translations")(
-  connect(mapStateToProps, mapDispatchToProps)(GPMSModuleStatus)
+  connect(mapStateToProps)(GPMSModuleStatus)
 );

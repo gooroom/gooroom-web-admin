@@ -172,6 +172,7 @@ export default {
 
     "otp/authenticate":"OTP 인증",
     "otp/login":"OTP 로그인",
+    "otp/generate":"OTP 인증기기 추가",
 
     "health/checkRepoServerUrl":"레포 서버 URL 검사",
     "health/registerRepoServer":"레포 서버 등록",

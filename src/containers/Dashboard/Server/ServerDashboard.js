@@ -11,6 +11,7 @@ import * as AdminActions from "modules/AdminModule";
 import * as ResourceMetricsActions from "modules/ResourceMetricsModule";
 import * as SecurityLogActions from "modules/SecurityLogModule";
 import * as HealthCheckActions from "modules/HealthCheckModule";
+import * as HealthActions from "modules/HealthModule";
 
 import GRPane from "containers/GRContent/GRPane";
 import GPMSModuleHealth from "./GPMSModuleStatus";
@@ -41,7 +42,6 @@ class ServerDashboard extends Component {
     this.refreshDashboard();
     this.handleClickChangeResource("cpu");
     this.dashboardTimer = setInterval(() => this.refreshDashboard(), 1000);
-
   }
 
   componentWillUnmount() {
@@ -60,6 +60,7 @@ class ServerDashboard extends Component {
           isRunningTimer: true,
         });
         // refresh action to here
+        this.props.GPMSHealthActions.getGPMSModuleStatusALL();
         this.props.HealthCheckActions.getServerList()
         .then((response) => {
           this.setState({
@@ -166,6 +167,7 @@ const mapDispatchToProps = (dispatch) => ({
   AdminActions: bindActionCreators(AdminActions, dispatch),
   SecurityLogActions: bindActionCreators(SecurityLogActions, dispatch),
   HealthCheckActions: bindActionCreators(HealthCheckActions, dispatch),
+  GPMSHealthActions: bindActionCreators(HealthActions, dispatch),
 });
 
 export default translate("translations")(connect(

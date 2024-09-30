@@ -171,6 +171,7 @@ export default {
 
     "otp/authenticate":"OTP Authenticate",
     "otp/login":"OTP Login",
+    "otp/generate":"Add OTP Authentication Device",
 
     "health/checkRepoServerUrl":"Check Repository Server Url",
     "health/registerRepoServer":"Register Repository Server",
