@@ -1411,6 +1411,7 @@ export default {
   "intgSystSttsHealthMng": "{{target}} Server Health Check",
   "serverNameDot": "• Server Name",
   "serverLocationDot": "• Server Location",
+  "sidDot":"• SID",
   "repoUrlDot": "• Repository URL",
   "repoDistDot": "• Repository DIST",
   "checkDateDot": "• Check Schedule",

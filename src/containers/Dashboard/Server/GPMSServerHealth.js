@@ -68,6 +68,7 @@ const GPMSServerHealth = ({ serverList, t, classes }) => {
                 <Grid item xs={6}>
                   <Typography variant="body2">{t("serverNameDot")}</Typography>
                   <Typography variant="body2">{t("serverLocationDot")}</Typography>
+		  <Typography variant="body2">{t("sidDot")}</Typography>
                   <Typography variant="body2">{t("checkDateDot")}</Typography>
                   <Typography variant="body2">{t("dbconnectionDot")}</Typography>
                   {dbServer.dbCheckItems && dbServer.dbCheckItems.map((item, index) => (
@@ -80,6 +81,7 @@ const GPMSServerHealth = ({ serverList, t, classes }) => {
                 <Grid item xs={6}>
                   <Typography variant="body2">{dbServer.serverName}</Typography>
                   <Typography variant="body2">{dbServer.url}</Typography>
+		  <Typography variant="body2">{dbServer.sid}</Typography>
                   <Typography variant="body2">
                     {formatDateToSimple(dbServer.updatedDateTime, "YYYY-MM-DD HH:mm:ss")}
                   </Typography>

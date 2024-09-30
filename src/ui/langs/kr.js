@@ -1413,6 +1413,7 @@ export default {
   "intgSystSttsHealthMng": "{{target}} 서버 Health Check",
   "serverNameDot": "• 서버 이름",
   "serverLocationDot": "• 서버 위치",
+  "sidDot":"• SID",
   "repoUrlDot": "• 레포지토리 URL",
   "repoDistDot": "• 레포지토리 DIST",
   "checkDateDot": "• 체크 시간",
