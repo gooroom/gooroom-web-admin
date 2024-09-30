@@ -60,13 +60,13 @@ class ResourceMetrics extends Component {
   drawLineChart (resourceType, data) {
     if (resourceType === "net") {
       return (
-        <ResponsiveContainer width="100%">
+        <ResponsiveContainer width="100%" height="90%">
           <LineChart
             data={data}
-            // margin={{ top: 10, right: 35, left: 35, bottom: 10 }}
+            margin={{ top: 10, right: 35, left: 35, bottom: 10 }}
           >
-            <XAxis dataKey="timestamp" />
-            <YAxis type="number" domain={["dataMin", "dataMax"]} />
+            <XAxis dataKey="timestamp" interval={4} ticks={Array.from({ length: 60 }, (_, index) => index)} tickFormatter={(tick) => `${tick}s`} />
+            <YAxis type="number" domain={["dataMin", "dataMax"]} tick={{fontSize: 12}} tickFormatter={(tick) => tick.length > 4 ? `${tick.substring(0, 4)}...MB/s` : `${tick}MB/s`} />
             <CartesianGrid strokeDasharray="3 3" />
             <Tooltip />
             <Legend />
@@ -88,13 +88,13 @@ class ResourceMetrics extends Component {
       );
     } else {
       return (
-        <ResponsiveContainer width="100%">
+        <ResponsiveContainer width="100%" height="90%">
           <LineChart
             data={data}
-            // margin={{ top: 10, right: 35, left: 35, bottom: 10 }}
+            margin={{ top: 10, right: 35, left: 35, bottom: 10 }}
           >
-            <XAxis dataKey="timestamp" />
-            <YAxis type="number" domain={["dataMin", "dataMax"]} />
+            <XAxis dataKey="timestamp" interval={4} ticks={Array.from({ length: 60 }, (_, index) => index)} tickFormatter={(tick) => `${tick}s`}  />
+            <YAxis type="number" domain={["dataMin", "dataMax"]} tickFormatter={(tick) => tick.length > 4 ? `${tick.substring(0, 4)}...%` : `${tick}%`} />
             <CartesianGrid strokeDasharray="3 3" />
             <Tooltip />
             <Legend />
@@ -135,7 +135,7 @@ class ResourceMetrics extends Component {
                 ? "MEMORY"
                 : resourceType == "net"
                 ? "NETWORK"
-                : resourceType == "mem"
+                : resourceType == "disk"
                 ? "DISK"
                 : ""}{" "}
             </Typography>
