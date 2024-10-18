@@ -379,7 +379,7 @@ class DividedAdminManage extends Component {
                       onClick={event => this.handleSelectRow(event, n.get('adminId'), isEditable)}
                       key={n.get('adminId')}
                     >
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('adminId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell} style={n.get('loginTrial') < 1 ? {color: "red"} : {}}>{n.get('adminId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('adminNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{
                         (n.get('adminTp') === Constants.SUPER_TYPECODE) ? t("lbTotalAdmin") : ((n.get('adminTp') === Constants.ADMIN_TYPECODE) ? t("lbSiteAdmin") : ((n.get('adminTp') === Constants.PART_TYPECODE) ? t("lbPartAdmin") : ''))
