@@ -187,21 +187,6 @@ export default handleActions({
             });
         }
     },
-    // [GET_RESOURCE_METRICS_SUCCESS] : (state, action) => {
-    //     const statusInfo = (action.response.data && action.response.data.data) ? action.response.data.data : null;
-    //     let initData = [];
-
-    //     if(action.resourceType === "net") {
-    //         initData = {timeStamp: 0, recv: 0, sent: 0};
-    //     } else {
-    //         initData = {timeStamp: 0, value: 0};
-    //     }
-
-    //     return state.merge({
-    //         resourceMetricsInfo: statusInfo.length > 0 ? statusInfo : initData,
-    //         resourceType: action.resourceType
-    //     });
-    // }
 
 }, initialState);
 

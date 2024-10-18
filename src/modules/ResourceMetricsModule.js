@@ -56,7 +56,7 @@ export default handleActions(
       const resourceType = action.resourceType;
       
       const initialResourceMetrics = Array.from({ length: minuteLength }, (elem, idx) => (
-        resourceType === "net" 
+        resourceType === "net_recv" || resourceType === "net_sent"  
           ? { timeStamp: idx, recv: null, sent: null }
           : { timeStamp: idx, value: null }
       ));
@@ -68,8 +68,9 @@ export default handleActions(
         statusInfo.map((entry, idx) => {
           const reverseIdx = minuteLength - idx - 1;
           
-          if (resourceType === "net") {
+          if (resourceType === "net_recv") {
             reversed[reverseIdx].recv = entry.recv;
+          } else if (resourceType === "net_sent") {
             reversed[reverseIdx].sent = entry.sent;
           } else {
             reversed[reverseIdx].value = entry.value;

@@ -1,12 +1,12 @@
-import React, { Component, useCallback } from "react";
+import React, { Component } from "react";
 
-import * as ResourceMetricsActions from "modules/ResourceMetricsModule";
 
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 
 import { Tooltip, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import { translate } from "react-i18next";
 import {
   CartesianGrid,
   Legend,
@@ -17,13 +17,23 @@ import {
   YAxis,
 } from "recharts";
 import { GRCommonStyle } from "templates/styles/GRStyles";
-import { translate } from "react-i18next";
 
 
 class ResourceMetrics extends Component {
 
   constructor(props) {
     super(props);
+  }
+  
+  getDataKey(resourceType) {
+    switch(resourceType) {
+      case "net_recv":
+        return "recv";
+      case "net_sent":
+        return "sent";
+      default:
+        return "value";
+    }
   }
   
   convertData(statusInfo, resourceType) {
@@ -36,29 +46,36 @@ class ResourceMetrics extends Component {
           if (n) {
             data.push({
               timestamp: n.get("timeStamp"),
-              // timestamp: n.get("timestamp"),
               value: Math.round(n.get("value") * 100) / 100,
             });
           }
         });
         return data;
-      case "net":
+      case "net_recv":
         statusInfo.map((n) => {
           if (n) {
             data.push({
               timestamp: n.get("timeStamp"),
-              // timestamp: n.get("timestamp"),
-              recv: Math.round(n.get("recv") * 0.000001 * 100) / 100, //Bytes => MegaBytes
-              sent: Math.round(n.get("sent") * 0.000001 * 100) / 100, //Bytes => MegaBytes
+              value: Math.round(n.get("recv") * 0.000001 * 100) / 100, //Bytes => MegaBytes
+            });
+          }
+        });
+        return data;
+      case "net_sent":
+        statusInfo.map((n) => {
+          if (n) {
+            data.push({
+              timestamp: n.get("timeStamp"),
+              value: Math.round(n.get("sent") * 0.000001 * 100) / 100, //Bytes => MegaBytes
             });
           }
         });
         return data;
     }
   }
-
+  
   drawLineChart (resourceType, data) {
-    if (resourceType === "net") {
+    if(resourceType === "net_recv" || resourceType === "net_sent") {
       return (
         <ResponsiveContainer width="100%" height="90%">
           <LineChart
@@ -66,22 +83,15 @@ class ResourceMetrics extends Component {
             margin={{ top: 10, right: 35, left: 35, bottom: 10 }}
           >
             <XAxis dataKey="timestamp" interval={4} ticks={Array.from({ length: 60 }, (_, index) => index)} tickFormatter={(tick) => `${tick}s`} />
-            <YAxis type="number" domain={["dataMin", "dataMax"]} tick={{fontSize: 12}} tickFormatter={(tick) => tick.length > 4 ? `${tick.substring(0, 4)}...MB/s` : `${tick}MB/s`} />
+-            <YAxis type="number" domain={["dataMin", "dataMax"]} tick={{fontSize: 12}} tickFormatter={(tick) => tick.length > 4 ? `${tick.substring(0, 4)}...MB` : `${tick}MB`} />
             <CartesianGrid strokeDasharray="3 3" />
             <Tooltip />
             <Legend />
-            {/* {this.drawLineChart(resourceType)} */}
             <Line
-              name={"recv"}
+              name={"Usage"}
               type="monotone"
-              dataKey="recv"
+              dataKey={"value"}
               stroke="#efa7a7"
-            />
-            <Line
-              name={"sent"}
-              type="monotone"
-              dataKey="sent"
-              stroke="#62b6e2"
             />
           </LineChart>
         </ResponsiveContainer>
@@ -98,22 +108,17 @@ class ResourceMetrics extends Component {
             <CartesianGrid strokeDasharray="3 3" />
             <Tooltip />
             <Legend />
-            {/* {this.drawLineChart(resourceType)} */}
             <Line
               name={"Usage"}
               type="monotone"
-              dataKey="value"
+              dataKey={"value"}
               stroke="#efa7a7"
             />
           </LineChart>
         </ResponsiveContainer>
       );
     }
-  };
-
-  // drawAdditionalChart = (resourceType) => {
-  //   return <Line name={"Usage2"} type="monotone" dataKey="sent" stroke="#efa7a7" />;
-  // }
+  }
 
   render() {
     const { t, classes, statusInfo, onClickChangeType, resourceType } = this.props;
@@ -129,15 +134,15 @@ class ResourceMetrics extends Component {
           <Grid item xs={6}>
             <Typography style={{ margin: "2px 8px", fontWeight: "bold" }}>
               {t("lbGPMSResourceMetrics")} - 
-              {resourceType == "cpu"
+              {resourceType === "cpu"
                 ? "CPU"
-                : resourceType == "mem"
+                : resourceType === "mem"
                 ? "MEMORY"
-                : resourceType == "net"
+                : resourceType === "net_recv" || resourceType === "net_sent"
                 ? "NETWORK"
-                : resourceType == "disk"
+                : resourceType === "disk"
                 ? "DISK"
-                : ""}{" "}
+                : ""}
             </Typography>
           </Grid>
           <Grid item xs={6} style={{ textAlign: "right" }}>
@@ -163,10 +168,19 @@ class ResourceMetrics extends Component {
               className={classes.GRIconSmallButton}
               style={{ minWidth: 25, marginRight: 10 }}
               variant="contained"
-              color={resourceType == "net" ? "secondary" : "primary"}
-              onClick={() => onClickChangeType("net")}
+              color={resourceType == "net_recv" ? "secondary" : "primary"}
+              onClick={() => onClickChangeType("net_recv")}
             >
-              NET
+              NET_RECV
+            </Button>
+            <Button
+              className={classes.GRIconSmallButton}
+              style={{ minWidth: 25, marginRight: 10 }}
+              variant="contained"
+              color={resourceType == "net_sent" ? "secondary" : "primary"}
+              onClick={() => onClickChangeType("net_sent")}
+            >
+              NET_SENT
             </Button>
             <Button
               className={classes.GRIconSmallButton}

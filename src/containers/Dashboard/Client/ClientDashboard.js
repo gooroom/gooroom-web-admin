@@ -19,8 +19,6 @@ import ViolatedStatus from './ViolatedStatus';
 
 import ClientListForDashboard from 'views/Client/ClientListForDashboard';
 
-// import ResourceMetrics from './ResourceMetrics';
-
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -46,7 +44,6 @@ class ClientDashboard extends Component {
         const { DashboardActions, DashboardProps } = this.props;
         DashboardActions.readClientStatusForDashboard();
         this.handleClickChangePeriod('day');
-        // this.handleClickChangeResource('cpu');
         this.dashboardTimer = setInterval(() => this.refreshDashboard(), 1000);
     }
 
@@ -66,11 +63,6 @@ class ClientDashboard extends Component {
                     isRunningTimer: true
                 });
                 this.props.DashboardActions.readClientStatusForDashboard();
-                // const resourceType = this.props.DashboardProps.get('resourceType');
-                // console.log("[Debug Refresh Dashbaord] resourceType : ", resourceType);
-                // if (resourceType) {
-                //     this.props.DashboardActions.readResourceMetrics({ resourceType: resourceType });
-                // }
             } else {
                 const newCount = this.state.currentCount - 1;
                 this.setState({
@@ -93,13 +85,7 @@ class ClientDashboard extends Component {
             countType: type
         });
     }
-
-    // handleClickChangeResource = (type) => {
-    //     this.props.DashboardActions.readResourceMetrics({
-    //         resourceType: type
-    //     });
-    // }
-
+    
     handleClickViolatedLink = (type, clientId) => {
         const { AdminActions, SecurityLogActions, SecurityLogProps } = this.props;
         if (SecurityLogProps.getIn(['viewItems', 'GRM0935'])) {
@@ -153,8 +139,6 @@ class ClientDashboard extends Component {
 
         const violatedStatusInfo = (DashboardProps.get('violatedStatusInfo')) ? DashboardProps.get('violatedStatusInfo') : 0;
 
-        // const resourceMetricsData = (DashboardProps.get('resourceMetricsInfo')) ? DashboardProps.get('resourceMetricsInfo') : [];
-
         return (
             <GRPane>
                 <Grid container spacing={24} style={{ marginTop: 20 }}>
@@ -192,16 +176,6 @@ class ClientDashboard extends Component {
                             />
                         </Paper>
                     </Grid>
-
-                    {/* <Grid item xs={12} sm={12}>
-                        <Paper className={classes.paper}>
-                            <ResourceMetrics
-                                statusInfo={resourceMetricsData}
-                                onClickChangeType={this.handleClickChangeResource}
-                                resourceType={DashboardProps.get('resourceType')}
-                            />
-                        </Paper>
-                    </Grid> */}
 
                     {/* <Grid item xs={12} sm={4}>
                 <Paper className={classes.paper}>-</Paper>
