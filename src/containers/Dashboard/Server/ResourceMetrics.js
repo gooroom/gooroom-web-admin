@@ -40,6 +40,15 @@ class ResourceMetrics extends Component {
     const data = [];
     switch (resourceType) {
       case "cpu":
+        statusInfo.map((n) => {
+          if (n) {
+            data.push({
+              timestamp: n.get("timeStamp"),
+              value: Math.round((100 - n.get("value")) * 100) / 100,
+            });
+          }
+        });
+        return data;
       case "mem":
       case "disk":
         statusInfo.map((n) => {
