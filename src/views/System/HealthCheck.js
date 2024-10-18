@@ -217,14 +217,14 @@ class HealthCheck extends Component {
                                     <TextField value={server.dbType} fullWidth margin="normal" InputProps={{ readOnly: true }}  />
                                 </Grid>
 
-				{/* SID */}
+                                {/* SID */}
                                 <Grid item xs={3}>
                                     <Typography variant="body1">{"SID"}</Typography>
                                 </Grid>
                                 <Grid item xs={9}>
                                     <TextField value={server.sid} fullWidth margin="normal" InputProps={{ readOnly: true }}  />
                                 </Grid>
-
+        
                                 {/* Health Check Schedule */}
                                 <Grid item xs={3}>
                                     <Typography variant="body1">{t("healthCheckSchedule")}</Typography>
