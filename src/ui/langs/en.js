@@ -1138,6 +1138,22 @@ export default {
   "msgShowOnlyClientGroupRule": "This is the Client connected to the local account. Only client rules are displayed.",
   "lbViolatedClientList": "List of infringing devices",
 
+  //health
+  "lbGPMSModuleManage":"Service Module Management",
+  "lbGPMSModuleStatus":"Service Module Status",
+  "msgGPMSModuleManage":"Run start, stop, and restart operations of the server main modules (GLM, GKM, GRM).",
+  "GPMSModuleCurrentState":"Current State",
+  "GPMSModuleWork":"Work",
+  "GPMSModuleStart":"start",
+  "GPMSModuleStop":"stop",
+  "GPMSModuleRestart":"restart",
+  "GPMSModuleOnline":"Online",
+  "GPMSModuleOffline":"Offline",
+  "GPMSModuleError":"Error",
+
+  // GPMS Resource Metrics
+  "lbGPMSResourceMetrics": "Server Resource Monitoring",
+
   // 공지
   "dtAddNotice": "Add Notice",
   "msgAddNotice": "Do you want to register the notice?",
