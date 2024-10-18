@@ -1,5 +1,4 @@
 import { handleActions } from 'redux-actions';
-import { Map, List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import sha256 from 'sha-256-js';
@@ -33,6 +32,8 @@ const GET_ADMINCONN_IPLIST_SUCCESS = 'adminUser/GET_ADMINCONN_IPLIST_SUCCESS';
 const SET_ADMINCONN_IP_VALUE = 'adminUser/SET_ADMINCONN_IP_VALUE';
 const ADD_ADMINCONN_IP_ITEM = 'adminUser/ADD_ADMINCONN_IP_ITEM';
 const DELETE_ADMINCONN_IP_ITEM = 'adminUser/DELETE_ADMINCONN_IP_ITEM';
+
+const CHG_LOGINTRIAL_RESET = 'adminUser/CHG_LOGINTRIAL_RESET';
 
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chAdminNm', 'asc', {}, {
@@ -302,6 +303,32 @@ export const updateAdminAddress = (param) => dispatch => {
     });
 };
 
+export const resetLoginTrialCount = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('updateAdminLoginTrialCount', {
+        adminId: param.adminId
+    }).then(
+        (response) => {
+            try {
+                if(response && response.data) {
+                    if(response.data.status && response.data.status.result === 'success') {
+                        dispatch({
+                            type: CHG_LOGINTRIAL_RESET
+                        });
+                    } else {
+                        dispatch({ type: COMMON_FAILURE, error: response.data });
+                    }
+                    return response.data;
+                }
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
+                return error;
+            }
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
 
 export default handleActions({
 
@@ -362,7 +389,8 @@ export default handleActions({
     [DELETE_ADMINUSER_SUCCESS]: (state, action) => {
         return commonHandleActions.handleDeleteSuccessAction(state, action, 'userId');
     },
-
+    [CHG_LOGINTRIAL_RESET]: (state, action) => {
+    },
     [SHOW_ADMINCONN_DIALOG]: (state, action) => {
         return state.merge({connDialogOpen: true});
     },

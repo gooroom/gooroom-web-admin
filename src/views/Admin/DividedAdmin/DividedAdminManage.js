@@ -1,27 +1,26 @@
-import React, { Component } from 'react';
-import { Map, List, Iterable } from 'immutable';
 import * as Constants from "components/GRComponents/GRConstants";
+import { List, Map } from 'immutable';
+import React, { Component } from 'react';
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import * as AdminUserActions from 'modules/AdminUserModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { getRowObjectById, getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
-import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
+import GRPageHeader from 'containers/GRContent/GRPageHeader';
 
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
 import AdminUserStatusSelect from "views/Options/AdminUserStatusSelect";
 
-import DividedAdminManageDialog from './DividedAdminManageDialog';
-import DividedAdminHistDialog from './DividedAdminHistDialog';
-import DividedAdminManageSpec from './DividedAdminManageSpec';
 import GRPane from 'containers/GRContent/GRPane';
+import DividedAdminHistDialog from './DividedAdminHistDialog';
+import DividedAdminManageDialog from './DividedAdminManageDialog';
+import DividedAdminManageSpec from './DividedAdminManageSpec';
 
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
@@ -32,22 +31,25 @@ import TableRow from '@material-ui/core/TableRow';
 
 import FormControl from '@material-ui/core/FormControl';
 
-import InputLabel from "@material-ui/core/InputLabel";
 
 import Button from '@material-ui/core/Button';
-import Search from '@material-ui/icons/Search';
-import CheckIcon from '@material-ui/icons/CheckCircleTwoTone';
 import AddIcon from '@material-ui/icons/Add';
-import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
-import DeleteIcon from '@material-ui/icons/Delete';
 import HistoryIcon from '@material-ui/icons/Assignment';
+import CheckIcon from '@material-ui/icons/CheckCircleTwoTone';
+import DeleteIcon from '@material-ui/icons/Delete';
+import LoginResetIcon from '@material-ui/icons/Flare';
+import LockIcon from '@material-ui/icons/Lock';
+import ReplayIcon from '@material-ui/icons/Replay';
+import Search from '@material-ui/icons/Search';
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
 // option components
 import AdminTypeSelect from 'views/Options/AdminTypeSelect';
 
+import { Chip, Tooltip, Typography } from "@material-ui/core";
 import { withStyles } from '@material-ui/core/styles';
+import { translate } from "react-i18next";
 import { GRCommonStyle } from 'templates/styles/GRStyles';
-import { translate, Trans } from "react-i18next";
 
 class DividedAdminManage extends Component {
 
@@ -198,11 +200,68 @@ class DividedAdminManage extends Component {
     });
   }
 
+  handleResetTrialCount = (viewItem, compId) => {
+    const { UserProps, GRConfirmActions } = this.props;
+    const { t, i18n } = this.props;
+
+    GRConfirmActions.showConfirm({
+        confirmTitle: t("lbEditUserInfo"),
+        confirmMsg: t("msgEditLoginTrialCount"),
+        handleConfirmResult: (confirmValue, paramObject) => {
+          if(confirmValue) {
+            const { AdminProps, AdminUserActions, compId } = this.props;
+            if(paramObject !== undefined) {
+              AdminUserActions.resetLoginTrialCount({
+                  adminId: paramObject.get('adminId')
+              }).then((res) => {
+                  if(res.status && res.status && res.status.message) {
+                    this.props.GRAlertActions.showAlert({
+                      alertTitle: t("dtSystemNotice"),
+                      alertMsg: res.status.message
+                    });
+                  }
+                  AdminUserActions.readUserListPaged(UserProps, compId);
+                  this.handleClose();
+              });
+            }
+          }
+        },
+        confirmObject: viewItem
+    });
+  }
+  
   render() {
     const { classes } = this.props;
     const { AdminProps, AdminUserProps } = this.props;
     const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
+    
+    const getActionButton = (viewItem, compId) => {
+      let actionButton = null;
+      if(viewItem.get('loginTrial') < 1 || viewItem.get('otpLoginTrial') < 1) {
+        actionButton = <div style={{width:200,paddingTop:10,display:'flex'}}>
+          <Chip icon={<LockIcon style={{color: "#fafafa"}}/>} label={t("lbAccountLocked")} style={{color: "#fafafa", backgroundColor: "#d50000", marginRight:18}}/>
+          <Tooltip title={t("ttResetLoginTrial")}>
+            <Button size="small"
+              variant="outlined" color="primary" style={{minWidth:32,marginRight:18}}
+              onClick={() => this.handleResetTrialCount(viewItem, compId)}
+            ><LoginResetIcon /></Button>
+          </Tooltip>
+        </div>
+      } else {
+        actionButton = <div style={{width:280,paddingTop:10}}>
+          <ReplayIcon style={{verticalAlign: 'middle', marginRight:5}}/>
+          <Typography style={{display: 'inline-block', fontWeight:'bold', marginRight:10}}>{t("lbAccountRemailTrial")}</Typography>
+          <Typography style={{display: 'inline-block', marginRight:8}}>[{viewItem.get('loginTrial')+t("lbAccountPossibleCnt")}]</Typography>
+          {/* <Button size="small"
+            variant="outlined" color="primary" style={{minWidth:32}}
+            onClick={() => this.handleClickEdit(viewItem, compId)}
+          ><SettingsApplicationsIcon /></Button> */}
+        </div>
+      }
+  
+      return actionButton;
+    }
 
     const columnHeaders = [
       { id: 'ch1', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
@@ -392,6 +451,7 @@ class DividedAdminManage extends Component {
         <DividedAdminManageSpec compId={compId} specType="inform"
           selectedItem={(listObj) ? listObj.get('viewItem') : null}
           onClickEdit={(event, id) => this.handleEditClick(event, id)}
+          getActionButton={getActionButton}
         />
         </GRPane>
         {/* dialog(popup) component area */}
