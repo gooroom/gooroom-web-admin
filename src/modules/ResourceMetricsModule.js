@@ -10,7 +10,7 @@ const GET_RESOURCE_METRICS_SUCCESS = "dashboard/GET_RESOURCE_METRICS";
 
 const initialState = commonHandleActions.getCommonInitialState("", "", {
   resourceMetricsInfo: Array(60).map((idx, elem) => {
-      timeStamp: idx;
+      timestamp: idx;
       value: 0;
       recv: 0;
       sent: 0;
@@ -55,25 +55,25 @@ export default handleActions(
       const minuteLength = 60;
       const resourceType = action.resourceType;
       
-      const initialResourceMetrics = Array.from({ length: minuteLength }, (elem, idx) => (
-        resourceType === "net_recv" || resourceType === "net_sent"  
-          ? { timeStamp: idx, recv: null, sent: null }
-          : { timeStamp: idx, value: null }
-      ));
-    
+      const initialResourceMetrics = Array.from({ length: 60 }, (_, idx) => ({ timestamp: idx, value: 0 }));
 
       if (statusInfo) {
-        
-        const reversed = initialResourceMetrics;
+        const reversed = Array.from({ length: 60 }, (_, idx) => ({ timestamp: idx, value: 0 }));
         statusInfo.map((entry, idx) => {
           const reverseIdx = minuteLength - idx - 1;
           
-          if (resourceType === "net_recv") {
-            reversed[reverseIdx].recv = entry.recv;
+          // reversed[reverseIdx].timestamp = entry.timeStamp;
+          
+          if (resourceType === "cpu") {
+            // reversed[reverseIdx].value = entry.value;
+            reversed[reverseIdx].value = Math.round((100 - entry.value) * 100) / 100;
+          } else if (resourceType === "net_recv") {
+            reversed[reverseIdx].value = Math.round(entry.recv * 0.000001 * 100) / 100; //Bytes => MegaBytes
+            // reversed[reverseIdx].recv = entry.recv ; 
           } else if (resourceType === "net_sent") {
-            reversed[reverseIdx].sent = entry.sent;
-          } else {
-            reversed[reverseIdx].value = entry.value;
+            reversed[reverseIdx].value = Math.round(entry.sent * 0.000001 * 100) / 100; //Bytes => MegaBytes
+          }  else {
+            reversed[reverseIdx].value = Math.round(entry.value * 100) / 100;
           }
         });
 

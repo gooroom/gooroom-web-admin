@@ -25,65 +25,7 @@ class ResourceMetrics extends Component {
     super(props);
   }
   
-  getDataKey(resourceType) {
-    switch(resourceType) {
-      case "net_recv":
-        return "recv";
-      case "net_sent":
-        return "sent";
-      default:
-        return "value";
-    }
-  }
-  
-  convertData(statusInfo, resourceType) {
-    const data = [];
-    switch (resourceType) {
-      case "cpu":
-        statusInfo.map((n) => {
-          if (n) {
-            data.push({
-              timestamp: n.get("timeStamp"),
-              value: Math.round((100 - n.get("value")) * 100) / 100,
-            });
-          }
-        });
-        return data;
-      case "mem":
-      case "disk":
-        statusInfo.map((n) => {
-          if (n) {
-            data.push({
-              timestamp: n.get("timeStamp"),
-              value: Math.round(n.get("value") * 100) / 100,
-            });
-          }
-        });
-        return data;
-      case "net_recv":
-        statusInfo.map((n) => {
-          if (n) {
-            data.push({
-              timestamp: n.get("timeStamp"),
-              value: Math.round(n.get("recv") * 0.000001 * 100) / 100, //Bytes => MegaBytes
-            });
-          }
-        });
-        return data;
-      case "net_sent":
-        statusInfo.map((n) => {
-          if (n) {
-            data.push({
-              timestamp: n.get("timeStamp"),
-              value: Math.round(n.get("sent") * 0.000001 * 100) / 100, //Bytes => MegaBytes
-            });
-          }
-        });
-        return data;
-    }
-  }
-  
-  drawLineChart (resourceType, data) {
+  drawLineChart = (resourceType, data) => {
     if(resourceType === "net_recv" || resourceType === "net_sent") {
       return (
         <ResponsiveContainer width="100%" height="90%">
@@ -91,8 +33,8 @@ class ResourceMetrics extends Component {
             data={data}
             margin={{ top: 10, right: 35, left: 35, bottom: 10 }}
           >
-            <XAxis dataKey="timestamp" interval={4} ticks={Array.from({ length: 60 }, (_, index) => index)} tickFormatter={(tick) => `${tick}s`} />
--            <YAxis type="number" domain={["dataMin", "dataMax"]} tick={{fontSize: 12}} tickFormatter={(tick) => tick.length > 4 ? `${tick.substring(0, 4)}...MB` : `${tick}MB`} />
+            <XAxis dataKey="timeStamp" interval={4} ticks={Array.from({ length: 60 }, (_, index) => index)} tickFormatter={(tick) => `${tick}s`} />
+            <YAxis type="number" domain={["dataMin", "dataMax"]} tick={{fontSize: 12}} tickFormatter={(tick) => tick.length > 4 ? `${tick.substring(0, 4)}...MB` : `${tick}MB`} />
             <CartesianGrid strokeDasharray="3 3" />
             <Tooltip />
             <Legend />
@@ -131,11 +73,6 @@ class ResourceMetrics extends Component {
 
   render() {
     const { t, classes, statusInfo, onClickChangeType, resourceType } = this.props;
-
-    let data = [];
-    if (statusInfo) {
-      data = this.convertData(statusInfo, resourceType);
-    }
 
     return (
       <div style={{ height: 220, paddingTop: 10 }}>
@@ -204,7 +141,7 @@ class ResourceMetrics extends Component {
         </Grid>
         {statusInfo &&
           statusInfo.size > 0 &&
-          this.drawLineChart(resourceType, data)}
+          this.drawLineChart(resourceType, statusInfo.toJS())}
       </div>
     );
   }
