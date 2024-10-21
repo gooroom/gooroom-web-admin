@@ -68,10 +68,10 @@ export default handleActions(
             // reversed[reverseIdx].value = entry.value;
             reversed[reverseIdx].value = Math.round((100 - entry.value) * 100) / 100;
           } else if (resourceType === "net_recv") {
-            reversed[reverseIdx].value = Math.round(entry.recv * 0.000001 * 100) / 100; //Bytes => MegaBytes
+            reversed[reverseIdx].value = Math.round(entry.recv * 0.001 * 100) / 100; //Bytes => MegaBytes
             // reversed[reverseIdx].recv = entry.recv ; 
           } else if (resourceType === "net_sent") {
-            reversed[reverseIdx].value = Math.round(entry.sent * 0.000001 * 100) / 100; //Bytes => MegaBytes
+            reversed[reverseIdx].value = Math.round(entry.sent * 0.001 * 100) / 100; //Bytes => MegaBytes
           }  else {
             reversed[reverseIdx].value = Math.round(entry.value * 100) / 100;
           }
