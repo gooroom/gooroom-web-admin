@@ -33,7 +33,7 @@ class ResourceMetrics extends Component {
             data={data}
             margin={{ top: 10, right: 35, left: 35, bottom: 10 }}
           >
-            <XAxis dataKey="timeStamp" interval={4} ticks={Array.from({ length: 60 }, (_, index) => index)} tickFormatter={(tick) => `${tick}s`} />
+            <XAxis dataKey="timestamp" interval={4} ticks={Array.from({ length: 60 }, (_, index) => index)} tickFormatter={(tick) => `${tick}s`} />
             <YAxis type="number" domain={["dataMin", "dataMax"]} tick={{fontSize: 12}} tickFormatter={(tick) => tick.length > 4 ? `${tick.substring(0, 4)}...MB` : `${tick}MB`} />
             <CartesianGrid strokeDasharray="3 3" />
             <Tooltip />
